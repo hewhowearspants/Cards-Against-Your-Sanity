@@ -12,7 +12,20 @@ app.use(express.static(__dirname + '/public'));
 
 io.on('connection', (socket) => {
   console.log(socket.id);
+
+  socket.emit('room code', {roomCode: roomCodeGen()})
 })
+
+function roomCodeGen() {
+  let roomCode = '';
+  let charBank = 'abcdefghijklmnopqrstuvwxyz0123456789';
+
+  for(let i = 0; i < 5; i++){
+    roomCode += charBank.charAt(Math.floor(Math.random() * charBank.length));
+  }
+
+  return roomCode;
+}
 
 const port = process.env.PORT || 3001;
 

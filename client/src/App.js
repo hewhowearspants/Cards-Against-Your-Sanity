@@ -12,6 +12,10 @@ const randBlackIndex = Math.floor(Math.random() * cards.blackCards.length);
 class App extends Component {
   componentDidMount() {
     const socket = io.connect();
+
+    socket.on('room code', (data) => {
+      console.log(data.roomCode)
+    })
   }
 
   generateWhiteIndex() {
@@ -32,6 +36,17 @@ class App extends Component {
     })
   }
 
+  roomCodeGen() {
+    let roomCode = '';
+    let charBank = 'abcdefghijklmnopqrstuvwxyz0123456789';
+
+    for(let i = 0; i < 5; i++){
+      roomCode += charBank.charAt(Math.floor(Math.random() * charBank.length));
+    }
+
+    return roomCode;
+  }
+
   render() {
     return (
       <div className="App">
@@ -41,6 +56,7 @@ class App extends Component {
         </header>
         <p className="Answer">
           {this.renderAnswers()}
+          {this.roomCodeGen()}
         </p>
       </div>
     );
