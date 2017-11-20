@@ -8,6 +8,14 @@ import cards from './cards';
 const randBlackIndex = Math.floor(Math.random() * cards.blackCards.length);
 
 class App extends Component {
+  componentDidMount() {
+    const socket = io.connect();
+
+    socket.on('room code', (data) => {
+      console.log(data.roomCode)
+    })
+  }
+
   generateWhiteIndex() {
     return Math.floor(Math.random() * cards.whiteCards.length);
   }
