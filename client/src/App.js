@@ -31,7 +31,7 @@ class App extends Component {
 
     return whiteCards.map((card) => {
       return (
-        <p>{card}</p>
+        <h1>{card}</h1>
       )
     })
   }
@@ -51,13 +51,11 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
           <h1 className="Question">{cards.blackCards[randBlackIndex].text}</h1>
         </header>
-        <p className="Answer">
+        <div className="Answers">
           {this.renderAnswers()}
-          {this.roomCodeGen()}
-        </p>
+        </div>
       </div>
     );
   }
