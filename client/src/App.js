@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import io from "socket.io-client";
 
 import cards from './cards';
 
+var socket;
 
 const randBlackIndex = Math.floor(Math.random() * cards.blackCards.length);
 
