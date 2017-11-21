@@ -30,7 +30,6 @@ io.on('connection', (socket) => {
 
     socket.join(roomCode);
     joinPlayerToRoom(socket.id, data.name, roomCode);
-
     socket.emit('joined', {
       cards: [...gameRooms[roomCode].players[socket.id].cards],
       roomCode,
@@ -39,20 +38,24 @@ io.on('connection', (socket) => {
   });
 
   socket.on('join', (data) => {
-    if (gameRooms[data.roomCode].players.length < 10) {
+    let roomCode = data.roomCode.toUpperCase();
+    if (gameRooms[roomCode]) {
+      if (Object.keys(gameRooms[roomCode].players).length < 10) {
 
-      socket.join(roomCode);
-      joinPlayerToRoom(socket.id, data.name, data.roomCode);
+        socket.join(roomCode);
+        joinPlayerToRoom(socket.id, data.name, roomCode);
+        socket.emit('joined', {
+          cards: [...gameRooms[roomCode].players[socket.id].cards],
+          roomCode,
+        });
 
-      socket.emit('joined', {
-        cards: [...gameRooms[data.roomCode].players[socket.id].cards],
-        roomCode: data.roomCode,
-      });
-
-      console.log(data.name + ' has joined game ' + data.roomCode);
+        console.log(data.name + ' has joined game ' + roomCode);
+      } else {
+        console.log("Fuck off, we're full!");
+        socket.emit('players full');
+      }
     } else {
-      console.log("Fuck off, we're full!");
-      socket.emit('players full');
+      socket.emit('bad roomcode');
     }
   });
 })
