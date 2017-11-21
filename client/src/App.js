@@ -39,10 +39,20 @@ class App extends Component {
       })
       console.log(data.cards);
     })
-  }
 
-  generateWhiteIndex() {
-    return Math.floor(Math.random() * cards.whiteCards.length);
+    socket.on('new player', (data) => {
+      this.setState({
+        players: data.players
+      })
+    })
+
+    socket.on('bad roomcode', () => {
+      console.log('bad roomcode');
+    });
+
+    socket.on('players full', () => {
+      console.log("fuck off, players full");
+    });
   }
 
   renderCards() {
