@@ -88,24 +88,30 @@ class App extends Component {
     });
   }
 
+  setScreen(screen) {
+    this.setState({
+      currentScreen: screen
+    })
+  }
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <h1 className="Question">{cards.blackCards[randBlackIndex].text}</h1>
-        </header>
-        <div className="Answers">
-          {this.state.cards.length > 0 ? this.renderCards() : ''}
-        </div>
-        <input
-            type="text"
-            name="name"
-            value={this.state.name}
-            placeholder="Enter name"
-            onChange={this.handleInputChange}
-          />
-        <button onClick={this.createGame}>Create</button>
-        <button onClick={this.joinGame}>Join</button>
+        {this.state.currentScreen === 'home' ? 
+          <Home 
+            name={this.state.name}
+            roomCode={this.state.roomCode}
+            handleInputChange={this.handleInputChange}
+            createGame={this.createGame}
+            joinGame={this.joinGame}
+          /> : ''}
+        {this.state.currentScreen === 'lobby' ? 
+          <Lobby 
+            name={this.state.name}
+            roomCode={this.state.roomCode}
+            players={this.state.players}
+          /> : ''}
+        {this.state.currentScreen === 'game' ? <Game /> : ''}
       </div>
     );
   }
