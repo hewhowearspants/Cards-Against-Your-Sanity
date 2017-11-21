@@ -11,12 +11,53 @@ const io = require('socket.io')(server);
 app.use(logger('dev'));
 app.use(express.static(__dirname + '/public'));
 
-io.on('connection', (socket) => {
-  console.log(socket.id);
+const gameRooms = {};
 
-  socket.emit('room code', {roomCode: roomCodeGen()})
+io.on('connection', (socket) => {
+  console.log(socket.id + ' connected');
+
+  //socket.emit('room code', {roomCode: roomCodeGen()})
+
+  socket.on('create', (data) => {
+    let roomCode = roomCodeGen();
+    console.log(data.name + ' has created a game, code ' + roomCode);
+
+    gameRooms[roomCode] = {
+      players: {},
+      blackCards: shuffleCards([...cards.blackCards]),
+      whiteCards: shuffleCards([...cards.whiteCards]),
+    };
+
+    socket.join(roomCode);
+    joinPlayerToRoom(socket.id, data.name, roomCode);
+
+    socket.emit('joined', {
+      cards: [...gameRooms[roomCode].players[socket.id].cards],
+      roomCode,
+    });
+    
+  });
+
+  socket.on('join', (data) => {
+    if (gameRooms[data.roomCode].players.length < 10) {
+
+      socket.join(roomCode);
+      joinPlayerToRoom(socket.id, data.name, data.roomCode);
+
+      socket.emit('joined', {
+        cards: [...gameRooms[data.roomCode].players[socket.id].cards],
+        roomCode: data.roomCode,
+      });
+
+      console.log(data.name + ' has joined game ' + data.roomCode);
+    } else {
+      console.log("Fuck off, we're full!");
+      socket.emit('players full');
+    }
+  });
 })
 
+// generates a random 5-digit alphanumeric room code for players to join
 function roomCodeGen() {
   let roomCode = '';
   let charBank = 'abcdefghijklmnopqrstuvwxyz0123456789';
