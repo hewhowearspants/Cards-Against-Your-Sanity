@@ -79,6 +79,16 @@ function joinPlayerToRoom(id, name, roomCode) {
   }
 
   gameRooms[roomCode].players[id] = player;
+
+  let players = [];
+
+  for (let id in gameRooms[roomCode].players) {
+    players.push(gameRooms[roomCode].players[id].name);
+  }
+
+  io.sockets.in(roomCode).emit('new player', {players: players});
+
+  
 }
 
 function shuffleCards(cards) {
