@@ -52,13 +52,15 @@ class App extends Component {
     })
   }
 
-  roomCodeGen() {
-    let roomCode = '';
-    let charBank = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  createGame() {
+    console.log(this.state.name + ' creating game');
+    socket.emit('create', {name: this.state.name});
+  }
 
-    for(let i = 0; i < 5; i++){
-      roomCode += charBank.charAt(Math.floor(Math.random() * charBank.length));
-    }
+  joinGame() {
+    console.log(`${this.state.name} joining game ${this.state.roomCode}`);
+    socket.emit('join', {name: this.state.name, roomCode: this.state.roomCode});
+  }
 
     return roomCode;
   }
