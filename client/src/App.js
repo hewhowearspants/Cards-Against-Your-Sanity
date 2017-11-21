@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import io from "socket.io-client";
 
-import cards from './cards';
+import Home from './components/Home';
+import Lobby from './components/Lobby';
+import Game from './components/Game';
 
 var socket;
-
-const randBlackIndex = Math.floor(Math.random() * cards.blackCards.length);
 
 class App extends Component {
   constructor() {
@@ -17,6 +16,8 @@ class App extends Component {
       name: '',
       cards: [],
       roomCode: '',
+      currentScreen: 'home',
+      players: [],
     }
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -38,10 +39,20 @@ class App extends Component {
       })
       console.log(data.cards);
     })
-  }
 
-  generateWhiteIndex() {
-    return Math.floor(Math.random() * cards.whiteCards.length);
+    socket.on('new player', (data) => {
+      this.setState({
+        players: data.players
+      })
+    })
+
+    socket.on('bad roomcode', () => {
+      console.log('bad roomcode');
+    });
+
+    socket.on('players full', () => {
+      console.log("fuck off, players full");
+    });
   }
 
   renderCards() {
@@ -55,11 +66,18 @@ class App extends Component {
   createGame() {
     console.log(this.state.name + ' creating game');
     socket.emit('create', {name: this.state.name});
+    this.setState({
+      currentScreen: 'lobby'
+    })
   }
 
   joinGame() {
     console.log(`${this.state.name} joining game ${this.state.roomCode}`);
     socket.emit('join', {name: this.state.name, roomCode: this.state.roomCode});
+    this.setState({
+      currentScreen: 'lobby',
+      joiningGame: false,
+    });
   }
 
   handleInputChange(event) {
@@ -70,24 +88,30 @@ class App extends Component {
     });
   }
 
+  setScreen(screen) {
+    this.setState({
+      currentScreen: screen
+    })
+  }
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <h1 className="Question">{cards.blackCards[randBlackIndex].text}</h1>
-        </header>
-        <div className="Answers">
-          {this.state.cards.length > 0 ? this.renderCards() : ''}
-        </div>
-        <input
-            type="text"
-            name="name"
-            value={this.state.name}
-            placeholder="Enter name"
-            onChange={this.handleInputChange}
-          />
-        <button onClick={this.createGame}>Create</button>
-        <button onClick={this.joinGame}>Join</button>
+        {this.state.currentScreen === 'home' ? 
+          <Home 
+            name={this.state.name}
+            roomCode={this.state.roomCode}
+            handleInputChange={this.handleInputChange}
+            createGame={this.createGame}
+            joinGame={this.joinGame}
+          /> : ''}
+        {this.state.currentScreen === 'lobby' ? 
+          <Lobby 
+            name={this.state.name}
+            roomCode={this.state.roomCode}
+            players={this.state.players}
+          /> : ''}
+        {this.state.currentScreen === 'game' ? <Game /> : ''}
       </div>
     );
   }
