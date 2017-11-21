@@ -16,6 +16,8 @@ class App extends Component {
       name: '',
       cards: [],
       roomCode: '',
+      currentScreen: 'home',
+      players: [],
     }
 
     this.handleInputChange = this.handleInputChange.bind(this);
