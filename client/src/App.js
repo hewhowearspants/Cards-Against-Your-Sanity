@@ -62,7 +62,12 @@ class App extends Component {
     socket.emit('join', {name: this.state.name, roomCode: this.state.roomCode});
   }
 
-    return roomCode;
+  handleInputChange(event) {
+    let name = event.target.name;
+    let value = event.target.value;
+    this.setState({
+      [name]: value
+    });
   }
 
   render() {
