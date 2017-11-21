@@ -25,7 +25,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const socket = io.connect();
+    socket = io.connect();
 
     socket.on('room code', (data) => {
       console.log(data.roomCode)
