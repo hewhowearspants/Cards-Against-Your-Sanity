@@ -77,8 +77,17 @@ class App extends Component {
           <h1 className="Question">{cards.blackCards[randBlackIndex].text}</h1>
         </header>
         <div className="Answers">
-          {this.renderAnswers()}
+          {this.state.cards.length > 0 ? this.renderCards() : ''}
         </div>
+        <input
+            type="text"
+            name="name"
+            value={this.state.name}
+            placeholder="Enter name"
+            onChange={this.handleInputChange}
+          />
+        <button onClick={this.createGame}>Create</button>
+        <button onClick={this.joinGame}>Join</button>
       </div>
     );
   }
