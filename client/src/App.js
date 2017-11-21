@@ -44,16 +44,10 @@ class App extends Component {
     return Math.floor(Math.random() * cards.whiteCards.length);
   }
 
-  renderAnswers() {
-    let whiteCards = [];
-
-    for(let i = 0; i < cards.blackCards[randBlackIndex].pick; i++) {
-      whiteCards.push(cards.whiteCards[this.generateWhiteIndex()]);
-    }
-
-    return whiteCards.map((card) => {
+  renderCards() {
+    return this.state.cards.map((card) => {
       return (
-        <h1>{card}</h1>
+        <h2 key={card}>{card}</h2>
       )
     })
   }
