@@ -66,11 +66,18 @@ class App extends Component {
   createGame() {
     console.log(this.state.name + ' creating game');
     socket.emit('create', {name: this.state.name});
+    this.setState({
+      currentScreen: 'lobby'
+    })
   }
 
   joinGame() {
     console.log(`${this.state.name} joining game ${this.state.roomCode}`);
     socket.emit('join', {name: this.state.name, roomCode: this.state.roomCode});
+    this.setState({
+      currentScreen: 'lobby',
+      joiningGame: false,
+    });
   }
 
   handleInputChange(event) {
