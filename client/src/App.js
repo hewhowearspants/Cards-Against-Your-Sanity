@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import io from "socket.io-client";
 
-import cards from './cards';
+import Home from './components/Home';
+import Lobby from './components/Lobby';
+import Game from './components/Game';
 
 var socket;
-
-const randBlackIndex = Math.floor(Math.random() * cards.blackCards.length);
 
 class App extends Component {
   constructor() {
