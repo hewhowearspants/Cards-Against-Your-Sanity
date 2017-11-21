@@ -69,7 +69,7 @@ function roomCodeGen() {
     roomCode += charBank.charAt(Math.floor(Math.random() * charBank.length));
   }
 
-  return roomCode;
+  return roomCode.toUpperCase();
 }
 
 function joinPlayerToRoom(id, name, roomCode) {
