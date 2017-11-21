@@ -1,4 +1,4 @@
-{
+module.exports = {
   "blackCards": [
   {
   "text": "Why can't I sleep at night?",

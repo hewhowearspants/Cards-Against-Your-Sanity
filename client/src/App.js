@@ -10,11 +10,33 @@ var socket;
 const randBlackIndex = Math.floor(Math.random() * cards.blackCards.length);
 
 class App extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      name: '',
+      cards: [],
+      roomCode: '',
+    }
+
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.createGame = this.createGame.bind(this);
+    this.joinGame = this.joinGame.bind(this);
+  }
+
   componentDidMount() {
-    const socket = io.connect();
+    socket = io.connect();
 
     socket.on('room code', (data) => {
       console.log(data.roomCode)
+    })
+
+    socket.on('joined', (data) => {
+      this.setState({
+        cards: data.cards,
+        roomCode: data.roomCode,
+      })
+      console.log(data.cards);
     })
   }
 
@@ -22,42 +44,50 @@ class App extends Component {
     return Math.floor(Math.random() * cards.whiteCards.length);
   }
 
-  renderAnswers() {
-    let whiteCards = [];
-
-    for(let i = 0; i < cards.blackCards[randBlackIndex].pick; i++) {
-      whiteCards.push(cards.whiteCards[this.generateWhiteIndex()]);
-    }
-
-    return whiteCards.map((card) => {
+  renderCards() {
+    return this.state.cards.map((card) => {
       return (
-        <p>{card}</p>
+        <h2 key={card}>{card}</h2>
       )
     })
   }
 
-  roomCodeGen() {
-    let roomCode = '';
-    let charBank = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  createGame() {
+    console.log(this.state.name + ' creating game');
+    socket.emit('create', {name: this.state.name});
+  }
 
-    for(let i = 0; i < 5; i++){
-      roomCode += charBank.charAt(Math.floor(Math.random() * charBank.length));
-    }
+  joinGame() {
+    console.log(`${this.state.name} joining game ${this.state.roomCode}`);
+    socket.emit('join', {name: this.state.name, roomCode: this.state.roomCode});
+  }
 
-    return roomCode;
+  handleInputChange(event) {
+    let name = event.target.name;
+    let value = event.target.value;
+    this.setState({
+      [name]: value
+    });
   }
 
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
           <h1 className="Question">{cards.blackCards[randBlackIndex].text}</h1>
         </header>
-        <p className="Answer">
-          {this.renderAnswers()}
-          {this.roomCodeGen()}
-        </p>
+        <div className="Answers">
+          {this.state.cards.length > 0 ? this.renderCards() : ''}
+        </div>
+        <input
+            type="text"
+            name="name"
+            value={this.state.name}
+            placeholder="Enter name"
+            onChange={this.handleInputChange}
+          />
+        <button onClick={this.createGame}>Create</button>
+        <button onClick={this.joinGame}>Join</button>
       </div>
     );
   }
