@@ -10,6 +10,20 @@ var socket;
 const randBlackIndex = Math.floor(Math.random() * cards.blackCards.length);
 
 class App extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      name: '',
+      cards: [],
+      roomCode: '',
+    }
+
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.createGame = this.createGame.bind(this);
+    this.joinGame = this.joinGame.bind(this);
+  }
+
   componentDidMount() {
     const socket = io.connect();
 
