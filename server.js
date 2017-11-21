@@ -69,6 +69,37 @@ function roomCodeGen() {
   return roomCode;
 }
 
+function joinPlayerToRoom(id, name, roomCode) {
+  let player = {
+    name,
+    cards: initialDeal(roomCode),
+  }
+
+  gameRooms[roomCode].players[id] = player;
+}
+
+function shuffleCards(cards) {
+  let shuffledCards = [];
+
+  for(let i = 0; i < cards.length; i++) {
+    randIndex = Math.floor(Math.random() * cards.length);
+    shuffledCards.push(cards.splice(randIndex, 1)[0]);
+  };
+
+  return shuffledCards;
+}
+
+function initialDeal(roomCode) {
+  let cards = [];
+
+  for(let i = 0; i < 10; i++) {
+    let card = gameRooms[roomCode].whiteCards.pop();
+    cards.push(card);
+  }
+
+  return cards;
+}
+
 const port = process.env.PORT || 3001;
 
 server.listen(port, function() {
