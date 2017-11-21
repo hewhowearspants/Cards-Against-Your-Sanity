@@ -30,6 +30,14 @@ class App extends Component {
     socket.on('room code', (data) => {
       console.log(data.roomCode)
     })
+
+    socket.on('joined', (data) => {
+      this.setState({
+        cards: data.cards,
+        roomCode: data.roomCode,
+      })
+      console.log(data.cards);
+    })
   }
 
   generateWhiteIndex() {
