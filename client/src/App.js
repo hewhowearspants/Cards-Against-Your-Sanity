@@ -142,8 +142,19 @@ class App extends Component {
             name={this.state.name}
             roomCode={this.state.roomCode}
             players={this.state.players}
+            readyUp={this.readyUp}
           /> : ''}
-        {this.state.currentScreen === 'game' ? <Game /> : ''}
+        {this.state.currentScreen === 'game' ? 
+          <Game 
+            cardCzar={this.state.cardCzar}
+            cardCzarName={this.state.cardCzarName}
+            blackCard={this.state.blackCard}
+            cards={this.state.cards}
+            players={this.state.players}
+            playedCount={this.state.playedCount}
+            startGame={this.startGame}
+            gameStarted={this.state.gameStarted}
+          /> : ''}
       </div>
     );
   }
