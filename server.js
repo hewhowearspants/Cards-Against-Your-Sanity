@@ -154,6 +154,33 @@ function initialDeal(roomCode) {
   return cards;
 }
 
+function preparePlayerListToSend(roomCode) {
+  let players = gameRooms[roomCode].players;
+  let playersPackaged = [];
+
+  for (let id in players) {
+    playersPackaged.push({
+      name: players[id].name,
+      id: id,
+      ready: players[id].ready,
+    });
+  }
+
+  return playersPackaged;
+}
+
+function checkIfAllPlayersReady(roomCode) {
+  let players = gameRooms[roomCode].players;
+
+  for (let id in players) {
+    if (!players[id].ready) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 const port = process.env.PORT || 3001;
 
 server.listen(port, function() {
