@@ -55,7 +55,7 @@ io.on('connection', (socket) => {
         console.log(data.name + ' has joined game ' + roomCode);
       } else {
         console.log("Fuck off, we're full!");
-        socket.emit('players full');
+        socket.emit('room full');
       }
     } else {
       socket.emit('bad roomcode');
