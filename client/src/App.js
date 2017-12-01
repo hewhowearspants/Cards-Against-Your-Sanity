@@ -100,6 +100,14 @@ class App extends Component {
     });
   }
 
+  startGame() {
+    console.log("let's start this shit");
+    socket.emit('czar ready', {blackCard: this.state.blackCard});
+    this.setState({
+      gameStarted: true,
+    });
+  }
+
   handleInputChange(event) {
     let name = event.target.name;
     let value = event.target.value;
