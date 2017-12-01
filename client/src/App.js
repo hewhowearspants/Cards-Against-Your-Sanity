@@ -74,13 +74,13 @@ class App extends Component {
         blackCard: data.blackCard,
       });
     })
-  }
 
-  renderCards() {
-    return this.state.cards.map((card) => {
-      return (
-        <h2 key={card}>{card}</h2>
-      )
+    socket.on('pick your cards', (data) => {
+      console.log(`pick ${data.blackCard.pick} of your cards!`);
+      this.setState({
+        blackCard: data.blackCard,
+        gameStarted: true,
+      })
     })
   }
 
