@@ -97,6 +97,20 @@ io.on('connection', (socket) => {
       io.sockets.in(roomCode).emit('start game', {cardCzarName: cardCzar.name});
       socket.to(cardCzar.id).emit('card czar', {blackCard: blackCard});
     }
+  });
+
+  socket.on('czar ready', (data) => {
+    socket.broadcast.to(data.roomCode).emit('pick your cards', {blackCard: data.blackCard});
+  });
+
+  socket.on('card submit', (data) => {
+    let roomCode = data.roomCode;
+    let players = gameRooms[roomCode].players;
+    let playedCards = gameRooms[roomCode].playedCards;
+
+    console.log(`${players[socket.id].name} submitted: ${data.cardSelection}`);
+
+    playedCards.push(data.cardSelection);
   })
 
   socket.on('disconnect', () => {
