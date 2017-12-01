@@ -43,7 +43,7 @@ class App extends Component {
       console.log(data.cards);
     })
 
-    socket.on('new player', (data) => {
+    socket.on('update players', (data) => {
       this.setState({
         players: data.players
       })
