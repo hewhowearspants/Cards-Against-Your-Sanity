@@ -17,6 +17,7 @@ class Lobby extends Component {
         <h1>{this.props.roomCode}</h1>
         <h3>Horrible People:</h3>
         {this.renderPlayers()}
+        <button onClick={this.props.readyUp}>Ready</button>
       </div>
     )
   }
