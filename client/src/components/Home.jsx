@@ -30,7 +30,7 @@ class Home extends Component {
           <CodeField roomCode={this.props.roomCode} handleInputChange={this.props.handleInputChange} /> 
           : <NameField name={this.props.name} handleInputChange={this.props.handleInputChange} />}
         {!this.state.joiningGame ? <button onClick={this.props.createGame}>Create</button> : ''}
-        <button onClick={this.state.joiningGame ? this.props.joinGame : () => this.toggleJoiningGame()}>Join</button>
+        <button onClick={this.props.name.length > 0 ? this.state.joiningGame ? this.props.joinGame : () => this.toggleJoiningGame() : null}>Join</button>
       </div>
     )
   }
