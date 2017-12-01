@@ -129,6 +129,64 @@ class App extends Component {
     socket.emit('player ready', {roomCode: this.state.roomCode});
   }
 
+  handleCardSelection(text) {
+
+    let cardSelection = Object.assign({}, this.state.cardSelection);
+
+    if (!cardSelection[text]) {
+      if (Object.keys(cardSelection).length < this.state.blackCard.pick) {
+        let i = 1;
+
+        while (Object.values(cardSelection).indexOf(i) > -1) {
+          i++;
+        }
+
+        cardSelection[text] = i;
+
+      } else {
+        console.log('selected too many cards');
+      }
+    } else {
+      console.log('deleting ' + text);
+      delete cardSelection[text];
+    }
+
+    this.setState({
+      cardSelection: cardSelection
+    })
+  }
+
+  handleCardSelectionSubmit() {
+    let sortableSelection = [];
+    let cardSelection = Object.assign({}, this.state.cardSelection);
+    let cards = Object.assign([], this.state.cards);
+
+    for (let text in cardSelection) {
+      sortableSelection.push([text, cardSelection[text]]);
+      cards.splice(cards.indexOf(text), 1);
+    }
+
+    let sortedSelection = sortableSelection
+      .sort((a, b) => {
+        return a[1] - b[1];
+      })
+      .map((card) => {
+        return card[0]
+      });
+
+    console.log(sortedSelection);
+
+    socket.emit('card submit', {
+      roomCode: this.state.roomCode,
+      cardSelection: sortedSelection,
+    })
+
+    this.setState({
+      cardSelection: {},
+      cards
+    })
+  }
+
   render() {
     return (
       <div className="App">
