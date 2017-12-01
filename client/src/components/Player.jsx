@@ -1,19 +1,30 @@
 import React, { Component } from 'react';
 
+import WhiteCard from './WhiteCard';
+import BlackCard from './BlackCard';
+
 class Player extends Component {
   
   renderCards() {
-    return this.props.cards.map((card, index) => {
-      return <p key={index}>{card}</p>
+    return this.props.cards.map((text, index) => {
+      return (
+        <WhiteCard 
+          key={index}
+          handleCardSelection={this.props.handleCardSelection}
+          selection={this.props.cardSelection[text]}
+          text={text} 
+          />
+      )
     });
   }
 
   render() {
     return (
       <div className='player'>
-        <div className='player-black-card'>
-          <p>{this.props.blackCard ? this.props.blackCard.text : ''}</p>
-        </div>
+        {this.props.blackCard ? 
+          <BlackCard text={this.props.blackCard.text} /> 
+          : ''
+        }
         <div className='message'>
           <p>{this.props.message}</p>
         </div>
