@@ -24,8 +24,11 @@ io.on('connection', (socket) => {
 
     gameRooms[roomCode] = {
       players: {},
+      czarOrder: [],
       blackCards: shuffleCards([...cards.blackCards]),
       whiteCards: shuffleCards([...cards.whiteCards]),
+      blackCardDiscard: [],
+      whiteCardDiscard: [],
     };
 
     socket.join(roomCode);
@@ -52,12 +55,51 @@ io.on('connection', (socket) => {
         console.log(data.name + ' has joined game ' + roomCode);
       } else {
         console.log("Fuck off, we're full!");
-        socket.emit('players full');
+        socket.emit('room full');
       }
     } else {
       socket.emit('bad roomcode');
     }
   });
+
+  socket.on('player ready', (data) => {
+    let roomCode = data.roomCode;
+
+    console.log(gameRooms[roomCode].players[socket.id].name + ' is ready');
+    gameRooms[roomCode].players[socket.id].ready = true;
+
+    let players = preparePlayerListToSend(roomCode);
+    io.sockets.in(roomCode).emit('update players', {players: players});
+
+    if (checkIfAllPlayersReady(roomCode)) {
+      let blackCard = gameRooms[roomCode].blackCards.pop();
+      let czarTurn = gameRooms[roomCode].czarOrder[0];
+      let czarTurnSocket = io.sockets.connected[czarTurn.id];
+
+      if (czarTurnSocket) {
+        czarTurnSocket.emit('card czar', {blackCard: blackCard});
+      }
+
+      console.log('all players ready, starting game');
+      console.log(czarTurn.name + ' is the card czar');
+
+      io.sockets.in(roomCode).emit('start game', {cardCzarName: czarTurn.name});
+      socket.to(czarTurn.id).emit('card czar', {blackCard: blackCard});
+    }
+  })
+
+  socket.on('disconnect', () => {
+    for (let roomCode in gameRooms) {
+      if (gameRooms[roomCode].players[socket.id]) {
+        console.log(gameRooms[roomCode].players[socket.id].name + ' disconnected');
+
+        delete gameRooms[roomCode].players[socket.id];
+
+        let players = preparePlayerListToSend(roomCode);
+        io.sockets.in(roomCode).emit('update players', {players: players});
+      }
+    }
+  })
 })
 
 // generates a random 5-digit alphanumeric room code for players to join
@@ -76,19 +118,18 @@ function joinPlayerToRoom(id, name, roomCode) {
   let player = {
     name,
     cards: initialDeal(roomCode),
+    ready: false,
+    winningCards: [],
   }
 
   gameRooms[roomCode].players[id] = player;
+  gameRooms[roomCode].czarOrder.push({id: id, name: player.name});
+  console.log(gameRooms[roomCode].czarOrder);
 
-  let players = [];
+  let players = preparePlayerListToSend(roomCode);
 
-  for (let id in gameRooms[roomCode].players) {
-    players.push(gameRooms[roomCode].players[id].name);
-  }
+  io.sockets.in(roomCode).emit('update players', {players: players});
 
-  io.sockets.in(roomCode).emit('new player', {players: players});
-
-  
 }
 
 function shuffleCards(cards) {
@@ -111,6 +152,33 @@ function initialDeal(roomCode) {
   }
 
   return cards;
+}
+
+function preparePlayerListToSend(roomCode) {
+  let players = gameRooms[roomCode].players;
+  let playersPackaged = [];
+
+  for (let id in players) {
+    playersPackaged.push({
+      name: players[id].name,
+      id: id,
+      ready: players[id].ready,
+    });
+  }
+
+  return playersPackaged;
+}
+
+function checkIfAllPlayersReady(roomCode) {
+  let players = gameRooms[roomCode].players;
+
+  for (let id in players) {
+    if (!players[id].ready) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 const port = process.env.PORT || 3001;

@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 
 class Lobby extends Component {
+
   renderPlayers() {
     return this.props.players.map((player) => {
-      return <p className='player' key={new Date()}>{player}</p>
+      return (
+        <p className={'player' + (player.ready ? ' ready' : '')} key={player.id}>{player.name}</p>
+      )
     })
   }
 
@@ -14,6 +17,7 @@ class Lobby extends Component {
         <h1>{this.props.roomCode}</h1>
         <h3>Horrible People:</h3>
         {this.renderPlayers()}
+        <button onClick={this.props.readyUp}>Ready</button>
       </div>
     )
   }

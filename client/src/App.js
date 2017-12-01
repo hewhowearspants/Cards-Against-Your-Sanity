@@ -18,19 +18,22 @@ class App extends Component {
       roomCode: '',
       currentScreen: 'home',
       players: [],
+      cardCzar: false,
+      cardCzarName: '',
+      blackCard: null,
+      gameStarted: false,
+      playedCount: 0,
     }
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.createGame = this.createGame.bind(this);
     this.joinGame = this.joinGame.bind(this);
+    this.readyUp = this.readyUp.bind(this);
+    this.startGame = this.startGame.bind(this);
   }
 
   componentDidMount() {
     socket = io.connect();
-
-    socket.on('room code', (data) => {
-      console.log(data.roomCode)
-    })
 
     socket.on('joined', (data) => {
       this.setState({
@@ -40,7 +43,7 @@ class App extends Component {
       console.log(data.cards);
     })
 
-    socket.on('new player', (data) => {
+    socket.on('update players', (data) => {
       this.setState({
         players: data.players
       })
@@ -50,9 +53,24 @@ class App extends Component {
       console.log('bad roomcode');
     });
 
-    socket.on('players full', () => {
-      console.log("fuck off, players full");
+    socket.on('room full', () => {
+      console.log("fuck off, room full");
     });
+
+    socket.on('start game', (data) => {
+      this.setState({
+        currentScreen: 'game',
+        cardCzarName: data.cardCzarName
+      });
+    })
+
+    socket.on('card czar', (data) => {
+      console.log('you are the card czar!');
+      this.setState({
+        cardCzar: true,
+        blackCard: data.blackCard,
+      });
+    })
   }
 
   renderCards() {
@@ -64,11 +82,13 @@ class App extends Component {
   }
 
   createGame() {
-    console.log(this.state.name + ' creating game');
-    socket.emit('create', {name: this.state.name});
-    this.setState({
-      currentScreen: 'lobby'
-    })
+    if (this.state.name.length > 0) {
+      console.log(this.state.name + ' creating game');
+      socket.emit('create', {name: this.state.name});
+      this.setState({
+        currentScreen: 'lobby'
+      })
+    }
   }
 
   joinGame() {
@@ -77,6 +97,14 @@ class App extends Component {
     this.setState({
       currentScreen: 'lobby',
       joiningGame: false,
+    });
+  }
+
+  startGame() {
+    console.log("let's start this shit");
+    socket.emit('czar ready', {blackCard: this.state.blackCard});
+    this.setState({
+      gameStarted: true,
     });
   }
 
@@ -92,6 +120,10 @@ class App extends Component {
     this.setState({
       currentScreen: screen
     })
+  }
+
+  readyUp() {
+    socket.emit('player ready', {roomCode: this.state.roomCode});
   }
 
   render() {
@@ -110,8 +142,19 @@ class App extends Component {
             name={this.state.name}
             roomCode={this.state.roomCode}
             players={this.state.players}
+            readyUp={this.readyUp}
           /> : ''}
-        {this.state.currentScreen === 'game' ? <Game /> : ''}
+        {this.state.currentScreen === 'game' ? 
+          <Game 
+            cardCzar={this.state.cardCzar}
+            cardCzarName={this.state.cardCzarName}
+            blackCard={this.state.blackCard}
+            cards={this.state.cards}
+            players={this.state.players}
+            playedCount={this.state.playedCount}
+            startGame={this.startGame}
+            gameStarted={this.state.gameStarted}
+          /> : ''}
       </div>
     );
   }
