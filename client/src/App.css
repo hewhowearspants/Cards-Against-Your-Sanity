@@ -22,7 +22,12 @@
   font-size: large;
 }
 
-.ready {
+.player .white-card {
+  cursor: pointer;
+}
+
+.ready,
+.selected {
   background-color: black;
   color: white;
 }

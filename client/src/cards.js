@@ -2030,7 +2030,7 @@ export default {
   "One unforgettable night of passion.",
   "Being popular and good at sports.",
   "Filling a man's anus with concrete.",
-  "Two whales fucking the shit out of eachother.",
+  "Two whales fucking the shit out of each other.",
   "Cool, relateable cancer teens.",
   "The amount of gay I am.",
   "A possible Muslim.",

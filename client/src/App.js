@@ -23,9 +23,12 @@ class App extends Component {
       blackCard: null,
       gameStarted: false,
       playedCount: 0,
+      cardSelection: {},
     }
 
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleCardSelection = this.handleCardSelection.bind(this);
+    this.handleCardSelectionSubmit = this.handleCardSelectionSubmit.bind(this);
     this.createGame = this.createGame.bind(this);
     this.joinGame = this.joinGame.bind(this);
     this.readyUp = this.readyUp.bind(this);
@@ -71,13 +74,13 @@ class App extends Component {
         blackCard: data.blackCard,
       });
     })
-  }
 
-  renderCards() {
-    return this.state.cards.map((card) => {
-      return (
-        <h2 key={card}>{card}</h2>
-      )
+    socket.on('pick your cards', (data) => {
+      console.log(`pick ${data.blackCard.pick} of your cards!`);
+      this.setState({
+        blackCard: data.blackCard,
+        gameStarted: true,
+      })
     })
   }
 
@@ -102,7 +105,7 @@ class App extends Component {
 
   startGame() {
     console.log("let's start this shit");
-    socket.emit('czar ready', {blackCard: this.state.blackCard});
+    socket.emit('czar ready', {blackCard: this.state.blackCard, roomCode: this.state.roomCode});
     this.setState({
       gameStarted: true,
     });
@@ -124,6 +127,64 @@ class App extends Component {
 
   readyUp() {
     socket.emit('player ready', {roomCode: this.state.roomCode});
+  }
+
+  handleCardSelection(text) {
+
+    let cardSelection = Object.assign({}, this.state.cardSelection);
+
+    if (!cardSelection[text]) {
+      if (Object.keys(cardSelection).length < this.state.blackCard.pick) {
+        let i = 1;
+
+        while (Object.values(cardSelection).indexOf(i) > -1) {
+          i++;
+        }
+
+        cardSelection[text] = i;
+
+      } else {
+        console.log('selected too many cards');
+      }
+    } else {
+      console.log('deleting ' + text);
+      delete cardSelection[text];
+    }
+
+    this.setState({
+      cardSelection: cardSelection
+    })
+  }
+
+  handleCardSelectionSubmit() {
+    let sortableSelection = [];
+    let cardSelection = Object.assign({}, this.state.cardSelection);
+    let cards = Object.assign([], this.state.cards);
+
+    for (let text in cardSelection) {
+      sortableSelection.push([text, cardSelection[text]]);
+      cards.splice(cards.indexOf(text), 1);
+    }
+
+    let sortedSelection = sortableSelection
+      .sort((a, b) => {
+        return a[1] - b[1];
+      })
+      .map((card) => {
+        return card[0]
+      });
+
+    console.log(sortedSelection);
+
+    socket.emit('card submit', {
+      roomCode: this.state.roomCode,
+      cardSelection: sortedSelection,
+    })
+
+    this.setState({
+      cardSelection: {},
+      cards
+    })
   }
 
   render() {
@@ -154,6 +215,9 @@ class App extends Component {
             playedCount={this.state.playedCount}
             startGame={this.startGame}
             gameStarted={this.state.gameStarted}
+            cardSelection={this.state.cardSelection}
+            handleCardSelection={this.handleCardSelection}
+            handleCardSelectionSubmit={this.handleCardSelectionSubmit}
           /> : ''}
       </div>
     );
