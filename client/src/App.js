@@ -18,19 +18,22 @@ class App extends Component {
       roomCode: '',
       currentScreen: 'home',
       players: [],
+      cardCzar: false,
+      cardCzarName: '',
+      blackCard: null,
+      gameStarted: false,
+      playedCount: 0,
     }
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.createGame = this.createGame.bind(this);
     this.joinGame = this.joinGame.bind(this);
+    this.readyUp = this.readyUp.bind(this);
+    this.startGame = this.startGame.bind(this);
   }
 
   componentDidMount() {
     socket = io.connect();
-
-    socket.on('room code', (data) => {
-      console.log(data.roomCode)
-    })
 
     socket.on('joined', (data) => {
       this.setState({
