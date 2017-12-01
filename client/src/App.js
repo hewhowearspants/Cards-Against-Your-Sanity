@@ -82,11 +82,13 @@ class App extends Component {
   }
 
   createGame() {
-    console.log(this.state.name + ' creating game');
-    socket.emit('create', {name: this.state.name});
-    this.setState({
-      currentScreen: 'lobby'
-    })
+    if (this.state.name.length > 0) {
+      console.log(this.state.name + ' creating game');
+      socket.emit('create', {name: this.state.name});
+      this.setState({
+        currentScreen: 'lobby'
+      })
+    }
   }
 
   joinGame() {
