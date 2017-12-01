@@ -2243,7 +2243,7 @@ module.exports = {
   "Mixing M&Ms and Skittles like some kind of psychopath.",
   "Mommy and daddy fighting all the time.",
   "Moon people.",
-  "Muchin' puss.",
+  "Munchin' puss.",
   "My brother's hot friends.",
   "My dog dying.",
   "My huge penis and substantial fortune.",
