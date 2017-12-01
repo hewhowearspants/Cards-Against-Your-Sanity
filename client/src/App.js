@@ -215,6 +215,9 @@ class App extends Component {
             playedCount={this.state.playedCount}
             startGame={this.startGame}
             gameStarted={this.state.gameStarted}
+            cardSelection={this.state.cardSelection}
+            handleCardSelection={this.handleCardSelection}
+            handleCardSelectionSubmit={this.handleCardSelectionSubmit}
           /> : ''}
       </div>
     );
