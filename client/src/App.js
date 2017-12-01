@@ -53,9 +53,24 @@ class App extends Component {
       console.log('bad roomcode');
     });
 
-    socket.on('players full', () => {
-      console.log("fuck off, players full");
+    socket.on('room full', () => {
+      console.log("fuck off, room full");
     });
+
+    socket.on('start game', (data) => {
+      this.setState({
+        currentScreen: 'game',
+        cardCzarName: data.cardCzarName
+      });
+    })
+
+    socket.on('card czar', (data) => {
+      console.log('you are the card czar!');
+      this.setState({
+        cardCzar: true,
+        blackCard: data.blackCard,
+      });
+    })
   }
 
   renderCards() {
