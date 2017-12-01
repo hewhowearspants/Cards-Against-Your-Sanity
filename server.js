@@ -105,7 +105,7 @@ io.on('connection', (socket) => {
 // generates a random 5-digit alphanumeric room code for players to join
 function roomCodeGen() {
   let roomCode = '';
-  let charBank = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let charBank = 'abcdefghijklmnpqrstuvwxyz123456789';
 
   for(let i = 0; i < 5; i++){
     roomCode += charBank.charAt(Math.floor(Math.random() * charBank.length));
