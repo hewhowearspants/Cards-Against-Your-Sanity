@@ -122,6 +122,10 @@ class App extends Component {
     })
   }
 
+  readyUp() {
+    socket.emit('player ready', {roomCode: this.state.roomCode});
+  }
+
   render() {
     return (
       <div className="App">
