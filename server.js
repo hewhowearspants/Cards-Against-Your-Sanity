@@ -44,13 +44,16 @@ io.on('connection', (socket) => {
 
   socket.on('join', (data) => {
     let roomCode = data.roomCode.toUpperCase();
+
     if (gameRooms[roomCode]) {
-      if (Object.keys(gameRooms[roomCode].players).length < 10) {
+      let players = gameRooms[roomCode].players;
+
+      if (Object.keys(players).length < 10) {
 
         socket.join(roomCode);
         joinPlayerToRoom(socket.id, data.name, roomCode);
         socket.emit('joined', {
-          cards: [...gameRooms[roomCode].players[socket.id].cards],
+          cards: [...players[socket.id].cards],
           roomCode,
         });
 
@@ -66,39 +69,48 @@ io.on('connection', (socket) => {
 
   socket.on('player ready', (data) => {
     let roomCode = data.roomCode;
+    let players = gameRooms[roomCode].players;
+    let blackCards = gameRooms[roomCode].blackCards;
+    let czarOrder = gameRooms[roomCode].czarOrder;
 
-    console.log(gameRooms[roomCode].players[socket.id].name + ' is ready');
-    gameRooms[roomCode].players[socket.id].ready = true;
+    console.log(players[socket.id].name + ' is ready');
+    players[socket.id].ready = true;
 
-    let players = preparePlayerListToSend(roomCode);
-    io.sockets.in(roomCode).emit('update players', {players: players});
+    let playersList = preparePlayerListToSend(roomCode);
+    io.sockets.in(roomCode).emit('update players', {players: playersList});
 
     if (checkIfAllPlayersReady(roomCode)) {
-      let blackCard = gameRooms[roomCode].blackCards.pop();
-      let czarTurn = gameRooms[roomCode].czarOrder[0];
-      let czarTurnSocket = io.sockets.connected[czarTurn.id];
+      let blackCard;
+      while (!blackCard || blackCard.pick < 2) { 
+        blackCard = blackCards.pop();
+      }
+      let cardCzar = czarOrder[0];
+      let cardCzarSocket = io.sockets.connected[cardCzar.id];
 
-      if (czarTurnSocket) {
-        czarTurnSocket.emit('card czar', {blackCard: blackCard});
+      if (cardCzarSocket) {
+        cardCzarSocket.emit('card czar', {blackCard: blackCard});
       }
 
       console.log('all players ready, starting game');
-      console.log(czarTurn.name + ' is the card czar');
+      console.log(cardCzar.name + ' is the card czar');
 
-      io.sockets.in(roomCode).emit('start game', {cardCzarName: czarTurn.name});
-      socket.to(czarTurn.id).emit('card czar', {blackCard: blackCard});
+      io.sockets.in(roomCode).emit('start game', {cardCzarName: cardCzar.name});
+      socket.to(cardCzar.id).emit('card czar', {blackCard: blackCard});
     }
   })
 
   socket.on('disconnect', () => {
+
     for (let roomCode in gameRooms) {
-      if (gameRooms[roomCode].players[socket.id]) {
-        console.log(gameRooms[roomCode].players[socket.id].name + ' disconnected');
+      let players = gameRooms[roomCode].players
 
-        delete gameRooms[roomCode].players[socket.id];
+      if (players[socket.id]) {
+        console.log(players[socket.id].name + ' disconnected');
 
-        let players = preparePlayerListToSend(roomCode);
-        io.sockets.in(roomCode).emit('update players', {players: players});
+        delete players[socket.id];
+
+        let playersList = preparePlayerListToSend(roomCode);
+        io.sockets.in(roomCode).emit('update players', {players: playersList});
       }
     }
   })
@@ -124,13 +136,17 @@ function joinPlayerToRoom(id, name, roomCode) {
     winningCards: [],
   }
 
-  gameRooms[roomCode].players[id] = player;
-  gameRooms[roomCode].czarOrder.push({id: id, name: player.name});
+  let players = gameRooms[roomCode].players;
+  let czarOrder = gameRooms[roomCode].czarOrder;
+
+  players[id] = player;
+  czarOrder.push({id: id, name: player.name});
+
   console.log(gameRooms[roomCode].czarOrder);
 
-  let players = preparePlayerListToSend(roomCode);
+  let playersList = preparePlayerListToSend(roomCode);
 
-  io.sockets.in(roomCode).emit('update players', {players: players});
+  io.sockets.in(roomCode).emit('update players', {players: playersList});
 
 }
 
@@ -147,9 +163,10 @@ function shuffleCards(cards) {
 
 function initialDeal(roomCode) {
   let cards = [];
+  let whiteCards = gameRooms[roomCode].whiteCards;
 
   for(let i = 0; i < 10; i++) {
-    let card = gameRooms[roomCode].whiteCards.pop();
+    let card = whiteCards.pop();
     cards.push(card);
   }
 
