@@ -105,7 +105,7 @@ class App extends Component {
 
   startGame() {
     console.log("let's start this shit");
-    socket.emit('czar ready', {blackCard: this.state.blackCard});
+    socket.emit('czar ready', {blackCard: this.state.blackCard, roomCode: this.state.roomCode});
     this.setState({
       gameStarted: true,
     });
