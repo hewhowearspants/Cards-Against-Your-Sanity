@@ -118,19 +118,18 @@ function joinPlayerToRoom(id, name, roomCode) {
   let player = {
     name,
     cards: initialDeal(roomCode),
+    ready: false,
+    winningCards: [],
   }
 
   gameRooms[roomCode].players[id] = player;
+  gameRooms[roomCode].czarOrder.push({id: id, name: player.name});
+  console.log(gameRooms[roomCode].czarOrder);
 
-  let players = [];
+  let players = preparePlayerListToSend(roomCode);
 
-  for (let id in gameRooms[roomCode].players) {
-    players.push(gameRooms[roomCode].players[id].name);
-  }
+  io.sockets.in(roomCode).emit('update players', {players: players});
 
-  io.sockets.in(roomCode).emit('new player', {players: players});
-
-  
 }
 
 function shuffleCards(cards) {
