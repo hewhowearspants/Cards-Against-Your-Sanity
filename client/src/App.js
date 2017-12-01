@@ -23,9 +23,12 @@ class App extends Component {
       blackCard: null,
       gameStarted: false,
       playedCount: 0,
+      cardSelection: {},
     }
 
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleCardSelection = this.handleCardSelection.bind(this);
+    this.handleCardSelectionSubmit = this.handleCardSelectionSubmit.bind(this);
     this.createGame = this.createGame.bind(this);
     this.joinGame = this.joinGame.bind(this);
     this.readyUp = this.readyUp.bind(this);
