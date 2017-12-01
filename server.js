@@ -16,15 +16,15 @@ const gameRooms = {};
 io.on('connection', (socket) => {
   console.log(socket.id + ' connected');
 
-  //socket.emit('room code', {roomCode: roomCodeGen()})
-
   socket.on('create', (data) => {
     let roomCode = roomCodeGen();
+
     console.log(data.name + ' has created a game, code ' + roomCode);
 
     gameRooms[roomCode] = {
       players: {},
       czarOrder: [],
+      playedCards: [],
       blackCards: shuffleCards([...cards.blackCards]),
       whiteCards: shuffleCards([...cards.whiteCards]),
       blackCardDiscard: [],
@@ -32,7 +32,9 @@ io.on('connection', (socket) => {
     };
 
     socket.join(roomCode);
+
     joinPlayerToRoom(socket.id, data.name, roomCode);
+
     socket.emit('joined', {
       cards: [...gameRooms[roomCode].players[socket.id].cards],
       roomCode,
