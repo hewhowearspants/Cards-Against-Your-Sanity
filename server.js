@@ -24,8 +24,11 @@ io.on('connection', (socket) => {
 
     gameRooms[roomCode] = {
       players: {},
+      czarOrder: [],
       blackCards: shuffleCards([...cards.blackCards]),
       whiteCards: shuffleCards([...cards.whiteCards]),
+      blackCardDiscard: [],
+      whiteCardDiscard: [],
     };
 
     socket.join(roomCode);
