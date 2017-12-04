@@ -185,6 +185,7 @@ class App extends Component {
 
     this.setState({
       cardSelection: {},
+      gameStarted: false
     })
   }
 
