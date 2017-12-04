@@ -1,11 +1,22 @@
-import React from 'react';
+import React, { Component } from 'react';
  
-const WhiteCard = (props) => {
-  return (
-    <div className={'white-card' + (props.selection ? ' selected' : '')} onClick={() => props.handleCardSelection(props.text)}>
-      <p>{props.text} <span>{props.selection ? props.selection : ''}</span></p>
-    </div>
-  )
+class WhiteCard extends Component{
+  renderHTML(){
+    return {__html: this.props.text}
+  }
+
+  renderWhiteCard(){
+    console.log(this.renderHTML())
+    return <p dangerouslySetInnerHTML={this.renderHTML()}></p>
+  }
+
+  render(){
+    return (
+      <div className={'white-card' + (this.props.selection ? ' selected' : '')} onClick={() => this.props.handleCardSelection(this.props.text)}>
+        {this.renderWhiteCard()}
+      </div>
+    )
+  }
 }
 
 export default WhiteCard;
