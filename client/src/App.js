@@ -24,6 +24,7 @@ class App extends Component {
       gameStarted: false,
       playedCount: 0,
       cardSelection: {},
+      message: '',
     }
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -43,7 +44,7 @@ class App extends Component {
         cards: data.cards,
         roomCode: data.roomCode,
       })
-      console.log(data.cards);
+      //console.log(data.cards);
     })
 
     socket.on('update players', (data) => {
@@ -72,8 +73,8 @@ class App extends Component {
       this.setState({
         cardCzar: true,
         blackCard: data.blackCard,
-      });
-    })
+      })
+    });
 
     socket.on('pick your cards', (data) => {
       console.log(`pick ${data.blackCard.pick} of your cards!`);
@@ -125,12 +126,17 @@ class App extends Component {
     })
   }
 
+  setMessage(message) {
+    this.setState({
+      message
+    })
+  }
+
   readyUp() {
     socket.emit('player ready', {roomCode: this.state.roomCode});
   }
 
   handleCardSelection(text) {
-
     let cardSelection = Object.assign({}, this.state.cardSelection);
     let cards = Object.assign([], this.state.cards);
 
@@ -220,6 +226,7 @@ class App extends Component {
             cardSelection={this.state.cardSelection}
             handleCardSelection={this.handleCardSelection}
             handleCardSelectionSubmit={this.handleCardSelectionSubmit}
+            message={this.state.message}
           /> : ''}
       </div>
     );
