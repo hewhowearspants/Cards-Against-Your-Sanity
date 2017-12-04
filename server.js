@@ -80,13 +80,10 @@ io.on('connection', (socket) => {
     io.sockets.in(roomCode).emit('update players', {players: playersList});
 
     if (checkIfAllPlayersReady(roomCode)) {
-      let blackCard;
-      while (!blackCard || blackCard.pick < 2) { 
-        blackCard = blackCards.pop();
-      }
       let cardCzar = czarOrder[0];
       let cardCzarSocket = io.sockets.connected[cardCzar.id];
 
+      let blackCard = blackCards.pop();
       if (cardCzarSocket) {
         cardCzarSocket.emit('card czar', {blackCard: blackCard});
       }
@@ -180,8 +177,8 @@ function initialDeal(roomCode) {
   let whiteCards = gameRooms[roomCode].whiteCards;
 
   for(let i = 0; i < 10; i++) {
-    let card = whiteCards.pop();
-    cards.push(card);
+    let whiteCard = whiteCards.pop()
+    cards.push(whiteCard);
   }
 
   return cards;
