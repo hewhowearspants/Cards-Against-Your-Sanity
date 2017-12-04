@@ -82,7 +82,13 @@ class App extends Component {
         blackCard: data.blackCard,
         gameStarted: true,
       })
-    })
+    });
+
+    socket.on('player submitted', (data) => {
+      this.setState({
+        playedCount: data.playedCount,
+      })
+    });
   }
 
   createGame() {
