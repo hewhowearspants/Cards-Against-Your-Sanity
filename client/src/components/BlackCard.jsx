@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 
 class BlackCard extends Component {
-  renderHTML(){
+  renderHTML() {
     return {__html: this.props.text}
   }
 
-  renderBlackCard(){
-    console.log(this.renderHTML())
+  renderBlackCard() {
+    //console.log(this.renderHTML())
     return <p dangerouslySetInnerHTML={this.renderHTML()}></p>
   }
 
-  render(){
+  render() {
     return (
       <div className='black-card'>
-      {this.renderBlackCard()}
+        {this.renderBlackCard()}
       </div>
     )
   }
