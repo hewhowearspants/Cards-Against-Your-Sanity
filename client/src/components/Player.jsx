@@ -18,6 +18,28 @@ class Player extends Component {
     });
   }
 
+  renderSelection() {
+    let sortedSelection = [];
+    let cardSelection = this.props.cardSelection;
+
+    for (let i = 0; i < this.props.blackCard.pick; i++) {
+      sortedSelection.push(['', i + 1]);
+      for (let text in cardSelection) {
+        if (cardSelection[text] === sortedSelection[i][1]) {
+          sortedSelection[i][0] = text;
+        }
+      }
+    }
+
+    return sortedSelection.map((card) => {
+      return (
+        <div key={card[1]} className='selected-card' onClick={() => this.props.handleCardSelection(card[0])}>
+          <p><span>{card[1]} </span>{card[0]}</p>
+        </div>
+      )
+    })
+  }
+
   render() {
     return (
       <div className='player'>
@@ -27,6 +49,9 @@ class Player extends Component {
         }
         <div className='message'>
           <p>{this.props.message}</p>
+        </div>
+        <div className='selection'>
+          {this.props.blackCard ? this.renderSelection() : ''}
         </div>
         <div className='white-cards'>
           {this.renderCards()}
