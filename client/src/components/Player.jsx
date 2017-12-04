@@ -12,7 +12,8 @@ class Player extends Component {
           key={index}
           handleCardSelection={this.props.handleCardSelection}
           selection={this.props.cardSelection[text]}
-          text={text} 
+          text={text}
+          gameStarted={this.props.gameStarted}
           />
       )
     });
