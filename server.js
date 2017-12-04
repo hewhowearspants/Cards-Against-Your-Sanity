@@ -92,7 +92,7 @@ io.on('connection', (socket) => {
       console.log(cardCzar.name + ' is the card czar');
 
       io.sockets.in(roomCode).emit('start game', {cardCzarName: cardCzar.name});
-      socket.to(cardCzar.id).emit('card czar', {blackCard: blackCard});
+      //socket.to(cardCzar.id).emit('card czar', {blackCard: blackCard});
     }
   });
 
