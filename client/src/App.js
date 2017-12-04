@@ -132,6 +132,7 @@ class App extends Component {
   handleCardSelection(text) {
 
     let cardSelection = Object.assign({}, this.state.cardSelection);
+    let cards = Object.assign([], this.state.cards);
 
     if (!cardSelection[text]) {
       if (Object.keys(cardSelection).length < this.state.blackCard.pick) {
@@ -142,6 +143,7 @@ class App extends Component {
         }
 
         cardSelection[text] = i;
+        cards.splice(cards.indexOf(text), 1);
 
       } else {
         console.log('selected too many cards');
@@ -149,21 +151,21 @@ class App extends Component {
     } else {
       console.log('deleting ' + text);
       delete cardSelection[text];
+      cards.push(text);
     }
 
     this.setState({
-      cardSelection: cardSelection
+      cardSelection,
+      cards
     })
   }
 
   handleCardSelectionSubmit() {
     let sortableSelection = [];
     let cardSelection = Object.assign({}, this.state.cardSelection);
-    let cards = Object.assign([], this.state.cards);
 
     for (let text in cardSelection) {
       sortableSelection.push([text, cardSelection[text]]);
-      cards.splice(cards.indexOf(text), 1);
     }
 
     let sortedSelection = sortableSelection
@@ -183,7 +185,6 @@ class App extends Component {
 
     this.setState({
       cardSelection: {},
-      cards
     })
   }
 
