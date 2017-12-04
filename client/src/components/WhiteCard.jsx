@@ -12,7 +12,7 @@ class WhiteCard extends Component{
 
   render(){
     return (
-      <div className='white-card' onClick={() => this.props.handleCardSelection(this.props.text)}>
+      <div className='white-card' onClick={this.props.gameStarted ? () => {this.props.handleCardSelection(this.props.text)} : null}>
         {this.renderWhiteCard()}
       </div>
     )
