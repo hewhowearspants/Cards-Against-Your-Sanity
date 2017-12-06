@@ -244,6 +244,11 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <Header toggleMenu={this.toggleMenu} />
+        {this.state.showMenu && 
+          <Menu 
+            leaveGame={this.leaveGame}
+          />}
         {this.state.currentScreen === 'home' ? 
           <Home 
             name={this.state.name}
