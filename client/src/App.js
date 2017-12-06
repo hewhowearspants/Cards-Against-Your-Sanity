@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './App.css';
 import io from "socket.io-client";
 
+import Header from './components/Header';
+import Menu from './components/Menu';
 import Home from './components/Home';
 import Lobby from './components/Lobby';
 import Game from './components/Game';
