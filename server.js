@@ -124,9 +124,15 @@ io.on('connection', (socket) => {
 
     if (Object.keys(playedCards).length === Object.keys(players).length - 1) {
       let cardCzarSocket = io.sockets.connected[czarOrder[0].id];
+      let playerSelections = [];
+
+      for (let id in playedCards) {
+        playerSelections.push(playedCards[id]);
+      }
 
       if (cardCzarSocket) {
-        cardCzarSocket.emit('czar chooses', {playedCards: playedCards});
+        console.log('sending card czar: ' + playerSelections)
+        cardCzarSocket.emit('czar chooses', {playerSelections: playerSelections});
       }
     }
   })
