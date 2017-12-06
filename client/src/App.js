@@ -104,6 +104,13 @@ class App extends Component {
         playedCount: data.playedCount,
       })
     });
+
+    socket.on('czar chooses', (data) => {
+      console.log('czar received ' + data.playerSelections);
+      this.setState({
+        playerSelections: data.playerSelections,
+      })
+    });
   }
 
   createGame() {
