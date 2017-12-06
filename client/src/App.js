@@ -159,7 +159,8 @@ class App extends Component {
 
   setScreen(screen) {
     this.setState({
-      currentScreen: screen
+      currentScreen: screen,
+      showMenu: false,
     })
   }
 
