@@ -94,15 +94,15 @@ io.on('connection', (socket) => {
       let cardCzarSocket = io.sockets.connected[cardCzar.id];
 
       let blackCard = blackCards.pop();
-      if (cardCzarSocket) {
-        cardCzarSocket.emit('card czar', {blackCard: blackCard});
-      }
-
+      
       console.log('all players ready, starting game');
       console.log(cardCzar.name + ' is the card czar');
 
       io.sockets.in(roomCode).emit('start game', {cardCzarName: cardCzar.name});
-      //socket.to(cardCzar.id).emit('card czar', {blackCard: blackCard});
+
+      if (cardCzarSocket) {
+        cardCzarSocket.emit('card czar', {blackCard: blackCard});
+      }
     }
   });
 
