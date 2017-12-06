@@ -6,15 +6,25 @@ const cards = require('./cards.js');
 const app = express();
 
 const server = require('http').createServer(app);
-const io = require('socket.io')(server);
 
 app.use(logger('dev'));
 app.use(express.static(__dirname + '/public'));
+
+const port = process.env.PORT || 3001;
+
+server.listen(port, function() {
+  console.log(`Horrible people listen to ${port}`);
+});
+
+const io = require('socket.io')(server);
+//const io = require('socket.io', { rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling'] })(server);
 
 const gameRooms = {};
 
 io.on('connection', (socket) => {
   console.log(socket.id + ' connected');
+
+  socket.emit('connected');
 
   socket.on('create', (data) => {
     let roomCode = roomCodeGen();
@@ -24,7 +34,7 @@ io.on('connection', (socket) => {
     gameRooms[roomCode] = {
       players: {},
       czarOrder: [],
-      playedCards: [],
+      playedCards: {},
       blackCards: shuffleCards([...cards.blackCards]),
       whiteCards: shuffleCards([...cards.whiteCards]),
       blackCardDiscard: [],
@@ -84,15 +94,15 @@ io.on('connection', (socket) => {
       let cardCzarSocket = io.sockets.connected[cardCzar.id];
 
       let blackCard = blackCards.pop();
-      if (cardCzarSocket) {
-        cardCzarSocket.emit('card czar', {blackCard: blackCard});
-      }
-
+      
       console.log('all players ready, starting game');
       console.log(cardCzar.name + ' is the card czar');
 
       io.sockets.in(roomCode).emit('start game', {cardCzarName: cardCzar.name});
-      socket.to(cardCzar.id).emit('card czar', {blackCard: blackCard});
+
+      if (cardCzarSocket) {
+        cardCzarSocket.emit('card czar', {blackCard: blackCard});
+      }
     }
   });
 
@@ -104,25 +114,37 @@ io.on('connection', (socket) => {
     let roomCode = data.roomCode;
     let players = gameRooms[roomCode].players;
     let playedCards = gameRooms[roomCode].playedCards;
+    let czarOrder = gameRooms[roomCode].czarOrder;
 
     console.log(`${players[socket.id].name} submitted: ${data.cardSelection}`);
 
-    playedCards.push(data.cardSelection);
+    playedCards[socket.id] = data.cardSelection;
+
+    io.sockets.in(roomCode).emit('player submitted', {playedCount: Object.keys(playedCards).length});
+
+    if (Object.keys(playedCards).length === Object.keys(players).length - 1) {
+      let cardCzarSocket = io.sockets.connected[czarOrder[0].id];
+      let playerSelections = [];
+
+      for (let id in playedCards) {
+        playerSelections.push(playedCards[id]);
+      }
+
+      if (cardCzarSocket) {
+        console.log('sending card czar: ' + playerSelections)
+        cardCzarSocket.emit('czar chooses', {playerSelections: playerSelections});
+      }
+    }
+  })
+
+  socket.on('leave game', (data) => {
+    removePlayerFromRoom(data.roomCode, socket.id);
   })
 
   socket.on('disconnect', () => {
-
+    console.log(socket.id + ' disconnected')
     for (let roomCode in gameRooms) {
-      let players = gameRooms[roomCode].players
-
-      if (players[socket.id]) {
-        console.log(players[socket.id].name + ' disconnected');
-
-        delete players[socket.id];
-
-        let playersList = preparePlayerListToSend(roomCode);
-        io.sockets.in(roomCode).emit('update players', {players: playersList});
-      }
+      removePlayerFromRoom(roomCode, socket.id);
     }
   })
 })
@@ -139,10 +161,12 @@ function roomCodeGen() {
   return roomCode.toUpperCase();
 }
 
+// when a player joins, puts together a player object for them and adds them
+// to a room
 function joinPlayerToRoom(id, name, roomCode) {
   let player = {
     name,
-    cards: initialDeal(roomCode),
+    cards: refillWhiteCards(roomCode),
     ready: false,
     winningCards: [],
   }
@@ -153,35 +177,29 @@ function joinPlayerToRoom(id, name, roomCode) {
   players[id] = player;
   czarOrder.push({id: id, name: player.name});
 
-  console.log(gameRooms[roomCode].czarOrder);
-
   let playersList = preparePlayerListToSend(roomCode);
 
   io.sockets.in(roomCode).emit('update players', {players: playersList});
 
 }
 
-function shuffleCards(cards) {
-  let shuffledCards = [];
+function removePlayerFromRoom(roomCode, id) {
+  let players = gameRooms[roomCode].players;
+  let playedCards = gameRooms[roomCode].playedCards;
 
-  for(let i = 0; i < cards.length; i++) {
-    randIndex = Math.floor(Math.random() * cards.length);
-    shuffledCards.push(cards.splice(randIndex, 1)[0]);
-  };
+  if (players[id]) {
+    console.log(players[id].name + ' left room ' + roomCode);
 
-  return shuffledCards;
-}
+    delete players[id];
 
-function initialDeal(roomCode) {
-  let cards = [];
-  let whiteCards = gameRooms[roomCode].whiteCards;
-
-  for(let i = 0; i < 10; i++) {
-    let whiteCard = whiteCards.pop()
-    cards.push(whiteCard);
+    let playersList = preparePlayerListToSend(roomCode);
+    io.sockets.in(roomCode).emit('update players', {players: playersList});
   }
 
-  return cards;
+  if (playedCards[id]) {
+    console.log(`deleting ${id}'s played cards`);
+    delete playedCards[id];
+  }
 }
 
 function preparePlayerListToSend(roomCode) {
@@ -199,6 +217,28 @@ function preparePlayerListToSend(roomCode) {
   return playersPackaged;
 }
 
+function shuffleCards(cards) {
+  let shuffledCards = [];
+
+  for(let i = 0; i < cards.length; i++) {
+    randIndex = Math.floor(Math.random() * cards.length);
+    shuffledCards.push(cards.splice(randIndex, 1)[0]);
+  };
+
+  return shuffledCards;
+}
+
+function refillWhiteCards(roomCode, playerCards = []) {
+  let whiteCards = gameRooms[roomCode].whiteCards;
+
+  for(let i = playerCards.length; i < 10; i++) {
+    let whiteCard = whiteCards.pop()
+    playerCards.push(whiteCard);
+  }
+
+  return playerCards;
+}
+
 function checkIfAllPlayersReady(roomCode) {
   let players = gameRooms[roomCode].players;
 
@@ -210,9 +250,3 @@ function checkIfAllPlayersReady(roomCode) {
 
   return true;
 }
-
-const port = process.env.PORT || 3001;
-
-server.listen(port, function() {
-  console.log(`Horrible people listen to ${port}`);
-});

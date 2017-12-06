@@ -2,16 +2,18 @@
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+p, h3 {
+  padding: 0;
+  margin: 0;
 }
 
-.App-header {
+header {
   background-color: #222;
-  /* height: 150px; */
-  padding: 20px;
+  padding: 10px;
   color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .App-title {
@@ -24,6 +26,20 @@
 
 .player .white-card {
   cursor: pointer;
+}
+
+.player-selections {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.prev-selection {
+  margin-left: -0%;
+}
+
+.next-selection {
+  margin-right: -0%;
 }
 
 .ready,

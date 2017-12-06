@@ -23,9 +23,6 @@ class Home extends Component {
   render() {
     return (
       <div className='home'>
-        <header className="App-header">
-          <h1>Cards Against</h1>
-        </header>
         {this.state.joiningGame ? 
           <CodeField roomCode={this.props.roomCode} handleInputChange={this.props.handleInputChange} /> 
           : <NameField name={this.props.name} handleInputChange={this.props.handleInputChange} />}

@@ -10,17 +10,14 @@ const Game = (props) => {
       {props.cardCzar ? 
         <CardCzar 
           blackCard={props.blackCard}
-          message={!props.gameStarted ?
-                    'Read the card aloud and press "START" when finished' : ''}
+          message={props.message}
           startGame={props.startGame}
           gameStarted={props.gameStarted}
+          playerSelections={props.playerSelections}
         />
       : <Player 
           blackCard={props.blackCard}
-          message={props.gameStarted ? 
-                    `Pick ${props.blackCard.pick} of your cards` :
-                    `Waiting for ${props.cardCzarName} to read the black card`
-                  }
+          message={props.message}
           cards={props.cards}
           gameStarted={props.gameStarted}
           cardSelection={props.cardSelection}

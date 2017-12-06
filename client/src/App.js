@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import './App.css';
 import io from "socket.io-client";
 
+import Header from './components/Header';
+import Menu from './components/Menu';
 import Home from './components/Home';
 import Lobby from './components/Lobby';
 import Game from './components/Game';
 
-var socket;
+const socket = io();
 
 class App extends Component {
   constructor() {
@@ -24,6 +26,9 @@ class App extends Component {
       gameStarted: false,
       playedCount: 0,
       cardSelection: {},
+      playerSelections: null,
+      message: '',
+      showMenu: false,
     }
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -31,22 +36,30 @@ class App extends Component {
     this.handleCardSelectionSubmit = this.handleCardSelectionSubmit.bind(this);
     this.createGame = this.createGame.bind(this);
     this.joinGame = this.joinGame.bind(this);
-    this.readyUp = this.readyUp.bind(this);
     this.startGame = this.startGame.bind(this);
+    this.leaveGame = this.leaveGame.bind(this);
+    this.readyUp = this.readyUp.bind(this);
+    this.toggleMenu = this.toggleMenu.bind(this);
   }
 
   componentDidMount() {
-    socket = io.connect();
+    //socket.connect('http://localhost:5100', { rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling']});
+    socket.connect();
+
+    socket.on('connected', (data) => {
+      console.log('connected');
+    })
 
     socket.on('joined', (data) => {
       this.setState({
         cards: data.cards,
         roomCode: data.roomCode,
       })
-      console.log(data.cards);
+      //console.log(data.cards);
     })
 
     socket.on('update players', (data) => {
+      console.log('receiving players');
       this.setState({
         players: data.players
       })
@@ -63,7 +76,8 @@ class App extends Component {
     socket.on('start game', (data) => {
       this.setState({
         currentScreen: 'game',
-        cardCzarName: data.cardCzarName
+        cardCzarName: data.cardCzarName,
+        message: `waiting on ${data.cardCzarName} to read their card`,
       });
     })
 
@@ -72,16 +86,31 @@ class App extends Component {
       this.setState({
         cardCzar: true,
         blackCard: data.blackCard,
-      });
-    })
+        message: 'Read the card aloud and then press START',
+      })
+    });
 
     socket.on('pick your cards', (data) => {
       console.log(`pick ${data.blackCard.pick} of your cards!`);
       this.setState({
         blackCard: data.blackCard,
         gameStarted: true,
+        message: `pick ${data.blackCard.pick} cards`,
       })
-    })
+    });
+
+    socket.on('player submitted', (data) => {
+      this.setState({
+        playedCount: data.playedCount,
+      })
+    });
+
+    socket.on('czar chooses', (data) => {
+      console.log('czar received ' + data.playerSelections);
+      this.setState({
+        playerSelections: data.playerSelections,
+      })
+    });
   }
 
   createGame() {
@@ -108,7 +137,16 @@ class App extends Component {
     socket.emit('czar ready', {blackCard: this.state.blackCard, roomCode: this.state.roomCode});
     this.setState({
       gameStarted: true,
+      message: 'Dehumanize yourself and face to bloodshed',
     });
+  }
+
+  leaveGame() {
+    socket.emit('leave game', {roomCode: this.state.roomCode});
+    this.setState({
+      currentScreen: 'home',
+      showMenu: false,
+    })
   }
 
   handleInputChange(event) {
@@ -121,7 +159,22 @@ class App extends Component {
 
   setScreen(screen) {
     this.setState({
-      currentScreen: screen
+      currentScreen: screen,
+      showMenu: false,
+    })
+  }
+
+  setMessage(message) {
+    this.setState({
+      message
+    })
+  }
+
+  toggleMenu() {
+    this.setState((prevState) => {
+      return {
+        showMenu: !prevState.showMenu
+      }
     })
   }
 
@@ -130,7 +183,6 @@ class App extends Component {
   }
 
   handleCardSelection(text) {
-
     let cardSelection = Object.assign({}, this.state.cardSelection);
     let cards = Object.assign([], this.state.cards);
 
@@ -185,13 +237,18 @@ class App extends Component {
 
     this.setState({
       cardSelection: {},
-      gameStarted: false
+      gameStarted: false,
     })
   }
 
   render() {
     return (
       <div className="App">
+        <Header toggleMenu={this.toggleMenu} />
+        {this.state.showMenu && 
+          <Menu 
+            leaveGame={this.leaveGame}
+          />}
         {this.state.currentScreen === 'home' ? 
           <Home 
             name={this.state.name}
@@ -218,8 +275,10 @@ class App extends Component {
             startGame={this.startGame}
             gameStarted={this.state.gameStarted}
             cardSelection={this.state.cardSelection}
+            playerSelections={this.state.playerSelections}
             handleCardSelection={this.handleCardSelection}
             handleCardSelectionSubmit={this.handleCardSelectionSubmit}
+            message={this.state.message}
           /> : ''}
       </div>
     );
