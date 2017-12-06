@@ -43,7 +43,12 @@ class App extends Component {
   }
 
   componentDidMount() {
-    socket = io.connect();
+    //socket.connect('http://localhost:5100', { rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling']});
+    socket.connect();
+
+    socket.on('connected', (data) => {
+      console.log('connected');
+    })
 
     socket.on('joined', (data) => {
       this.setState({
@@ -54,6 +59,7 @@ class App extends Component {
     })
 
     socket.on('update players', (data) => {
+      console.log('receiving players');
       this.setState({
         players: data.players
       })
