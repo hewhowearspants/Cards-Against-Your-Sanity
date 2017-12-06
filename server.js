@@ -6,15 +6,25 @@ const cards = require('./cards.js');
 const app = express();
 
 const server = require('http').createServer(app);
-const io = require('socket.io')(server);
 
 app.use(logger('dev'));
 app.use(express.static(__dirname + '/public'));
+
+const port = process.env.PORT || 3001;
+
+server.listen(port, function() {
+  console.log(`Horrible people listen to ${port}`);
+});
+
+const io = require('socket.io')(server);
+//const io = require('socket.io', { rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling'] })(server);
 
 const gameRooms = {};
 
 io.on('connection', (socket) => {
   console.log(socket.id + ' connected');
+
+  socket.emit('connected');
 
   socket.on('create', (data) => {
     let roomCode = roomCodeGen();
