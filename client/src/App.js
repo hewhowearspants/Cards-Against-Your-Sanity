@@ -26,7 +26,9 @@ class App extends Component {
       gameStarted: false,
       playedCount: 0,
       cardSelection: {},
+      playerSelections: null,
       message: '',
+      showMenu: false,
     }
 
     this.handleInputChange = this.handleInputChange.bind(this);
