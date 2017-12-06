@@ -137,19 +137,14 @@ io.on('connection', (socket) => {
     }
   })
 
+  socket.on('leave game', (data) => {
+    removePlayerFromRoom(data.roomCode, socket.id);
+  })
+
   socket.on('disconnect', () => {
-
+    console.log(socket.id + ' disconnected')
     for (let roomCode in gameRooms) {
-      let players = gameRooms[roomCode].players
-
-      if (players[socket.id]) {
-        console.log(players[socket.id].name + ' disconnected');
-
-        delete players[socket.id];
-
-        let playersList = preparePlayerListToSend(roomCode);
-        io.sockets.in(roomCode).emit('update players', {players: playersList});
-      }
+      removePlayerFromRoom(roomCode, socket.id);
     }
   })
 })
