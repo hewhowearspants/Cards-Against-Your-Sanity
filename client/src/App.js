@@ -141,6 +141,14 @@ class App extends Component {
     });
   }
 
+  leaveGame() {
+    socket.emit('leave game', {roomCode: this.state.roomCode});
+    this.setState({
+      currentScreen: 'home',
+      showMenu: false,
+    })
+  }
+
   handleInputChange(event) {
     let name = event.target.name;
     let value = event.target.value;
