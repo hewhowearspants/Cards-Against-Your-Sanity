@@ -161,10 +161,12 @@ function roomCodeGen() {
   return roomCode.toUpperCase();
 }
 
+// when a player joins, puts together a player object for them and adds them
+// to a room
 function joinPlayerToRoom(id, name, roomCode) {
   let player = {
     name,
-    cards: initialDeal(roomCode),
+    cards: refillWhiteCards(roomCode),
     ready: false,
     winningCards: [],
   }
@@ -219,6 +221,28 @@ function preparePlayerListToSend(roomCode) {
   }
 
   return playersPackaged;
+}
+
+function shuffleCards(cards) {
+  let shuffledCards = [];
+
+  for(let i = 0; i < cards.length; i++) {
+    randIndex = Math.floor(Math.random() * cards.length);
+    shuffledCards.push(cards.splice(randIndex, 1)[0]);
+  };
+
+  return shuffledCards;
+}
+
+function refillWhiteCards(roomCode, playerCards = []) {
+  let whiteCards = gameRooms[roomCode].whiteCards;
+
+  for(let i = playerCards.length; i < 10; i++) {
+    let whiteCard = whiteCards.pop()
+    playerCards.push(whiteCard);
+  }
+
+  return playerCards;
 }
 
 function checkIfAllPlayersReady(roomCode) {
