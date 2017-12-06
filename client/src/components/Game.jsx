@@ -13,6 +13,7 @@ const Game = (props) => {
           message={props.message}
           startGame={props.startGame}
           gameStarted={props.gameStarted}
+          playerSelections={props.playerSelections}
         />
       : <Player 
           blackCard={props.blackCard}
