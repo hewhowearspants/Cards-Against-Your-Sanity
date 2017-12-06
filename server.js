@@ -34,7 +34,7 @@ io.on('connection', (socket) => {
     gameRooms[roomCode] = {
       players: {},
       czarOrder: [],
-      playedCards: [],
+      playedCards: {},
       blackCards: shuffleCards([...cards.blackCards]),
       whiteCards: shuffleCards([...cards.whiteCards]),
       blackCardDiscard: [],
