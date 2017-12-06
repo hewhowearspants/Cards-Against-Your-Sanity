@@ -76,7 +76,8 @@ class App extends Component {
     socket.on('start game', (data) => {
       this.setState({
         currentScreen: 'game',
-        cardCzarName: data.cardCzarName
+        cardCzarName: data.cardCzarName,
+        message: `waiting on ${data.cardCzarName} to read their card`,
       });
     })
 
@@ -85,6 +86,7 @@ class App extends Component {
       this.setState({
         cardCzar: true,
         blackCard: data.blackCard,
+        message: 'Read the card aloud and then press START',
       })
     });
 
@@ -93,6 +95,7 @@ class App extends Component {
       this.setState({
         blackCard: data.blackCard,
         gameStarted: true,
+        message: `pick ${data.blackCard.pick} cards`,
       })
     });
 
