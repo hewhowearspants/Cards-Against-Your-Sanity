@@ -170,6 +170,14 @@ class App extends Component {
     })
   }
 
+  toggleMenu() {
+    this.setState((prevState) => {
+      return {
+        showMenu: !prevState.showMenu
+      }
+    })
+  }
+
   readyUp() {
     socket.emit('player ready', {roomCode: this.state.roomCode});
   }
