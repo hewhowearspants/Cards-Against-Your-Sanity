@@ -8,7 +8,7 @@ import Home from './components/Home';
 import Lobby from './components/Lobby';
 import Game from './components/Game';
 
-var socket;
+const socket = io();
 
 class App extends Component {
   constructor() {
