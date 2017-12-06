@@ -275,6 +275,7 @@ class App extends Component {
             startGame={this.startGame}
             gameStarted={this.state.gameStarted}
             cardSelection={this.state.cardSelection}
+            playerSelections={this.state.playerSelections}
             handleCardSelection={this.handleCardSelection}
             handleCardSelectionSubmit={this.handleCardSelectionSubmit}
             message={this.state.message}
