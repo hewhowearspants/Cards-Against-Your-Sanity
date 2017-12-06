@@ -118,11 +118,11 @@ io.on('connection', (socket) => {
 
     console.log(`${players[socket.id].name} submitted: ${data.cardSelection}`);
 
-    playedCards.push(data.cardSelection);
+    playedCards[socket.id] = data.cardSelection;
 
-    io.sockets.in(roomCode).emit('player submitted', {playedCount: playedCards.length});
+    io.sockets.in(roomCode).emit('player submitted', {playedCount: Object.keys(playedCards).length});
 
-    if (playedCards.length === Object.keys(players).length - 1) {
+    if (Object.keys(playedCards).length === Object.keys(players).length - 1) {
       let cardCzarSocket = io.sockets.connected[czarOrder[0].id];
 
       if (cardCzarSocket) {
