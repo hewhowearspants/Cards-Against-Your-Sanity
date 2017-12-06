@@ -36,8 +36,10 @@ class App extends Component {
     this.handleCardSelectionSubmit = this.handleCardSelectionSubmit.bind(this);
     this.createGame = this.createGame.bind(this);
     this.joinGame = this.joinGame.bind(this);
-    this.readyUp = this.readyUp.bind(this);
     this.startGame = this.startGame.bind(this);
+    this.leaveGame = this.leaveGame.bind(this);
+    this.readyUp = this.readyUp.bind(this);
+    this.toggleMenu = this.toggleMenu.bind(this);
   }
 
   componentDidMount() {
