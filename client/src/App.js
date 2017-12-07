@@ -278,22 +278,23 @@ class App extends Component {
           <Menu 
             leaveGame={this.leaveGame}
           />}
-        {currentScreen === 'home' ? 
+        {currentScreen === 'home' && 
           <Home 
             name={name}
             roomCode={roomCode}
             handleInputChange={this.handleInputChange}
             createGame={this.createGame}
             joinGame={this.joinGame}
-          /> : ''}
-        {currentScreen === 'lobby' ? 
+            message={message}
+          />}
+        {currentScreen === 'lobby' && 
           <Lobby 
             name={name}
             roomCode={roomCode}
             players={players}
             readyUp={this.readyUp}
-          /> : ''}
-        {currentScreen === 'game' ? 
+          />}
+        {currentScreen === 'game' && 
           <Game 
             cardCzar={cardCzar}
             cardCzarName={cardCzarName}
@@ -308,7 +309,7 @@ class App extends Component {
             handleCardSelection={this.handleCardSelection}
             handleCardSelectionSubmit={this.handleCardSelectionSubmit}
             message={message}
-          /> : ''}
+          />}
       </div>
     );
   }
