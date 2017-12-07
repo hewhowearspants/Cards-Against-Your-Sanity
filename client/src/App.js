@@ -95,7 +95,7 @@ class App extends Component {
       this.setState({
         blackCard: data.blackCard,
         gameStarted: true,
-        message: `pick ${data.blackCard.pick} cards`,
+        message: `pick ${data.blackCard.pick} of your cards`,
       })
     });
 
