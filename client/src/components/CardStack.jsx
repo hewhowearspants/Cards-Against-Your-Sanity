@@ -14,7 +14,12 @@ class CardStack extends Component {
   render() {
     return (
       <div className={`${this.props.selection}-selection`} onClick={this.props.changeSelection}>
-        {this.renderWhiteCards()}
+        {/* {this.renderWhiteCards()} */}
+        {this.props.cards.map((text, index) => {
+          return (
+            <Card color='white' key={index} text={text} />
+          )
+        })}
       </div>
     )
   }
