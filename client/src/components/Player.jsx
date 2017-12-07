@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 
-import WhiteCard from './WhiteCard';
-import BlackCard from './BlackCard';
+import Card from './Card';
 
 class Player extends Component {
   
-  renderCards() {
+  renderWhiteCards() {
     return this.props.cards.map((text, index) => {
       return (
-        <WhiteCard 
+        <Card 
           key={index}
+          color='white'
           handleCardSelection={this.props.handleCardSelection}
-          selection={this.props.cardSelection[text]}
           text={text}
           gameStarted={this.props.gameStarted}
           />
@@ -44,18 +43,17 @@ class Player extends Component {
   render() {
     return (
       <div className='player'>
-        {this.props.blackCard ? 
-          <BlackCard text={this.props.blackCard.text} /> 
-          : ''
+        {this.props.blackCard && 
+          <Card color='black' text={this.props.blackCard.text} /> 
         }
         <div className='message'>
           <p>{this.props.message}</p>
         </div>
         <div className='selection'>
-          {this.props.blackCard ? this.renderSelection() : ''}
+          {this.props.blackCard && this.renderSelection()}
         </div>
         <div className='white-cards'>
-          {this.renderCards()}
+          {this.renderWhiteCards()}
         </div>
         {this.props.gameStarted && (Object.keys(this.props.cardSelection).length === this.props.blackCard.pick) ? 
           <button onClick={this.props.handleCardSelectionSubmit}>OK</button>
