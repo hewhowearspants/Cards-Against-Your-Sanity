@@ -35,6 +35,9 @@ class Home extends Component {
           handleInputChange={this.props.handleInputChange} />
         {!joiningGame ? <button onClick={this.props.createGame}>Create</button> : <button onClick={this.toggleJoiningGame}>Back</button>}
         <button onClick={joiningGame ? this.props.joinGame : () => this.toggleJoiningGame()}>Join</button>
+        <div className='message'>
+          {this.props.message}
+        </div>
       </div>
     )
   }
