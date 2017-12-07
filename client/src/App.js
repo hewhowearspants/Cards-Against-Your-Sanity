@@ -69,7 +69,7 @@ class App extends Component {
 
     socket.on('room full', () => {
       console.log("fuck off, room full");
-      this.flashMessage('fuck off, this room is full!', 2000);
+      this.flashMessage('this room is full! go play with yourself', 2000);
     });
 
     socket.on('update players', (data) => {
@@ -78,7 +78,6 @@ class App extends Component {
         players: data.players
       })
     })
-
 
     socket.on('start game', (data) => {
       this.setState({
