@@ -24,8 +24,27 @@ header {
   font-size: large;
 }
 
+.card-czar,
+.player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .player .white-card {
   cursor: pointer;
+}
+
+.black-card {
+  background-color: black;
+  color: white;
+}
+
+.card-czar .black-card {
+  height: 250px;
+  width: 150px;
+  border-radius: 5px;
 }
 
 .player-selections {
