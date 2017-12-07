@@ -149,6 +149,7 @@ class App extends Component {
     this.setState({
       currentScreen: 'home',
       showMenu: false,
+      message: '',
     })
   }
 
