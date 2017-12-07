@@ -228,7 +228,7 @@ class App extends Component {
         return card[0]
       });
 
-    console.log(sortedSelection);
+    //console.log(sortedSelection);
 
     socket.emit('card submit', {
       roomCode: this.state.roomCode,
