@@ -1,28 +1,17 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import Card from './Card';
 
-class CardStack extends Component {
-  renderWhiteCards() {
-    return this.props.cards.map((text, index) => {
-      return (
-        <Card color='white' key={index} text={text} />
-      )
-    })
-  }
-
-  render() {
-    return (
-      <div className={`${this.props.selection}-selection`} onClick={this.props.changeSelection}>
-        {/* {this.renderWhiteCards()} */}
-        {this.props.cards.map((text, index) => {
-          return (
-            <Card color='white' key={index} text={text} />
-          )
-        })}
-      </div>
-    )
-  }
+const CardStack = (props) => {
+  return (
+    <div className={`${props.selection}-selection`} onClick={props.changeSelection}>
+      {props.cards.map((text, index) => {
+        return (
+          <Card color='white' key={index} text={text} />
+        )
+      })}
+    </div>
+  )
 }
 
 export default CardStack;
