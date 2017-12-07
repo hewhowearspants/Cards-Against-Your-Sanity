@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import CardStack from './CardStack';
+import Card from './Card';
 
 class CardCzar extends Component {
   constructor() {
@@ -49,22 +50,12 @@ class CardCzar extends Component {
     return index;
   }
 
-  renderHTML(){
-    return {__html: this.props.blackCard.text}
-  }
-
-  renderBlackCard(){
-    //console.log(this.renderHTML())
-    return <p dangerouslySetInnerHTML={this.renderHTML()}></p>
-  }
-
   render(){
     const { prevSelection, currentSelection, nextSelection } = this.state;
+
     return (
       <div className='card-czar'>
-        <div className='black-card'>
-          {this.props.blackCard && this.renderBlackCard()}
-        </div>
+        {this.props.blackCard && <Card color='black' text={this.props.blackCard.text} />}
         <div className='message'>
           <p>{this.props.message}</p>
         </div>
