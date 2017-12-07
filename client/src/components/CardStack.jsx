@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 
-import WhiteCard from './WhiteCard';
+import Card from './Card';
 
 class CardStack extends Component {
   renderWhiteCards() {
     return this.props.cards.map((text, index) => {
       return (
-        <WhiteCard key={index} text={text} />
+        <Card color='white' key={index} text={text} />
       )
     })
   }
