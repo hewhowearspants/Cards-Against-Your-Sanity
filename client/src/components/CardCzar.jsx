@@ -59,6 +59,7 @@ class CardCzar extends Component {
   }
 
   render(){
+    const { prevSelection, currentSelection, nextSelection } = this.state;
     return (
       <div className='card-czar'>
         <div className='black-card'>
@@ -70,19 +71,19 @@ class CardCzar extends Component {
         {this.props.playerSelections &&
           <div className='player-selections'>
             <CardStack 
-              cards={this.props.playerSelections[this.state.prevSelection]}
+              cards={this.props.playerSelections[prevSelection]}
               selection='prev'
-              changeSelection={() => {this.changeSelection(this.state.currentSelection - 1)}}
+              changeSelection={() => {this.changeSelection(-1)}}
               />
             <CardStack 
-              cards={this.props.playerSelections[this.state.currentSelection]}
+              cards={this.props.playerSelections[currentSelection]}
               selection='current'
-              changeSelection=''
+              changeSelection={null}
               />
             <CardStack 
-              cards={this.props.playerSelections[this.state.nextSelection]} 
+              cards={this.props.playerSelections[nextSelection]} 
               selection='next'
-              changeSelection={() => {this.changeSelection(this.state.currentSelection + 1)}}
+              changeSelection={() => {this.changeSelection(1)}}
               />
           </div>
         }
