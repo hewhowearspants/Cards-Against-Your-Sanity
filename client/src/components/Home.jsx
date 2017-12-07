@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
-import NameField from './NameField';
-import CodeField from './CodeField';
+import InputField from './InputField';
 
 class Home extends Component {
   constructor() {
@@ -21,12 +20,16 @@ class Home extends Component {
   }
 
   render() {
+    const { joiningGame } = this.state;
     return (
       <div className='home'>
-        {this.state.joiningGame ? 
-          <CodeField roomCode={this.props.roomCode} handleInputChange={this.props.handleInputChange} /> 
-          : <NameField name={this.props.name} handleInputChange={this.props.handleInputChange} />}
-        {!this.state.joiningGame ? <button onClick={this.props.createGame}>Create</button> : ''}
+        <InputField
+          value={!joiningGame ? this.props.name : this.props.roomCode}
+          max={!joiningGame ? 20 : 5}
+          fieldName={!joiningGame ? "name" : "roomCode"}
+          placeholder={!joiningGame ? "Enter name" : "Enter code"}
+          handleInputChange={this.props.handleInputChange} />
+        {!joiningGame ? <button onClick={this.props.createGame}>Create</button> : <button onClick={this.toggleJoiningGame}>Back</button>}
         <button onClick={this.props.name.length > 0 ? this.state.joiningGame ? this.props.joinGame : () => this.toggleJoiningGame() : null}>Join</button>
       </div>
     )
