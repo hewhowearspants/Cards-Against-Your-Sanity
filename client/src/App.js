@@ -56,7 +56,21 @@ class App extends Component {
         roomCode: data.roomCode,
       })
       //console.log(data.cards);
+      this.setState({
+        currentScreen: 'lobby',
+        joiningGame: false,
+      });
     })
+
+    socket.on('bad roomcode', () => {
+      console.log('bad roomcode');
+      this.flashMessage('bad roomcode, asshole!', 2000);
+    });
+
+    socket.on('room full', () => {
+      console.log("fuck off, room full");
+      this.flashMessage('fuck off, this room is full!', 2000);
+    });
 
     socket.on('update players', (data) => {
       console.log('receiving players');
@@ -65,13 +79,6 @@ class App extends Component {
       })
     })
 
-    socket.on('bad roomcode', () => {
-      console.log('bad roomcode');
-    });
-
-    socket.on('room full', () => {
-      console.log("fuck off, room full");
-    });
 
     socket.on('start game', (data) => {
       this.setState({
@@ -126,10 +133,7 @@ class App extends Component {
   joinGame() {
     console.log(`${this.state.name} joining game ${this.state.roomCode}`);
     socket.emit('join', {name: this.state.name, roomCode: this.state.roomCode});
-    this.setState({
-      currentScreen: 'lobby',
-      joiningGame: false,
-    });
+    
   }
 
   startGame() {
@@ -168,6 +172,14 @@ class App extends Component {
     this.setState({
       message
     })
+  }
+
+  flashMessage(message, timeout) {
+    this.setMessage(message);
+
+    setTimeout(() => {
+      this.setMessage('')
+    }, timeout)
   }
 
   toggleMenu() {
