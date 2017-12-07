@@ -56,7 +56,21 @@ class App extends Component {
         roomCode: data.roomCode,
       })
       //console.log(data.cards);
+      this.setState({
+        currentScreen: 'lobby',
+        joiningGame: false,
+      });
     })
+
+    socket.on('bad roomcode', () => {
+      console.log('bad roomcode');
+      this.flashMessage('bad roomcode, asshole!', 2000);
+    });
+
+    socket.on('room full', () => {
+      console.log("fuck off, room full");
+      this.flashMessage('this room is full! go play with yourself', 2000);
+    });
 
     socket.on('update players', (data) => {
       console.log('receiving players');
@@ -64,14 +78,6 @@ class App extends Component {
         players: data.players
       })
     })
-
-    socket.on('bad roomcode', () => {
-      console.log('bad roomcode');
-    });
-
-    socket.on('room full', () => {
-      console.log("fuck off, room full");
-    });
 
     socket.on('start game', (data) => {
       this.setState({
@@ -126,10 +132,7 @@ class App extends Component {
   joinGame() {
     console.log(`${this.state.name} joining game ${this.state.roomCode}`);
     socket.emit('join', {name: this.state.name, roomCode: this.state.roomCode});
-    this.setState({
-      currentScreen: 'lobby',
-      joiningGame: false,
-    });
+    
   }
 
   startGame() {
@@ -146,6 +149,7 @@ class App extends Component {
     this.setState({
       currentScreen: 'home',
       showMenu: false,
+      message: '',
     })
   }
 
@@ -168,6 +172,14 @@ class App extends Component {
     this.setState({
       message
     })
+  }
+
+  flashMessage(message, timeout) {
+    this.setMessage(message);
+
+    setTimeout(() => {
+      this.setMessage('')
+    }, timeout)
   }
 
   toggleMenu() {
@@ -266,22 +278,23 @@ class App extends Component {
           <Menu 
             leaveGame={this.leaveGame}
           />}
-        {currentScreen === 'home' ? 
+        {currentScreen === 'home' && 
           <Home 
             name={name}
             roomCode={roomCode}
             handleInputChange={this.handleInputChange}
             createGame={this.createGame}
             joinGame={this.joinGame}
-          /> : ''}
-        {currentScreen === 'lobby' ? 
+            message={message}
+          />}
+        {currentScreen === 'lobby' && 
           <Lobby 
             name={name}
             roomCode={roomCode}
             players={players}
             readyUp={this.readyUp}
-          /> : ''}
-        {currentScreen === 'game' ? 
+          />}
+        {currentScreen === 'game' && 
           <Game 
             cardCzar={cardCzar}
             cardCzarName={cardCzarName}
@@ -296,7 +309,7 @@ class App extends Component {
             handleCardSelection={this.handleCardSelection}
             handleCardSelectionSubmit={this.handleCardSelectionSubmit}
             message={message}
-          /> : ''}
+          />}
       </div>
     );
   }
