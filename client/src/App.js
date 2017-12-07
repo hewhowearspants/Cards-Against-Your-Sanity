@@ -242,43 +242,60 @@ class App extends Component {
   }
 
   render() {
+    const {
+      name,
+      cards,
+      roomCode,
+      currentScreen,
+      players,
+      cardCzar,
+      cardCzarName,
+      blackCard,
+      gameStarted,
+      playedCount,
+      cardSelection,
+      playerSelections,
+      message,
+      showMenu,
+    } = this.state;
+    
     return (
       <div className="App">
         <Header toggleMenu={this.toggleMenu} />
-        {this.state.showMenu && 
+        {showMenu && 
           <Menu 
             leaveGame={this.leaveGame}
           />}
-        {this.state.currentScreen === 'home' ? 
+        {currentScreen === 'home' ? 
           <Home 
-            name={this.state.name}
-            roomCode={this.state.roomCode}
+            name={name}
+            roomCode={roomCode}
             handleInputChange={this.handleInputChange}
             createGame={this.createGame}
             joinGame={this.joinGame}
           /> : ''}
-        {this.state.currentScreen === 'lobby' ? 
+        {currentScreen === 'lobby' ? 
           <Lobby 
-            name={this.state.name}
-            roomCode={this.state.roomCode}
-            players={this.state.players}
+            name={name}
+            roomCode={roomCode}
+            players={players}
             readyUp={this.readyUp}
           /> : ''}
-        {this.state.currentScreen === 'game' ? 
+        {currentScreen === 'game' ? 
           <Game 
-            cardCzar={this.state.cardCzar}
-            cardCzarName={this.state.cardCzarName}
-            blackCard={this.state.blackCard}
-            cards={this.state.cards}
-            players={this.state.players}
-            playedCount={this.state.playedCount}
+            cardCzar={cardCzar}
+            cardCzarName={cardCzarName}
+            blackCard={blackCard}
+            cards={cards}
+            players={players}
+            playedCount={playedCount}
             startGame={this.startGame}
-            gameStarted={this.state.gameStarted}
-            cardSelection={this.state.cardSelection}
-            playerSelections={this.state.playerSelections}
+            gameStarted={gameStarted}
+            cardSelection={cardSelection}
+            playerSelections={playerSelections}
             handleCardSelection={this.handleCardSelection}
             handleCardSelectionSubmit={this.handleCardSelectionSubmit}
-            message={this.state.message}
+            message={message}
           /> : ''}
       </div>
     );
