@@ -28,6 +28,17 @@ header {
   cursor: pointer;
 }
 
+.black-card {
+  background-color: black;
+  color: white;
+}
+
+.card-czar .black-card {
+  height: 250px;
+  width: 150px;
+  border-radius: 5px;
+}
+
 .player-selections {
   display: flex;
   justify-content: space-between;
