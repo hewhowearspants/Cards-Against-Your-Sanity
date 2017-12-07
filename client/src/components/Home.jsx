@@ -9,6 +9,8 @@ class Home extends Component {
     this.state = {
       joiningGame: false,
     }
+
+    this.toggleJoiningGame = this.toggleJoiningGame.bind(this);
   }
 
   toggleJoiningGame() {
