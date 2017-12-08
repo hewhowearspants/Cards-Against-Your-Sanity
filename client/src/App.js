@@ -123,17 +123,29 @@ class App extends Component {
     });
 
     socket.on('a winner is', (data) => {
-      console.log('a winnar is ' + data.winner.name + '!!');
+      console.log('teh winnar is ' + data.winner.name + '!!');
+      this.setState({
+        winningCards: data.winningCards,
+        showModal: true,
+        modalCallback: this.readyForReset,
+        gameStarted: false,
+      })
+  
       if (data.winner.id === socket.id) {
-        this.setState({
-          message: `You are ${this.state.cardCzarName}'s favorite.`
-        })
+        this.setMessage(`You are ${this.state.cardCzarName}'s favorite.`, 'modal')
+      } else if (this.state.cardCzar) {
+        this.setMessage(`${data.winner.name} is your favorite`, 'modal')
       } else {
-        this.setState({
-          message: `${this.state.cardCzarName} hates you. Specifically you.`
-        })
+        this.setMessage(`${this.state.cardCzarName} hates you. Specifically you.`, 'modal')
       }
     })
+
+    socket.on('refill white cards', (data) => {
+      this.setState({
+        cards: data.cards
+      })
+    })
+
   }
 
   createGame() {
