@@ -197,10 +197,18 @@ class App extends Component {
     })
   }
 
-  setMessage(message) {
-    this.setState({
-      message
-    })
+  setMessage(message, type = null) {
+    switch(type) {
+      case 'modal':
+        this.setState({
+          modalMessage: message
+        });
+        break;
+      default:
+        this.setState({
+          message
+        });
+    }
   }
 
   flashMessage(message, timeout) {
