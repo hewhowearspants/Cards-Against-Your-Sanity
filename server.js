@@ -17,7 +17,6 @@ server.listen(port, function() {
 });
 
 const io = require('socket.io')(server);
-//const io = require('socket.io', { rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling'] })(server);
 
 const gameRooms = {};
 
@@ -135,6 +134,23 @@ io.on('connection', (socket) => {
         cardCzarSocket.emit('czar chooses', {playerSelections: playerSelections});
       }
     }
+  })
+
+  socket.on('czar has chosen', (data) => {
+    let players = gameRooms[data.roomCode].players;
+    let playedCards = gameRooms[data.roomCode].playedCards;
+    let winner = {};
+
+    console.log(`card czar chose ${data.czarChoice}`);
+
+    for (let id in playedCards) {
+      if (playedCards[id][0] === data.czarChoice[0]) {
+        winner.id = id;
+        winner.name = players[id].name;
+      }
+    }
+
+    socket.broadcast.in(data.roomCode).emit('a winner is', {winner});
   })
 
   socket.on('leave game', (data) => {
