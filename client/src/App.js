@@ -332,7 +332,10 @@ class App extends Component {
       cardSelection,
       playerSelections,
       message,
+      modalMessage,
+      modalCallback,
       showMenu,
+      showModal,
     } = this.state;
     
     return (
