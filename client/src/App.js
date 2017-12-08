@@ -292,7 +292,7 @@ class App extends Component {
     
     return (
       <div className="App">
-        <Header toggleMenu={this.toggleMenu} />
+        <Header showMenu={showMenu} toggleMenu={this.toggleMenu} />
         {showMenu && 
           <Menu 
             leaveGame={this.leaveGame}
