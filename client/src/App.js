@@ -312,6 +312,7 @@ class App extends Component {
             gameStarted={gameStarted}
             cardSelection={cardSelection}
             playerSelections={playerSelections}
+            submitCzarSelection={this.submitCzarSelection}
             handleCardSelection={this.handleCardSelection}
             handleCardSelectionSubmit={this.handleCardSelectionSubmit}
             message={message}
