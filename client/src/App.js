@@ -46,10 +46,10 @@ class App extends Component {
     this.readyUp = this.readyUp.bind(this);
     this.toggleMenu = this.toggleMenu.bind(this);
     this.submitCzarSelection = this.submitCzarSelection.bind(this);
+    this.readyForReset = this.readyForReset.bind(this);
   }
 
   componentDidMount() {
-    //socket.connect('http://localhost:5100', { rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling']});
     socket.connect();
 
     socket.on('connected', (data) => {
