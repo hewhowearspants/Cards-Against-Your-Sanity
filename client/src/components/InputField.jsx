@@ -4,7 +4,7 @@ const InputField = (props) => {
   return (
     <input
       type="text"
-      maxlength={props.max}
+      maxLength={props.max}
       name={props.fieldName}
       value={props.value}
       placeholder={props.placeholder}
