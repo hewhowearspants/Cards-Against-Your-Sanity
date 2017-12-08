@@ -121,6 +121,7 @@ io.on('connection', (socket) => {
     let czarOrder = gameRooms[roomCode].czarOrder;
 
     console.log(`${players[socket.id].name} submitted: ${data.cardSelection}`);
+    players[socket.id].cards.splice(players[socket.id].cards.indexOf(data.cardSelection), 1);
 
     playedCards[socket.id] = data.cardSelection;
 
