@@ -197,6 +197,10 @@ io.on('connection', (socket) => {
   })
 })
 
+// **
+// FUNCTIONS BELOW
+// **
+
 // generates a random 5-digit alphanumeric room code for players to join
 function roomCodeGen() {
   let roomCode = '';
