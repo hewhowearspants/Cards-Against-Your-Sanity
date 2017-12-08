@@ -7,6 +7,7 @@ import Menu from './components/Menu';
 import Home from './components/Home';
 import Lobby from './components/Lobby';
 import Game from './components/Game';
+import Modal from './components/Modal';
 
 const socket = io();
 
@@ -293,6 +294,11 @@ class App extends Component {
     return (
       <div className="App">
         <Header showMenu={showMenu} toggleMenu={this.toggleMenu} />
+        {showModal &&
+          <Modal
+            message={modalMessage}
+            callback={modalCallback}
+          />}
         {showMenu && 
           <Menu 
             leaveGame={this.leaveGame}
