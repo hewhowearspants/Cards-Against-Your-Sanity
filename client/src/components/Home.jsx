@@ -31,7 +31,7 @@ class Home extends Component {
           value={!joiningGame ? this.props.name : this.props.roomCode}
           max={!joiningGame ? 20 : 5}
           fieldName={!joiningGame ? "name" : "roomCode"}
-          placeholder={!joiningGame ? "Enter name" : "Enter code"}
+          placeholder={!joiningGame ? "Who are you?" : "code"}
           handleInputChange={this.props.handleInputChange} />
         {!joiningGame ? <button onClick={this.props.createGame}>Create</button> : <button onClick={this.toggleJoiningGame}>Back</button>}
         <button onClick={joiningGame ? this.props.joinGame : () => this.toggleJoiningGame()}>Join</button>
