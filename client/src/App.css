@@ -32,6 +32,7 @@ button {
 .home input {
   font-size: 20px;
   margin: 15px;
+  text-align: center;
 }
 
 p, h3 {
@@ -46,6 +47,11 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.menu-button {
+  padding: 0px 3px;
+  font-size: 18px;
 }
 
 .menu {
