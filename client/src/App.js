@@ -60,12 +60,10 @@ class App extends Component {
       this.setState({
         cards: data.cards,
         roomCode: data.roomCode,
-      })
-      //console.log(data.cards);
-      this.setState({
         currentScreen: 'lobby',
         joiningGame: false,
-      });
+      })
+    
     })
 
     socket.on('bad roomcode', () => {
@@ -83,7 +81,7 @@ class App extends Component {
       this.setState({
         players: data.players
       })
-    })
+    });
 
     socket.on('start game', (data) => {
       this.setState({
