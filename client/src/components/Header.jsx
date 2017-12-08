@@ -3,7 +3,10 @@ import React from 'react';
 const Header = (props) => {
   return (
     <header>
-      <h3>Cards Against</h3><p className='menu-button' onClick={props.toggleMenu}>M</p>
+      <h3>Cards Against</h3>
+      <p className={`menu-button ${props.showMenu ? 'selected' : ''}`} onClick={props.toggleMenu}>
+        <i className='fas fa-bars'></i>
+      </p>
     </header>
   )
 }
