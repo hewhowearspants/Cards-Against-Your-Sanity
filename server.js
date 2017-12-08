@@ -268,6 +268,7 @@ function preparePlayerListToSend(roomCode) {
       name: players[id].name,
       id: id,
       ready: players[id].ready,
+      winningCards: players[id].winningCards,
     });
   }
 
