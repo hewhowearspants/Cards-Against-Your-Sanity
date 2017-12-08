@@ -40,6 +40,7 @@ class App extends Component {
     this.leaveGame = this.leaveGame.bind(this);
     this.readyUp = this.readyUp.bind(this);
     this.toggleMenu = this.toggleMenu.bind(this);
+    this.submitCzarSelection = this.submitCzarSelection.bind(this);
   }
 
   componentDidMount() {
@@ -251,6 +252,11 @@ class App extends Component {
       cardSelection: {},
       gameStarted: false,
     })
+  }
+
+  submitCzarSelection(index) {
+    console.log(`I, the CZAR, have chosen ${this.state.playerSelections[index]}!!`);
+    socket.emit('czar has chosen', {czarChoice: this.state.playerSelections[index], roomCode: this.state.roomCode});
   }
 
   render() {
