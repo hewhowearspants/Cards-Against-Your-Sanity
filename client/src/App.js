@@ -292,7 +292,29 @@ class App extends Component {
 
   submitCzarSelection(index) {
     console.log(`I, the CZAR, have chosen ${this.state.playerSelections[index]}!!`);
-    socket.emit('czar has chosen', {czarChoice: this.state.playerSelections[index], roomCode: this.state.roomCode});
+    socket.emit('czar has chosen', {
+      czarChoice: this.state.playerSelections[index], 
+      blackCard: this.state.blackCard,
+      roomCode: this.state.roomCode,
+    });
+    this.setState({
+      playerSelections: null,
+    })
+  }
+
+  readyForReset() {
+    this.setState({
+      showModal: false,
+      modalMessage: '',
+      modalCallback: null,
+      cardCzar: false,
+      cardCzarName: '',
+      blackCard: null,
+      playedCount: 0,
+      message: 'waiting for reset'
+    })
+
+    socket.emit('next round', { roomCode: this.state.roomCode })
   }
 
   render() {
