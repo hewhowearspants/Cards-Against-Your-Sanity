@@ -144,13 +144,32 @@ header {
   margin-right: -15%;
 }
 
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0,0,0,0.25);
+  padding: 100px 50px;
+}
+
+.modal-window {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #ccc;
+  border-radius: 5px;
+  max-width: 300px;
+  min-height: 200px;
+  margin: 0 auto;
+  padding: 30px;
+}
+
 .ready,
 .selected {
   background-color: black;
   color: white;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
 }

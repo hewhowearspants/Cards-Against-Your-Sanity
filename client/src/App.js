@@ -7,6 +7,7 @@ import Menu from './components/Menu';
 import Home from './components/Home';
 import Lobby from './components/Lobby';
 import Game from './components/Game';
+import Modal from './components/Modal';
 
 const socket = io();
 
@@ -16,19 +17,23 @@ class App extends Component {
 
     this.state = {
       name: '',
-      cards: [],
       roomCode: '',
+      cards: [],
+      blackCard: null,
       currentScreen: 'home',
       players: [],
       cardCzar: false,
       cardCzarName: '',
-      blackCard: null,
       gameStarted: false,
       playedCount: 0,
       cardSelection: {},
       playerSelections: null,
+      winningCards: [],
       message: '',
+      modalMessage: '',
+      modalCallback: null,
       showMenu: false,
+      showModal: false,
     }
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -41,10 +46,10 @@ class App extends Component {
     this.readyUp = this.readyUp.bind(this);
     this.toggleMenu = this.toggleMenu.bind(this);
     this.submitCzarSelection = this.submitCzarSelection.bind(this);
+    this.readyForReset = this.readyForReset.bind(this);
   }
 
   componentDidMount() {
-    //socket.connect('http://localhost:5100', { rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling']});
     socket.connect();
 
     socket.on('connected', (data) => {
@@ -55,12 +60,10 @@ class App extends Component {
       this.setState({
         cards: data.cards,
         roomCode: data.roomCode,
-      })
-      //console.log(data.cards);
-      this.setState({
         currentScreen: 'lobby',
         joiningGame: false,
-      });
+      })
+    
     })
 
     socket.on('bad roomcode', () => {
@@ -78,7 +81,7 @@ class App extends Component {
       this.setState({
         players: data.players
       })
-    })
+    });
 
     socket.on('start game', (data) => {
       this.setState({
@@ -120,17 +123,29 @@ class App extends Component {
     });
 
     socket.on('a winner is', (data) => {
-      console.log('a winnar is ' + data.winner.name + '!!');
+      console.log('teh winnar is ' + data.winner.name + '!!');
+      this.setState({
+        winningCards: data.winningCards,
+        showModal: true,
+        modalCallback: this.readyForReset,
+        gameStarted: false,
+      })
+  
       if (data.winner.id === socket.id) {
-        this.setState({
-          message: `You are ${this.state.cardCzarName}'s favorite.`
-        })
+        this.setMessage(`You are ${this.state.cardCzarName}'s favorite.`, 'modal')
+      } else if (this.state.cardCzar) {
+        this.setMessage(`${data.winner.name} is your favorite`, 'modal')
       } else {
-        this.setState({
-          message: `${this.state.cardCzarName} hates you. Specifically you.`
-        })
+        this.setMessage(`${this.state.cardCzarName} hates you. Specifically you.`, 'modal')
       }
     })
+
+    socket.on('refill white cards', (data) => {
+      this.setState({
+        cards: data.cards
+      })
+    })
+
   }
 
   createGame() {
@@ -182,10 +197,18 @@ class App extends Component {
     })
   }
 
-  setMessage(message) {
-    this.setState({
-      message
-    })
+  setMessage(message, type = null) {
+    switch(type) {
+      case 'modal':
+        this.setState({
+          modalMessage: message
+        });
+        break;
+      default:
+        this.setState({
+          message
+        });
+    }
   }
 
   flashMessage(message, timeout) {
@@ -269,7 +292,29 @@ class App extends Component {
 
   submitCzarSelection(index) {
     console.log(`I, the CZAR, have chosen ${this.state.playerSelections[index]}!!`);
-    socket.emit('czar has chosen', {czarChoice: this.state.playerSelections[index], roomCode: this.state.roomCode});
+    socket.emit('czar has chosen', {
+      czarChoice: this.state.playerSelections[index], 
+      blackCard: this.state.blackCard,
+      roomCode: this.state.roomCode,
+    });
+    this.setState({
+      playerSelections: null,
+    })
+  }
+
+  readyForReset() {
+    this.setState({
+      showModal: false,
+      modalMessage: '',
+      modalCallback: null,
+      cardCzar: false,
+      cardCzarName: '',
+      blackCard: null,
+      playedCount: 0,
+      message: 'waiting for reset'
+    })
+
+    socket.emit('next round', { roomCode: this.state.roomCode })
   }
 
   render() {
@@ -287,12 +332,20 @@ class App extends Component {
       cardSelection,
       playerSelections,
       message,
+      modalMessage,
+      modalCallback,
       showMenu,
+      showModal,
     } = this.state;
     
     return (
       <div className="App">
         <Header showMenu={showMenu} toggleMenu={this.toggleMenu} />
+        {showModal &&
+          <Modal
+            message={modalMessage}
+            callback={modalCallback}
+          />}
         {showMenu && 
           <Menu 
             leaveGame={this.leaveGame}
