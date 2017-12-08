@@ -311,6 +311,12 @@ function checkIfAllPlayersReady(roomCode) {
   return true;
 }
 
+function resetGame(roomCode) {
+  // push white cards to discard
+  // cycle cardCzarOrder (shift first and push)
+  // notify new card czar
+}
+
 function findById(arrayOfObjects, id) {
   for (let i = 0; i < arrayOfObjects.length; i++) {
     if (arrayOfObjects[i].id === id) {
