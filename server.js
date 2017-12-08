@@ -202,6 +202,7 @@ function joinPlayerToRoom(id, name, roomCode) {
 function removePlayerFromRoom(roomCode, id) {
   let players = gameRooms[roomCode].players;
   let playedCards = gameRooms[roomCode].playedCards;
+  let czarOrder = gameRooms[roomCode].czarOrder;
 
   if (players[id]) {
     console.log(players[id].name + ' left room ' + roomCode);
@@ -215,6 +216,11 @@ function removePlayerFromRoom(roomCode, id) {
   if (playedCards[id]) {
     console.log(`deleting ${id}'s played cards`);
     delete playedCards[id];
+  }
+
+  if (czarOrder[findById(czarOrder, id)]) {
+    console.log(`removing ${id} from czarOrder`);
+    czarOrder.splice(findById(czarOrder, id));
   }
 }
 
