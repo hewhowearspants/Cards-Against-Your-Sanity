@@ -38,6 +38,7 @@ io.on('connection', (socket) => {
       whiteCards: shuffleCards([...cards.whiteCards]),
       blackCardDiscard: [],
       whiteCardDiscard: [],
+      winningCards: [],
     };
 
     socket.join(roomCode);
