@@ -14,6 +14,7 @@ const Game = (props) => {
           startGame={props.startGame}
           gameStarted={props.gameStarted}
           playerSelections={props.playerSelections}
+          submitCzarSelection={props.submitCzarSelection}
         />
       : <Player 
           blackCard={props.blackCard}
