@@ -1030,7 +1030,7 @@ module.exports = {
   },
   {
   "pick": 1,
-  "text": "I'll take the BBQ bacon burger with friend egg and fuck it how about _."
+  "text": "I'll take the BBQ bacon burger with fried egg and fuck it how about _."
   },
   {
   "pick": 1,
@@ -1349,7 +1349,7 @@ module.exports = {
   "Picking up girls at the abortion clinic.",
   "The homosexual agenda.",
   "The Holy Bible.",
-  "Passive-agression.",
+  "Passive-aggression.",
   "Ronald Reagan.",
   "Vehicular manslaughter.",
   "Nipple blades.",
