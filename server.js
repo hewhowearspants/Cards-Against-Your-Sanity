@@ -289,9 +289,11 @@ function shuffleCards(cards) {
 function refillWhiteCards(roomCode, playerCards = []) {
   let whiteCards = gameRooms[roomCode].whiteCards;
 
-  for(let i = playerCards.length; i < 10; i++) {
-    let whiteCard = whiteCards.pop()
-    playerCards.push(whiteCard);
+  if (playerCards.length < 10) {
+    for(let i = playerCards.length; i < 10; i++) {
+      let whiteCard = whiteCards.pop()
+      playerCards.push(whiteCard);
+    }
   }
 
   return playerCards;
