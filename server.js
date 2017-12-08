@@ -87,7 +87,7 @@ io.on('connection', (socket) => {
     players[socket.id].ready = true;
 
     let playersList = preparePlayerListToSend(roomCode);
-    io.sockets.in(roomCode).emit('update players', {players: playersList});
+    io.sockets.in(roomCode).emit('update players', { players: playersList });
 
     if (checkIfAllPlayersReady(roomCode)) {
       let cardCzar = czarOrder[0];
