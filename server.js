@@ -272,3 +272,11 @@ function checkIfAllPlayersReady(roomCode) {
 
   return true;
 }
+
+function findById(arrayOfObjects, id) {
+  for (let i = 0; i < arrayOfObjects.length; i++) {
+    if (arrayOfObjects[i].id === id) {
+      return i;
+    }
+  }
+}
