@@ -103,6 +103,10 @@ io.on('connection', (socket) => {
       if (cardCzarSocket) {
         cardCzarSocket.emit('card czar', {blackCard: blackCard});
       }
+
+      for (let id in players) {
+        players[id].ready = false;
+      }
     }
   });
 
