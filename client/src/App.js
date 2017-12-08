@@ -118,6 +118,19 @@ class App extends Component {
         playerSelections: data.playerSelections,
       })
     });
+
+    socket.on('a winner is', (data) => {
+      console.log('a winnar is ' + data.winner.name + '!!');
+      if (data.winner.id === socket.id) {
+        this.setState({
+          message: `You are ${this.state.cardCzarName}'s favorite.`
+        })
+      } else {
+        this.setState({
+          message: `${this.state.cardCzarName} hates you. Specifically you.`
+        })
+      }
+    })
   }
 
   createGame() {
