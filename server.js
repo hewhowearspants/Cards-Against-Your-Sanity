@@ -17,7 +17,6 @@ server.listen(port, function() {
 });
 
 const io = require('socket.io')(server);
-//const io = require('socket.io', { rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling'] })(server);
 
 const gameRooms = {};
 
@@ -137,6 +136,23 @@ io.on('connection', (socket) => {
     }
   })
 
+  socket.on('czar has chosen', (data) => {
+    let players = gameRooms[data.roomCode].players;
+    let playedCards = gameRooms[data.roomCode].playedCards;
+    let winner = {};
+
+    console.log(`card czar chose ${data.czarChoice}`);
+
+    for (let id in playedCards) {
+      if (playedCards[id][0] === data.czarChoice[0]) {
+        winner.id = id;
+        winner.name = players[id].name;
+      }
+    }
+
+    socket.broadcast.in(data.roomCode).emit('a winner is', {winner});
+  })
+
   socket.on('leave game', (data) => {
     removePlayerFromRoom(data.roomCode, socket.id);
   })
@@ -186,6 +202,7 @@ function joinPlayerToRoom(id, name, roomCode) {
 function removePlayerFromRoom(roomCode, id) {
   let players = gameRooms[roomCode].players;
   let playedCards = gameRooms[roomCode].playedCards;
+  let czarOrder = gameRooms[roomCode].czarOrder;
 
   if (players[id]) {
     console.log(players[id].name + ' left room ' + roomCode);
@@ -199,6 +216,11 @@ function removePlayerFromRoom(roomCode, id) {
   if (playedCards[id]) {
     console.log(`deleting ${id}'s played cards`);
     delete playedCards[id];
+  }
+
+  if (czarOrder[findById(czarOrder, id)]) {
+    console.log(`removing ${id} from czarOrder`);
+    czarOrder.splice(findById(czarOrder, id));
   }
 }
 
@@ -249,4 +271,12 @@ function checkIfAllPlayersReady(roomCode) {
   }
 
   return true;
+}
+
+function findById(arrayOfObjects, id) {
+  for (let i = 0; i < arrayOfObjects.length; i++) {
+    if (arrayOfObjects[i].id === id) {
+      return i;
+    }
+  }
 }

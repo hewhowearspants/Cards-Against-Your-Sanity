@@ -17,6 +17,12 @@ button {
   border: 0;
 }
 
+.home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .home button {
   position: relative;
   margin: 10px;
@@ -26,6 +32,7 @@ button {
 .home input {
   font-size: 20px;
   margin: 15px;
+  text-align: center;
 }
 
 p, h3 {
@@ -40,6 +47,11 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.menu-button {
+  padding: 0px 3px;
+  font-size: 18px;
 }
 
 .menu {

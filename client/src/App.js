@@ -40,6 +40,7 @@ class App extends Component {
     this.leaveGame = this.leaveGame.bind(this);
     this.readyUp = this.readyUp.bind(this);
     this.toggleMenu = this.toggleMenu.bind(this);
+    this.submitCzarSelection = this.submitCzarSelection.bind(this);
   }
 
   componentDidMount() {
@@ -117,6 +118,19 @@ class App extends Component {
         playerSelections: data.playerSelections,
       })
     });
+
+    socket.on('a winner is', (data) => {
+      console.log('a winnar is ' + data.winner.name + '!!');
+      if (data.winner.id === socket.id) {
+        this.setState({
+          message: `You are ${this.state.cardCzarName}'s favorite.`
+        })
+      } else {
+        this.setState({
+          message: `${this.state.cardCzarName} hates you. Specifically you.`
+        })
+      }
+    })
   }
 
   createGame() {
@@ -253,6 +267,11 @@ class App extends Component {
     })
   }
 
+  submitCzarSelection(index) {
+    console.log(`I, the CZAR, have chosen ${this.state.playerSelections[index]}!!`);
+    socket.emit('czar has chosen', {czarChoice: this.state.playerSelections[index], roomCode: this.state.roomCode});
+  }
+
   render() {
     const {
       name,
@@ -273,7 +292,7 @@ class App extends Component {
     
     return (
       <div className="App">
-        <Header toggleMenu={this.toggleMenu} />
+        <Header showMenu={showMenu} toggleMenu={this.toggleMenu} />
         {showMenu && 
           <Menu 
             leaveGame={this.leaveGame}
@@ -306,6 +325,7 @@ class App extends Component {
             gameStarted={gameStarted}
             cardSelection={cardSelection}
             playerSelections={playerSelections}
+            submitCzarSelection={this.submitCzarSelection}
             handleCardSelection={this.handleCardSelection}
             handleCardSelectionSubmit={this.handleCardSelectionSubmit}
             message={message}
