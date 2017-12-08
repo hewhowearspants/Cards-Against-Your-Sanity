@@ -230,8 +230,7 @@ function joinPlayerToRoom(id, name, roomCode) {
   czarOrder.push({id: id, name: player.name});
 
   let playersList = preparePlayerListToSend(roomCode);
-
-  io.sockets.in(roomCode).emit('update players', {players: playersList});
+  io.sockets.in(roomCode).emit('update players', { players: playersList });
 
 }
 
@@ -246,7 +245,7 @@ function removePlayerFromRoom(roomCode, id) {
     delete players[id];
 
     let playersList = preparePlayerListToSend(roomCode);
-    io.sockets.in(roomCode).emit('update players', {players: playersList});
+    io.sockets.in(roomCode).emit('update players', { players: playersList });
   }
 
   if (playedCards[id]) {
