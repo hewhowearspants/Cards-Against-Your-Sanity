@@ -17,19 +17,23 @@ class App extends Component {
 
     this.state = {
       name: '',
-      cards: [],
       roomCode: '',
+      cards: [],
+      blackCard: null,
       currentScreen: 'home',
       players: [],
       cardCzar: false,
       cardCzarName: '',
-      blackCard: null,
       gameStarted: false,
       playedCount: 0,
       cardSelection: {},
       playerSelections: null,
+      winningCards: [],
       message: '',
+      modalMessage: '',
+      modalCallback: null,
       showMenu: false,
+      showModal: false,
     }
 
     this.handleInputChange = this.handleInputChange.bind(this);
