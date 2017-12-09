@@ -130,9 +130,6 @@ io.on('connection', (socket) => {
     const { players, playedCards, winningCards } = gameRooms[roomCode];
     let winner = {};
 
-    // czar is ready for the next round
-    players[socket.id].ready = true;
-
     console.log(`card czar chose ${data.czarChoice}`);
 
     for (let id in playedCards) {
