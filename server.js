@@ -312,9 +312,30 @@ function startGame(roomCode) {
 }
 
 function resetGame(roomCode) {
-  // push white cards to discard
-  // cycle cardCzarOrder (shift first and push)
-  // notify new card czar
+  console.log('all players ready, resetting game');
+  const { 
+    playedCards, 
+    players, 
+    czarOrder, 
+    whiteCards,
+    blackCards, 
+    whiteCardDiscard,
+  } = gameRooms[roomCode];
+
+  console.log('cycling czar order');
+  let prevCzar = czarOrder.shift();
+  czarOrder.push(prevCzar);
+
+  console.log('dumping played cards into discard');
+  for (let id in playedCards) {
+    playedCards[id].forEach((card) => {
+      whiteCardDiscard.push(card);
+    });
+    delete playedCards[id];
+  }
+
+  startGame(roomCode);
+  
 }
 
 function findById(arrayOfObjects, id) {
