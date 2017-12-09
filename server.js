@@ -88,23 +88,7 @@ io.on('connection', (socket) => {
     io.sockets.in(roomCode).emit('update players', { players: playersList });
 
     if (checkIfAllPlayersReady(roomCode)) {
-      let cardCzar = czarOrder[0];
-      let cardCzarSocket = io.sockets.connected[cardCzar.id];
-
-      let blackCard = blackCards.pop();
-      
-      console.log('all players ready, starting game');
-      console.log(cardCzar.name + ' is the card czar');
-
-      io.sockets.in(roomCode).emit('start game', {cardCzarName: cardCzar.name});
-
-      if (cardCzarSocket) {
-        cardCzarSocket.emit('card czar', {blackCard: blackCard});
-      }
-
-      for (let id in players) {
-        players[id].ready = false;
-      }
+      startGame(roomCode);
     }
   });
 
@@ -304,6 +288,25 @@ function checkIfAllPlayersReady(roomCode) {
   }
 
   return true;
+}
+
+function startGame(roomCode) {
+  const { players, blackCards, czarOrder } = gameRooms[roomCode];
+
+  let blackCard = blackCards.pop();
+  
+  let cardCzar = czarOrder[0];
+  let cardCzarSocket = io.sockets.connected[cardCzar.id];
+
+  io.sockets.in(roomCode).emit('start game', {cardCzarName: cardCzar.name});
+
+  if (cardCzarSocket) {
+    cardCzarSocket.emit('card czar', {blackCard: blackCard});
+  }
+
+  for (let id in players) {
+    players[id].ready = false;
+  }
 }
 
 function resetGame(roomCode) {
