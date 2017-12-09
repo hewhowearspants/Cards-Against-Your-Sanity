@@ -56,7 +56,7 @@ io.on('connection', (socket) => {
     let roomCode = data.roomCode.toUpperCase();
 
     if (gameRooms[roomCode]) {
-      let players = gameRooms[roomCode].players;
+      const { players } = gameRooms[roomCode];
 
       if (Object.keys(players).length < 10) {
 
@@ -79,9 +79,7 @@ io.on('connection', (socket) => {
 
   socket.on('player ready', (data) => {
     let roomCode = data.roomCode;
-    let players = gameRooms[roomCode].players;
-    let blackCards = gameRooms[roomCode].blackCards;
-    let czarOrder = gameRooms[roomCode].czarOrder;
+    const { players, blackCards, czarOrder } = gameRooms[roomCode];
 
     console.log(players[socket.id].name + ' is ready');
     players[socket.id].ready = true;
@@ -90,23 +88,7 @@ io.on('connection', (socket) => {
     io.sockets.in(roomCode).emit('update players', { players: playersList });
 
     if (checkIfAllPlayersReady(roomCode)) {
-      let cardCzar = czarOrder[0];
-      let cardCzarSocket = io.sockets.connected[cardCzar.id];
-
-      let blackCard = blackCards.pop();
-      
-      console.log('all players ready, starting game');
-      console.log(cardCzar.name + ' is the card czar');
-
-      io.sockets.in(roomCode).emit('start game', {cardCzarName: cardCzar.name});
-
-      if (cardCzarSocket) {
-        cardCzarSocket.emit('card czar', {blackCard: blackCard});
-      }
-
-      for (let id in players) {
-        players[id].ready = false;
-      }
+      startGame(roomCode);
     }
   });
 
@@ -116,12 +98,13 @@ io.on('connection', (socket) => {
 
   socket.on('card submit', (data) => {
     let roomCode = data.roomCode;
-    let players = gameRooms[roomCode].players;
-    let playedCards = gameRooms[roomCode].playedCards;
-    let czarOrder = gameRooms[roomCode].czarOrder;
+    const { players, playedCards, czarOrder } = gameRooms[roomCode];
+    const { cards } = players[socket.id];
 
     console.log(`${players[socket.id].name} submitted: ${data.cardSelection}`);
-    players[socket.id].cards.splice(players[socket.id].cards.indexOf(data.cardSelection), 1);
+    data.cardSelection.forEach((card) => {
+      cards.splice(cards.indexOf(card), 1);
+    })
 
     playedCards[socket.id] = data.cardSelection;
 
@@ -144,13 +127,8 @@ io.on('connection', (socket) => {
 
   socket.on('czar has chosen', (data) => {
     let roomCode = data.roomCode;
-    let players = gameRooms[roomCode].players;
-    let playedCards = gameRooms[roomCode].playedCards;
-    let winningCards = gameRooms[roomCode].winningCards;
+    const { players, playedCards, winningCards } = gameRooms[roomCode];
     let winner = {};
-
-    // czar is ready for the next round
-    players[socket.id].ready = true;
 
     console.log(`card czar chose ${data.czarChoice}`);
 
@@ -169,19 +147,25 @@ io.on('connection', (socket) => {
     })
 
     let playersList = preparePlayerListToSend(roomCode);
+    console.log(`The scores so far: `);
+    playersList.forEach((player) => { 
+      console.log(`${player.name}: ${player.winningCards.length}`);
+    })
     io.sockets.in(roomCode).emit('update players', { players: playersList });
     io.sockets.in(roomCode).emit('a winner is', { winner, winningCards });
   })
 
   socket.on('next round', (data) => {
-    let players = gameRooms[data.roomCode].players;
+    let roomCode = data.roomCode;
+    const { players } = gameRooms[roomCode];
+
     players[socket.id].ready = true;
-    players[socket.id].cards = refillWhiteCards(data.roomCode, players[socket.id].cards);
+    players[socket.id].cards = refillWhiteCards(roomCode, players[socket.id].cards);
     socket.emit('refill white cards', { cards: players[socket.id].cards });
 
     if (checkIfAllPlayersReady(data.roomCode)) {
       console.log('on to the next round!');
-      resetGame(data.roomCode);
+      resetGame(roomCode);
     }
   })
 
@@ -216,15 +200,14 @@ function roomCodeGen() {
 // when a player joins, puts together a player object for them and adds them
 // to a room
 function joinPlayerToRoom(id, name, roomCode) {
+  const { players, czarOrder } = gameRooms[roomCode];
+
   let player = {
     name,
     cards: refillWhiteCards(roomCode),
     ready: false,
     winningCards: [],
   }
-
-  let players = gameRooms[roomCode].players;
-  let czarOrder = gameRooms[roomCode].czarOrder;
 
   players[id] = player;
   czarOrder.push({id: id, name: player.name});
@@ -235,9 +218,7 @@ function joinPlayerToRoom(id, name, roomCode) {
 }
 
 function removePlayerFromRoom(roomCode, id) {
-  let players = gameRooms[roomCode].players;
-  let playedCards = gameRooms[roomCode].playedCards;
-  let czarOrder = gameRooms[roomCode].czarOrder;
+  const { players, playedCards, czarOrder } = gameRooms[roomCode];
 
   if (players[id]) {
     console.log(players[id].name + ' left room ' + roomCode);
@@ -260,7 +241,7 @@ function removePlayerFromRoom(roomCode, id) {
 }
 
 function preparePlayerListToSend(roomCode) {
-  let players = gameRooms[roomCode].players;
+  const { players } = gameRooms[roomCode];
   let playersPackaged = [];
 
   for (let id in players) {
@@ -287,7 +268,7 @@ function shuffleCards(cards) {
 }
 
 function refillWhiteCards(roomCode, playerCards = []) {
-  let whiteCards = gameRooms[roomCode].whiteCards;
+  const { whiteCards } = gameRooms[roomCode];
 
   if (playerCards.length < 10) {
     for(let i = playerCards.length; i < 10; i++) {
@@ -300,7 +281,7 @@ function refillWhiteCards(roomCode, playerCards = []) {
 }
 
 function checkIfAllPlayersReady(roomCode) {
-  let players = gameRooms[roomCode].players;
+  const { players } = gameRooms[roomCode];
 
   for (let id in players) {
     if (!players[id].ready) {
@@ -311,10 +292,50 @@ function checkIfAllPlayersReady(roomCode) {
   return true;
 }
 
+function startGame(roomCode) {
+  const { players, blackCards, czarOrder } = gameRooms[roomCode];
+
+  let blackCard = blackCards.pop();
+  
+  let cardCzar = czarOrder[0];
+  let cardCzarSocket = io.sockets.connected[cardCzar.id];
+
+  io.sockets.in(roomCode).emit('start game', {cardCzarName: cardCzar.name});
+
+  if (cardCzarSocket) {
+    cardCzarSocket.emit('card czar', {blackCard: blackCard});
+  }
+
+  for (let id in players) {
+    players[id].ready = false;
+  }
+}
+
 function resetGame(roomCode) {
-  // push white cards to discard
-  // cycle cardCzarOrder (shift first and push)
-  // notify new card czar
+  console.log('all players ready, resetting game');
+  const { 
+    playedCards, 
+    players, 
+    czarOrder, 
+    whiteCards,
+    blackCards, 
+    whiteCardDiscard,
+  } = gameRooms[roomCode];
+
+  console.log('cycling czar order');
+  let prevCzar = czarOrder.shift();
+  czarOrder.push(prevCzar);
+
+  console.log('dumping played cards into discard');
+  for (let id in playedCards) {
+    playedCards[id].forEach((card) => {
+      whiteCardDiscard.push(card);
+    });
+    delete playedCards[id];
+  }
+
+  startGame(roomCode);
+  
 }
 
 function findById(arrayOfObjects, id) {

@@ -2070,7 +2070,7 @@ module.exports = {
   "Our new Buffalo Chicken Dippers&reg;!",
   "Treasures beyond your wildest dreams.",
   "Getting shot out of a cannon.",
-  "The sweet song of sword against and the braying of mighty war beasts.",
+  "The sweet song of sword against sword and the braying of mighty war beasts.",
   "Walking into a glass door.",
   "The color \"puce\".",
   "Every ounce of charisma left in Mick Jagger's tired body.",
