@@ -102,7 +102,9 @@ io.on('connection', (socket) => {
     const { cards } = players[socket.id];
 
     console.log(`${players[socket.id].name} submitted: ${data.cardSelection}`);
-    players[socket.id].cards.splice(players[socket.id].cards.indexOf(data.cardSelection), 1);
+    data.cardSelection.forEach((card) => {
+      cards.splice(cards.indexOf(card), 1);
+    })
 
     playedCards[socket.id] = data.cardSelection;
 
