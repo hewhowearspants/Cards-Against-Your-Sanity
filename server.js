@@ -147,6 +147,10 @@ io.on('connection', (socket) => {
     })
 
     let playersList = preparePlayerListToSend(roomCode);
+    console.log(`The scores so far: `);
+    playersList.forEach((player) => { 
+      console.log(`${player.name}: ${player.winningCards.length}`);
+    })
     io.sockets.in(roomCode).emit('update players', { players: playersList });
     io.sockets.in(roomCode).emit('a winner is', { winner, winningCards });
   })
