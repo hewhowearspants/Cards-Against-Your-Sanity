@@ -160,12 +160,12 @@ io.on('connection', (socket) => {
     const { players } = gameRooms[roomCode];
 
     players[socket.id].ready = true;
-    players[socket.id].cards = refillWhiteCards(data.roomCode, players[socket.id].cards);
+    players[socket.id].cards = refillWhiteCards(roomCode, players[socket.id].cards);
     socket.emit('refill white cards', { cards: players[socket.id].cards });
 
     if (checkIfAllPlayersReady(data.roomCode)) {
       console.log('on to the next round!');
-      resetGame(data.roomCode);
+      resetGame(roomCode);
     }
   })
 
@@ -208,7 +208,6 @@ function joinPlayerToRoom(id, name, roomCode) {
     ready: false,
     winningCards: [],
   }
-
 
   players[id] = player;
   czarOrder.push({id: id, name: player.name});
