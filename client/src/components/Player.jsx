@@ -9,6 +9,8 @@ class Player extends Component {
       return (
         <Card 
           key={index}
+          index={index}
+          heldBy='player'
           color='white'
           handleCardSelection={this.props.handleCardSelection}
           text={text}
