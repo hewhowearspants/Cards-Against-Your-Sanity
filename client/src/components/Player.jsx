@@ -35,7 +35,7 @@ class Player extends Component {
 
     return sortedSelection.map((card) => {
       return (
-        <div key={card[1]} className='selected-card' onClick={() => this.props.handleCardSelection(card[0])}>
+        <div key={card[1]} className={`selected-card ${!this.props.gameStarted ? 'pending' : ''}`} onClick={() => this.props.handleCardSelection(card[0])}>
           <p><span>{card[1]} </span>{card[0]}</p>
         </div>
       )
