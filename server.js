@@ -163,7 +163,7 @@ io.on('connection', (socket) => {
     players[socket.id].cards = refillWhiteCards(roomCode, players[socket.id].cards);
     socket.emit('refill white cards', { cards: players[socket.id].cards });
 
-    if (checkIfAllPlayersReady(data.roomCode)) {
+    if (checkIfAllPlayersReady(roomCode)) {
       console.log('on to the next round!');
       resetGame(roomCode);
     }
