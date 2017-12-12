@@ -147,6 +147,7 @@ class App extends Component {
         showModal: true,
         modalCallback: this.readyForReset,
         gameStarted: false,
+        cardSelection: {},
       })
   
       if (data.winner.id === socket.id) {
