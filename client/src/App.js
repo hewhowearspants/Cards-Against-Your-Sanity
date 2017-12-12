@@ -47,6 +47,8 @@ class App extends Component {
     this.toggleMenu = this.toggleMenu.bind(this);
     this.submitCzarSelection = this.submitCzarSelection.bind(this);
     this.readyForReset = this.readyForReset.bind(this);
+    this.flashMessage = this.flashMessage.bind(this);
+    this.setMessage = this.setMessage.bind(this);
   }
 
   componentDidMount() {
