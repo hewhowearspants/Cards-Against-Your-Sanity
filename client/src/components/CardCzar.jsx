@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-import CardStack from './CardStack';
 import Card from './Card';
 
 class CardCzar extends Component {
@@ -56,26 +55,33 @@ class CardCzar extends Component {
     return (
       <div className='card-czar'>
         {this.props.blackCard && <Card color='black' text={this.props.blackCard.text} />}
-        <div className='message'>
-          <p>{this.props.message}</p>
-        </div>
+        {!this.props.playerSelections && 
+          <div className='message'>
+            <p>{this.props.message}</p>
+          </div>}
         {this.props.playerSelections &&
           <div className='player-selections'>
-            <CardStack 
-              cards={this.props.playerSelections[prevSelection]}
-              selection='prev'
-              changeSelection={() => {this.changeSelection(-1)}}
-              />
-            <CardStack 
-              cards={this.props.playerSelections[currentSelection]}
-              selection='current'
-              changeSelection={null}
-              />
-            <CardStack 
-              cards={this.props.playerSelections[nextSelection]} 
-              selection='next'
-              changeSelection={() => {this.changeSelection(1)}}
-              />
+            <div className='prev-selection' onClick={() => this.changeSelection(-1)}>
+              {this.props.playerSelections[prevSelection].map((text, index) => {
+                return (
+                  <Card color='white' key={index} index={index} heldBy='czar' text={text} />
+                )
+              })}
+            </div>
+            <div className='current-selection'>
+              {this.props.playerSelections[currentSelection].map((text, index) => {
+                return (
+                  <Card color='white' key={index} index={index} heldBy='czar' text={text} />
+                )
+              })}
+            </div>
+            <div className='next-selection' onClick={() => this.changeSelection(1)}>
+              {this.props.playerSelections[nextSelection].map((text, index) => {
+                return (
+                  <Card color='white' key={index} index={index} heldBy='czar' text={text} />
+                )
+              })}
+            </div>
           </div>
         }
         {!this.props.gameStarted &&

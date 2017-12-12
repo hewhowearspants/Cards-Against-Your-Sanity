@@ -9,6 +9,8 @@ class Player extends Component {
       return (
         <Card 
           key={index}
+          index={index}
+          heldBy='player'
           color='white'
           handleCardSelection={this.props.handleCardSelection}
           text={text}
@@ -33,7 +35,7 @@ class Player extends Component {
 
     return sortedSelection.map((card) => {
       return (
-        <div key={card[1]} className='selected-card' onClick={() => this.props.handleCardSelection(card[0])}>
+        <div key={card[1]} className={`selected-card ${!this.props.gameStarted ? 'pending' : ''}`} onClick={() => this.props.handleCardSelection(card[0])}>
           <p><span>{card[1]} </span>{card[0]}</p>
         </div>
       )
@@ -55,9 +57,8 @@ class Player extends Component {
         <div className='white-cards'>
           {this.renderWhiteCards()}
         </div>
-        {this.props.gameStarted && (Object.keys(this.props.cardSelection).length === this.props.blackCard.pick) ? 
+        {this.props.gameStarted && (Object.keys(this.props.cardSelection).length === this.props.blackCard.pick) && 
           <button onClick={this.props.handleCardSelectionSubmit}>OK</button>
-          : ''
         }
       </div>
     )

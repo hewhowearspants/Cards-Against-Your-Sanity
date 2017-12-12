@@ -20,6 +20,8 @@ class Home extends Component {
           joiningGame: !prevState.joiningGame
         }
       })
+    } else {
+      this.props.flashMessage('you forgot to enter a name, genius')
     }
   }
 

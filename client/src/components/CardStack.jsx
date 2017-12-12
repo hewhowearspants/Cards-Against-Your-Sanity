@@ -7,7 +7,7 @@ const CardStack = (props) => {
     <div className={`${props.selection}-selection`} onClick={props.changeSelection}>
       {props.cards.map((text, index) => {
         return (
-          <Card color='white' key={index} text={text} />
+          <Card color='white' key={index} index={index} text={text} />
         )
       })}
     </div>

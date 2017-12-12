@@ -47,6 +47,8 @@ class App extends Component {
     this.toggleMenu = this.toggleMenu.bind(this);
     this.submitCzarSelection = this.submitCzarSelection.bind(this);
     this.readyForReset = this.readyForReset.bind(this);
+    this.flashMessage = this.flashMessage.bind(this);
+    this.setMessage = this.setMessage.bind(this);
   }
 
   componentDidMount() {
@@ -110,8 +112,25 @@ class App extends Component {
     });
 
     socket.on('player submitted', (data) => {
+      let playersLeftToPlay = (this.state.players.length - 1) - data.playedCount;
+      let message;
+
+      if (playersLeftToPlay === 0) {
+        message = 'waiting on czar to choose'
+      } else if (playersLeftToPlay > 0 && (Object.keys(this.state.cardSelection).length !== 0 || this.state.cardCzar)) {
+        message = `waiting on ${playersLeftToPlay} horrible `
+        if (playersLeftToPlay > 1) {
+          message += 'people'
+        } else {
+          message += 'person'
+        }
+      } else {
+        message = this.state.message;
+      }
+
       this.setState({
         playedCount: data.playedCount,
+        message
       })
     });
 
@@ -119,6 +138,7 @@ class App extends Component {
       console.log('czar received ' + data.playerSelections);
       this.setState({
         playerSelections: data.playerSelections,
+        message: '',
       })
     });
 
@@ -129,6 +149,7 @@ class App extends Component {
         showModal: true,
         modalCallback: this.readyForReset,
         gameStarted: false,
+        cardSelection: {},
       })
   
       if (data.winner.id === socket.id) {
@@ -155,13 +176,18 @@ class App extends Component {
       this.setState({
         currentScreen: 'lobby'
       })
+    } else {
+      this.flashMessage('you forgot to enter a name, genius')
     }
   }
 
   joinGame() {
-    console.log(`${this.state.name} joining game ${this.state.roomCode}`);
-    socket.emit('join', {name: this.state.name, roomCode: this.state.roomCode});
-    
+    if (this.state.roomCode.length > 0) {
+      console.log(`${this.state.name} joining game ${this.state.roomCode}`);
+      socket.emit('join', {name: this.state.name, roomCode: this.state.roomCode});
+    } else {
+      this.flashMessage('room codes are five digits long. can you count to five?');
+    }
   }
 
   startGame() {
@@ -169,7 +195,7 @@ class App extends Component {
     socket.emit('czar ready', {blackCard: this.state.blackCard, roomCode: this.state.roomCode});
     this.setState({
       gameStarted: true,
-      message: 'Dehumanize yourself and face to bloodshed',
+      message: `waiting on ${this.state.players.length - 1} horrible people`,
     });
   }
 
@@ -211,7 +237,7 @@ class App extends Component {
     }
   }
 
-  flashMessage(message, timeout) {
+  flashMessage(message, timeout = 2000) {
     this.setMessage(message);
 
     setTimeout(() => {
@@ -285,8 +311,9 @@ class App extends Component {
     })
 
     this.setState({
-      cardSelection: {},
+      // cardSelection: {},
       gameStarted: false,
+      message: 'waiting for other players'
     })
   }
 
@@ -340,7 +367,7 @@ class App extends Component {
     
     return (
       <div className="App">
-        <Header showMenu={showMenu} toggleMenu={this.toggleMenu} />
+        <Header showMenu={showMenu} toggleMenu={this.toggleMenu} name={name} />
         {showModal &&
           <Modal
             message={modalMessage}
@@ -349,6 +376,7 @@ class App extends Component {
         {showMenu && 
           <Menu 
             leaveGame={this.leaveGame}
+            roomCode={roomCode}
           />}
         {currentScreen === 'home' && 
           <Home 
@@ -358,6 +386,7 @@ class App extends Component {
             createGame={this.createGame}
             joinGame={this.joinGame}
             message={message}
+            flashMessage={this.flashMessage}
           />}
         {currentScreen === 'lobby' && 
           <Lobby 
