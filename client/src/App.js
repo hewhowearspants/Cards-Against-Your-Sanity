@@ -235,7 +235,7 @@ class App extends Component {
     }
   }
 
-  flashMessage(message, timeout) {
+  flashMessage(message, timeout = 2000) {
     this.setMessage(message);
 
     setTimeout(() => {
