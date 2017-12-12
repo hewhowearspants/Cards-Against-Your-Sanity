@@ -365,7 +365,7 @@ class App extends Component {
     
     return (
       <div className="App">
-        <Header showMenu={showMenu} toggleMenu={this.toggleMenu} />
+        <Header showMenu={showMenu} toggleMenu={this.toggleMenu} name={name} />
         {showModal &&
           <Modal
             message={modalMessage}
