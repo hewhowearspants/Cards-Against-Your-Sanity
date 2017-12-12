@@ -57,9 +57,8 @@ class Player extends Component {
         <div className='white-cards'>
           {this.renderWhiteCards()}
         </div>
-        {this.props.gameStarted && (Object.keys(this.props.cardSelection).length === this.props.blackCard.pick) ? 
+        {this.props.gameStarted && (Object.keys(this.props.cardSelection).length === this.props.blackCard.pick) && 
           <button onClick={this.props.handleCardSelectionSubmit}>OK</button>
-          : ''
         }
       </div>
     )
