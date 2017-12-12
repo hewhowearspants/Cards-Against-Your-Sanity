@@ -374,6 +374,7 @@ class App extends Component {
         {showMenu && 
           <Menu 
             leaveGame={this.leaveGame}
+            roomCode={roomCode}
           />}
         {currentScreen === 'home' && 
           <Home 
