@@ -193,7 +193,7 @@ class App extends Component {
     socket.emit('czar ready', {blackCard: this.state.blackCard, roomCode: this.state.roomCode});
     this.setState({
       gameStarted: true,
-      message: 'Dehumanize yourself and face to bloodshed',
+      message: `waiting on ${this.state.players.length - 1} horrible people`,
     });
   }
 
