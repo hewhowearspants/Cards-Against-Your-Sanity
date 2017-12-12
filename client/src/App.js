@@ -174,13 +174,18 @@ class App extends Component {
       this.setState({
         currentScreen: 'lobby'
       })
+    } else {
+      this.flashMessage('you forgot to enter a name, genius')
     }
   }
 
   joinGame() {
-    console.log(`${this.state.name} joining game ${this.state.roomCode}`);
-    socket.emit('join', {name: this.state.name, roomCode: this.state.roomCode});
-    
+    if (this.state.roomCode.length > 0) {
+      console.log(`${this.state.name} joining game ${this.state.roomCode}`);
+      socket.emit('join', {name: this.state.name, roomCode: this.state.roomCode});
+    } else {
+      this.flashMessage('room codes are five digits long. can you count to five?');
+    }
   }
 
   startGame() {
