@@ -136,6 +136,7 @@ class App extends Component {
       console.log('czar received ' + data.playerSelections);
       this.setState({
         playerSelections: data.playerSelections,
+        message: '',
       })
     });
 
