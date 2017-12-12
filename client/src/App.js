@@ -113,17 +113,19 @@ class App extends Component {
 
     socket.on('player submitted', (data) => {
       let playersLeftToPlay = (this.state.players.length - 1) - data.playedCount;
+      let message;
+
       if (playersLeftToPlay === 0) {
-        var message = 'waiting on czar to choose'
+        message = 'waiting on czar to choose'
       } else if (playersLeftToPlay > 0 && (Object.keys(this.state.cardSelection).length !== 0 || this.state.cardCzar)) {
-        var message = `waiting on ${playersLeftToPlay} horrible `
+        message = `waiting on ${playersLeftToPlay} horrible `
         if (playersLeftToPlay > 1) {
           message += 'people'
         } else {
           message += 'person'
         }
       } else {
-        var message = this.state.message;
+        message = this.state.message;
       }
 
       this.setState({
