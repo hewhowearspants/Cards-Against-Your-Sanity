@@ -309,8 +309,9 @@ class App extends Component {
     })
 
     this.setState({
-      cardSelection: {},
+      // cardSelection: {},
       gameStarted: false,
+      message: 'waiting for other players'
     })
   }
 
