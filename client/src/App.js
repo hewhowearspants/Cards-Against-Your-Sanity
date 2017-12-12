@@ -384,6 +384,7 @@ class App extends Component {
             createGame={this.createGame}
             joinGame={this.joinGame}
             message={message}
+            flashMessage={this.flashMessage}
           />}
         {currentScreen === 'lobby' && 
           <Lobby 
