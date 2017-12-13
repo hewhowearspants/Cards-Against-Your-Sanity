@@ -26,11 +26,6 @@ const Game = (props) => {
           handleCardSelectionSubmit={props.handleCardSelectionSubmit}
         />
       }
-      {props.gameStarted &&
-        <div className='played-count'>
-          <p>{props.playedCount} / {props.players.length - 1} ready</p>
-        </div>
-      }
     </div>
   )
 }
