@@ -32,6 +32,7 @@ io.on('connection', (socket) => {
     
     gameRooms[roomCode] = {
       players: {},
+      pendingPlayers: {},
       czarOrder: [],
       playedCards: {},
       blackCards: shuffleCards([...cards.blackCards]),
@@ -39,6 +40,7 @@ io.on('connection', (socket) => {
       blackCardDiscard: [],
       whiteCardDiscard: [],
       winningCards: [],
+      gameInProgress: false,
     };
 
     socket.join(roomCode);
@@ -56,16 +58,23 @@ io.on('connection', (socket) => {
     let roomCode = data.roomCode.toUpperCase();
 
     if (gameRooms[roomCode]) {
-      const { players } = gameRooms[roomCode];
+      const { players, pendingPlayers, gameInProgress } = gameRooms[roomCode];
 
       if (Object.keys(players).length < 10) {
 
         socket.join(roomCode);
-        joinPlayerToRoom(socket.id, data.name, roomCode);
-        socket.emit('joined', {
-          cards: [...players[socket.id].cards],
-          roomCode,
-        });
+        if (!gameInProgress) {
+          joinPlayerToRoom(socket.id, data.name, roomCode);
+          socket.emit('joined', {
+            cards: [...players[socket.id].cards],
+            roomCode,
+          });
+        } else {
+          pendingPlayers[socket.id] = {
+            name: data.name
+          }
+          socket.emit('game in progress');
+        }
 
         console.log(`${data.name} has joined game ${roomCode}`);
       } else {
@@ -79,7 +88,7 @@ io.on('connection', (socket) => {
 
   socket.on('player ready', (data) => {
     let roomCode = data.roomCode;
-    const { players, blackCards, czarOrder } = gameRooms[roomCode];
+    const { players, blackCards, czarOrder, gameInProgress } = gameRooms[roomCode];
 
     console.log(`${players[socket.id].name} is ready`);
     players[socket.id].ready = true;
@@ -88,6 +97,7 @@ io.on('connection', (socket) => {
     io.sockets.in(roomCode).emit('update players', { players: playersList });
 
     if (checkIfAllPlayersReady(roomCode)) {
+      gameInProgress = true;
       startGame(roomCode);
     }
   });
@@ -98,7 +108,7 @@ io.on('connection', (socket) => {
 
   socket.on('card submit', (data) => {
     let roomCode = data.roomCode;
-    const { players, playedCards, czarOrder } = gameRooms[roomCode];
+    const { players, playedCards, czarOrder, gameInProgress } = gameRooms[roomCode];
     const { cards } = players[socket.id];
 
     console.log(`${players[socket.id].name} submitted: ${data.cardSelection}`);
@@ -127,7 +137,7 @@ io.on('connection', (socket) => {
 
   socket.on('czar has chosen', (data) => {
     let roomCode = data.roomCode;
-    const { players, playedCards, winningCards } = gameRooms[roomCode];
+    const { players, pendingPlayers, playedCards, winningCards, gameInProgress } = gameRooms[roomCode];
     let winner = {};
 
     console.log(`card czar chose ${data.czarChoice}`);
@@ -146,6 +156,8 @@ io.on('connection', (socket) => {
       name: winner.name,
     })
 
+    gameInProgress = false;
+
     let playersList = preparePlayerListToSend(roomCode);
     console.log(`The scores so far: `);
     playersList.forEach((player) => { 
@@ -153,6 +165,15 @@ io.on('connection', (socket) => {
     })
     io.sockets.in(roomCode).emit('update players', { players: playersList });
     io.sockets.in(roomCode).emit('a winner is', { winner, winningCards });
+
+    for (let id in pendingPlayers) {
+      joinPlayerToRoom(id, pendingPlayers[id].name, roomCode);
+      socket.emit('joined', {
+        cards: [...players[id].cards],
+        roomCode,
+      });
+    }
+
   })
 
   socket.on('next round', (data) => {
