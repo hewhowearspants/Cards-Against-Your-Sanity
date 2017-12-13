@@ -41,7 +41,4 @@ class Card extends Component {
     )
   }
 }
-
-        {/* onMouseEnter={this.props.handleCardHover ? () => this.props.handleCardHover(this.props.index) : null}
-        onMouseLeave={this.props.handleCardHover ? () => this.props.handleCardHover(null) : null} */}
 export default Card;
