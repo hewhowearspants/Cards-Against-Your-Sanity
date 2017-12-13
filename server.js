@@ -8,7 +8,7 @@ const app = express();
 const server = require('http').createServer(app);
 
 app.use(logger('dev'));
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(`${__dirname}/public`));
 
 const port = process.env.PORT || 3001;
 
@@ -21,15 +21,15 @@ const io = require('socket.io')(server);
 const gameRooms = {};
 
 io.on('connection', (socket) => {
-  console.log(socket.id + ' connected');
+  console.log(`${socket.id} connected`);
 
   socket.emit('connected');
 
   socket.on('create', (data) => {
     let roomCode = roomCodeGen();
 
-    console.log(data.name + ' has created a game, code ' + roomCode);
-
+    console.log(`${data.name} has created a game, code ${roomCode}`);
+    
     gameRooms[roomCode] = {
       players: {},
       czarOrder: [],
@@ -67,9 +67,9 @@ io.on('connection', (socket) => {
           roomCode,
         });
 
-        console.log(data.name + ' has joined game ' + roomCode);
+        console.log(`${data.name} has joined game ${roomCode}`);
       } else {
-        console.log("Fuck off, we're full!");
+        console.log('Fuck off, we\'re full!');
         socket.emit('room full');
       }
     } else {
@@ -81,7 +81,7 @@ io.on('connection', (socket) => {
     let roomCode = data.roomCode;
     const { players, blackCards, czarOrder } = gameRooms[roomCode];
 
-    console.log(players[socket.id].name + ' is ready');
+    console.log(`${players[socket.id].name} is ready`);
     players[socket.id].ready = true;
 
     let playersList = preparePlayerListToSend(roomCode);
@@ -119,7 +119,7 @@ io.on('connection', (socket) => {
       }
 
       if (cardCzarSocket) {
-        console.log('sending card czar: ' + playerSelections)
+        console.log(`sending card czar: ${playerSelections}`)
         cardCzarSocket.emit('czar chooses', {playerSelections: playerSelections});
       }
     }
@@ -221,7 +221,7 @@ function removePlayerFromRoom(roomCode, id) {
   const { players, playedCards, czarOrder } = gameRooms[roomCode];
 
   if (players[id]) {
-    console.log(players[id].name + ' left room ' + roomCode);
+    console.log(`${players[id].name} left room ${roomCode}`);
 
     delete players[id];
 

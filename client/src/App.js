@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import io from "socket.io-client";
+import io from 'socket.io-client';
 
 import Header from './components/Header';
 import Menu from './components/Menu';
@@ -74,7 +74,7 @@ class App extends Component {
     });
 
     socket.on('room full', () => {
-      console.log("fuck off, room full");
+      console.log('fuck off, room full');
       this.flashMessage('this room is full! go play with yourself', 2000);
     });
 
@@ -135,7 +135,7 @@ class App extends Component {
     });
 
     socket.on('czar chooses', (data) => {
-      console.log('czar received ' + data.playerSelections);
+      console.log(`czar received ${data.playerSelections}`);
       this.setState({
         playerSelections: data.playerSelections,
         message: '',
@@ -143,7 +143,7 @@ class App extends Component {
     });
 
     socket.on('a winner is', (data) => {
-      console.log('teh winnar is ' + data.winner.name + '!!');
+      console.log(`teh winnar is ${data.winner.name}!!`);
       this.setState({
         winningCards: data.winningCards,
         showModal: true,
@@ -171,7 +171,7 @@ class App extends Component {
 
   createGame() {
     if (this.state.name.length > 0) {
-      console.log(this.state.name + ' creating game');
+      console.log(`${this.state.name} creating game`);
       socket.emit('create', {name: this.state.name});
       this.setState({
         currentScreen: 'lobby'
@@ -191,7 +191,7 @@ class App extends Component {
   }
 
   startGame() {
-    console.log("let's start this shit");
+    console.log('let\'s start this shit');
     socket.emit('czar ready', {blackCard: this.state.blackCard, roomCode: this.state.roomCode});
     this.setState({
       gameStarted: true,
@@ -276,7 +276,7 @@ class App extends Component {
         console.log('selected too many cards');
       }
     } else {
-      console.log('deleting ' + text);
+      console.log(`deleting ${text}`);
       delete cardSelection[text];
       cards.push(text);
     }
@@ -366,7 +366,7 @@ class App extends Component {
     } = this.state;
     
     return (
-      <div className="App">
+      <div className='App'>
         <Header showMenu={showMenu} toggleMenu={this.toggleMenu} name={name} />
         {showModal &&
           <Modal
