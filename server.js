@@ -40,7 +40,7 @@ io.on('connection', (socket) => {
       blackCardDiscard: [],
       whiteCardDiscard: [],
       winningCards: [],
-      gameInProgress: false,
+      gameStage: 'waiting for ready',
     };
 
     socket.join(roomCode);
