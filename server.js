@@ -95,7 +95,7 @@ io.on('connection', (socket) => {
 
   socket.on('player ready', (data) => {
     let roomCode = data.roomCode;
-    const { players, blackCards, czarOrder, gameInProgress } = gameRooms[roomCode];
+    let { players, blackCards, czarOrder, gameStage } = gameRooms[roomCode];
 
     console.log(`${players[socket.id].name} is ready`);
     players[socket.id].ready = true;
