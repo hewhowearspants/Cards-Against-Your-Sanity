@@ -204,9 +204,6 @@ class App extends Component {
     if (this.state.name.length > 0) {
       console.log(`${this.state.name} creating game`);
       socket.emit('create', {name: this.state.name});
-      this.setState({
-        currentScreen: 'lobby'
-      })
     } else {
       this.flashMessage('you forgot to enter a name, genius')
     }
