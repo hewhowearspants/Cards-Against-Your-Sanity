@@ -85,6 +85,22 @@ class App extends Component {
       this.flashMessage('this room is full! go play with yourself', 2000);
     });
 
+    socket.on('game in progress', (data) => {
+      this.setMessage('Game in progress, my dude. Hold on.', 'modal');
+      this.setState({
+        roomCode: data.roomCode,
+        currentScreen: 'lobby',
+        joiningGame: false,
+        cardCzarName: data.cardCzarName,
+        showModal: true,
+        modalCallback: null
+      })
+    })
+
+    socket.on('need more players', () => {
+      this.flashMessage('waiting for more players');
+    })
+
     socket.on('update players', (data) => {
       console.log('receiving players');
       this.setState({
