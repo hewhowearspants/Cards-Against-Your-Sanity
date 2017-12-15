@@ -59,13 +59,20 @@ class App extends Component {
     })
 
     socket.on('joined', (data) => {
-      this.setState({
-        cards: data.cards,
-        roomCode: data.roomCode,
-        currentScreen: 'lobby',
-        joiningGame: false,
+ 
+      this.setState((prevState) => {
+        let newCurrentScreen;
+        if (prevState.currentScreen === 'lobby') {
+          newCurrentScreen = 'game';
+        }
+        return {
+          cards: data.cards,
+          roomCode: data.roomCode,
+          showModal: false,
+          currentScreen: newCurrentScreen || 'lobby',
+          joiningGame: false,
+        }
       })
-    
     })
 
     socket.on('bad roomcode', () => {
