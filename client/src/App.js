@@ -137,26 +137,28 @@ class App extends Component {
     });
 
     socket.on('player submitted', (data) => {
-      let playersLeftToPlay = (this.state.players.length - 1) - data.playedCount;
-      let message;
+      if (this.state.currentScreen === 'game') {
+        let playersLeftToPlay = (this.state.players.length - 1) - data.playedCount;
+        let message;
 
-      if (playersLeftToPlay === 0) {
-        message = 'waiting on czar to choose'
-      } else if (playersLeftToPlay > 0 && (Object.keys(this.state.cardSelection).length !== 0 || this.state.cardCzar)) {
-        message = `waiting on ${playersLeftToPlay} horrible `
-        if (playersLeftToPlay > 1) {
-          message += 'people'
+        if (playersLeftToPlay === 0) {
+          message = 'waiting on czar to choose'
+        } else if (playersLeftToPlay > 0 && (Object.keys(this.state.cardSelection).length !== 0 || this.state.cardCzar)) {
+          message = `waiting on ${playersLeftToPlay} horrible `
+          if (playersLeftToPlay > 1) {
+            message += 'people'
+          } else {
+            message += 'person'
+          }
         } else {
-          message += 'person'
+          message = this.state.message;
         }
-      } else {
-        message = this.state.message;
-      }
 
-      this.setState({
-        playedCount: data.playedCount,
-        message
-      })
+        this.setState({
+          playedCount: data.playedCount,
+          message
+        })
+      }
     });
 
     socket.on('czar chooses', (data) => {
