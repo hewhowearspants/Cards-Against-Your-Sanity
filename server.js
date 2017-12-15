@@ -209,6 +209,8 @@ io.on('connection', (socket) => {
   })
 
   socket.on('leave game', (data) => {
+    const { players } = gameRooms[data.roomCode];
+    console.log(`${players[socket.id].name} left the game`);
     removePlayerFromRoom(data.roomCode, socket.id);
   })
 
