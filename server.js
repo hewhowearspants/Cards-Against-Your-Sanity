@@ -152,7 +152,7 @@ io.on('connection', (socket) => {
 
   socket.on('czar has chosen', (data) => {
     let roomCode = data.roomCode;
-    const { players, pendingPlayers, playedCards, winningCards, gameInProgress } = gameRooms[roomCode];
+    const { players, pendingPlayers, playedCards, winningCards } = gameRooms[roomCode];
     let winner = {};
 
     console.log(`card czar chose ${data.czarChoice}`);
