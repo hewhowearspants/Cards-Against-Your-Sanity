@@ -104,8 +104,13 @@ io.on('connection', (socket) => {
     io.sockets.in(roomCode).emit('update players', { players: playersList });
 
     if (checkIfAllPlayersReady(roomCode)) {
-      gameInProgress = true;
-      startGame(roomCode);
+      if (Object.keys(players).length >= 3) {
+        gameRooms[roomCode].gameStage = 'waiting for czar read';
+        startGame(roomCode);
+        console.log(`everyone's ready! game stage? ${gameRooms[roomCode].gameStage}`)
+      } else {
+        socket.emit('need more players');
+      }
     }
   });
 
