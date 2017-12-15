@@ -141,6 +141,8 @@ io.on('connection', (socket) => {
         playerSelections.push(playedCards[id]);
       }
 
+      gameRooms[roomCode].gameStage = 'waiting for czar choice';
+
       if (cardCzarSocket) {
         console.log(`sending card czar: ${playerSelections}`)
         cardCzarSocket.emit('czar chooses', {playerSelections: playerSelections});
