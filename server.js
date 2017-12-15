@@ -171,7 +171,7 @@ io.on('connection', (socket) => {
       name: winner.name,
     })
 
-    gameInProgress = false;
+    gameRooms[roomCode].gameStage = 'waiting for ready';
 
     let playersList = preparePlayerListToSend(roomCode);
     console.log(`The scores so far: `);
