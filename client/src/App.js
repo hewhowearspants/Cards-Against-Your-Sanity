@@ -59,13 +59,20 @@ class App extends Component {
     })
 
     socket.on('joined', (data) => {
-      this.setState({
-        cards: data.cards,
-        roomCode: data.roomCode,
-        currentScreen: 'lobby',
-        joiningGame: false,
+ 
+      this.setState((prevState) => {
+        let newCurrentScreen;
+        if (prevState.currentScreen === 'lobby') {
+          newCurrentScreen = 'game';
+        }
+        return {
+          cards: data.cards,
+          roomCode: data.roomCode,
+          showModal: false,
+          currentScreen: newCurrentScreen || 'lobby',
+          joiningGame: false,
+        }
       })
-    
     })
 
     socket.on('bad roomcode', () => {
@@ -77,6 +84,22 @@ class App extends Component {
       console.log('fuck off, room full');
       this.flashMessage('this room is full! go play with yourself', 2000);
     });
+
+    socket.on('game in progress', (data) => {
+      this.setMessage('Game in progress, my dude. Hold on.', 'modal');
+      this.setState({
+        roomCode: data.roomCode,
+        currentScreen: 'lobby',
+        joiningGame: false,
+        cardCzarName: data.cardCzarName,
+        showModal: true,
+        modalCallback: null
+      })
+    })
+
+    socket.on('need more players', () => {
+      this.flashMessage('waiting for more players');
+    })
 
     socket.on('update players', (data) => {
       console.log('receiving players');
@@ -103,35 +126,39 @@ class App extends Component {
     });
 
     socket.on('pick your cards', (data) => {
-      console.log(`pick ${data.blackCard.pick} of your cards!`);
-      this.setState({
-        blackCard: data.blackCard,
-        gameStarted: true,
-        message: `pick ${data.blackCard.pick} of your cards`,
-      })
+      if (this.state.currentScreen === 'game') {
+        console.log(`pick ${data.blackCard.pick} of your cards!`);
+        this.setState({
+          blackCard: data.blackCard,
+          gameStarted: true,
+          message: `pick ${data.blackCard.pick} of your cards`,
+        })
+      }
     });
 
     socket.on('player submitted', (data) => {
-      let playersLeftToPlay = (this.state.players.length - 1) - data.playedCount;
-      let message;
+      if (this.state.currentScreen === 'game') {
+        let playersLeftToPlay = (this.state.players.length - 1) - data.playedCount;
+        let message;
 
-      if (playersLeftToPlay === 0) {
-        message = 'waiting on czar to choose'
-      } else if (playersLeftToPlay > 0 && (Object.keys(this.state.cardSelection).length !== 0 || this.state.cardCzar)) {
-        message = `waiting on ${playersLeftToPlay} horrible `
-        if (playersLeftToPlay > 1) {
-          message += 'people'
+        if (playersLeftToPlay === 0) {
+          message = 'waiting on czar to choose'
+        } else if (playersLeftToPlay > 0 && (Object.keys(this.state.cardSelection).length !== 0 || this.state.cardCzar)) {
+          message = `waiting on ${playersLeftToPlay} horrible `
+          if (playersLeftToPlay > 1) {
+            message += 'people'
+          } else {
+            message += 'person'
+          }
         } else {
-          message += 'person'
+          message = this.state.message;
         }
-      } else {
-        message = this.state.message;
-      }
 
-      this.setState({
-        playedCount: data.playedCount,
-        message
-      })
+        this.setState({
+          playedCount: data.playedCount,
+          message
+        })
+      }
     });
 
     socket.on('czar chooses', (data) => {
@@ -167,15 +194,16 @@ class App extends Component {
       })
     })
 
+    socket.on('disconnect', () => {
+      socket.connect();
+    })
+
   }
 
   createGame() {
     if (this.state.name.length > 0) {
       console.log(`${this.state.name} creating game`);
       socket.emit('create', {name: this.state.name});
-      this.setState({
-        currentScreen: 'lobby'
-      })
     } else {
       this.flashMessage('you forgot to enter a name, genius')
     }
@@ -394,6 +422,7 @@ class App extends Component {
             roomCode={roomCode}
             players={players}
             readyUp={this.readyUp}
+            message={message}
           />}
         {currentScreen === 'game' && 
           <Game 

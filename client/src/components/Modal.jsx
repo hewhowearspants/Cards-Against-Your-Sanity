@@ -5,7 +5,7 @@ const Modal = (props) => {
     <div className='modal-overlay'>
       <div className='modal-window'>
         <p>{props.message}</p>
-        <button onClick={props.callback}>OK</button>
+        {props.callback && <button onClick={props.callback}>OK</button>}
       </div>
     </div>
   )
