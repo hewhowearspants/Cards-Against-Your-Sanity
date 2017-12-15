@@ -115,6 +115,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('czar ready', (data) => {
+    gameRooms[data.roomCode].gameStage = 'waiting for player submit';
     socket.broadcast.to(data.roomCode).emit('pick your cards', {blackCard: data.blackCard});
   });
 
