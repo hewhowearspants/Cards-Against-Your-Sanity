@@ -8,12 +8,13 @@ const Lobby = (props) => {
       <h1>{props.roomCode}</h1>
       <h3>Horrible People:</h3>
       <div className='player-list'>
-        {props.players.map((player) => {
+        {props.players && props.players.map((player) => {
           return (
             <p className={'player' + (player.ready ? ' ready' : '')} key={player.id}>{player.name}</p>
           )
         })}
       </div>
+      {props.message && <p>{props.message}</p>}
       <button onClick={props.readyUp}>Ready</button>
     </div>
   )
