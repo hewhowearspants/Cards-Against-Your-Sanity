@@ -194,6 +194,10 @@ class App extends Component {
       })
     })
 
+    socket.on('disconnect', () => {
+      socket.connect();
+    })
+
   }
 
   createGame() {
