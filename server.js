@@ -121,7 +121,7 @@ io.on('connection', (socket) => {
 
   socket.on('card submit', (data) => {
     let roomCode = data.roomCode;
-    const { players, playedCards, czarOrder, gameInProgress } = gameRooms[roomCode];
+    const { players, playedCards, czarOrder, gameStage } = gameRooms[roomCode];
     const { cards } = players[socket.id];
 
     console.log(`${players[socket.id].name} submitted: ${data.cardSelection}`);
