@@ -183,10 +183,13 @@ io.on('connection', (socket) => {
 
     for (let id in pendingPlayers) {
       joinPlayerToRoom(id, pendingPlayers[id].name, roomCode);
-      socket.emit('joined', {
+      players[id].ready = true;
+      let playerSocket = io.sockets.connected[id];
+      playerSocket.emit('joined', {
         cards: [...players[id].cards],
         roomCode,
       });
+      delete pendingPlayers[id];
     }
 
   })
