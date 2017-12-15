@@ -126,12 +126,14 @@ class App extends Component {
     });
 
     socket.on('pick your cards', (data) => {
-      console.log(`pick ${data.blackCard.pick} of your cards!`);
-      this.setState({
-        blackCard: data.blackCard,
-        gameStarted: true,
-        message: `pick ${data.blackCard.pick} of your cards`,
-      })
+      if (this.state.currentScreen === 'game') {
+        console.log(`pick ${data.blackCard.pick} of your cards!`);
+        this.setState({
+          blackCard: data.blackCard,
+          gameStarted: true,
+          message: `pick ${data.blackCard.pick} of your cards`,
+        })
+      }
     });
 
     socket.on('player submitted', (data) => {
