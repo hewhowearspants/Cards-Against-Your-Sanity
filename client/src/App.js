@@ -422,6 +422,7 @@ class App extends Component {
             roomCode={roomCode}
             players={players}
             readyUp={this.readyUp}
+            message={message}
           />}
         {currentScreen === 'game' && 
           <Game 
