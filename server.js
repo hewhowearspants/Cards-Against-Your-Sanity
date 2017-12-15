@@ -58,25 +58,32 @@ io.on('connection', (socket) => {
     let roomCode = data.roomCode.toUpperCase();
 
     if (gameRooms[roomCode]) {
-      const { players, pendingPlayers, gameInProgress } = gameRooms[roomCode];
+      const { players, pendingPlayers, gameStage, czarOrder } = gameRooms[roomCode];
 
       if (Object.keys(players).length < 10) {
 
         socket.join(roomCode);
-        if (!gameInProgress) {
+        if (gameStage === 'waiting for ready') {
+          console.log(`game stage? ${gameStage}! welcome aboard ${roomCode}, ${data.name}!`)
           joinPlayerToRoom(socket.id, data.name, roomCode);
           socket.emit('joined', {
             cards: [...players[socket.id].cards],
             roomCode,
           });
         } else {
+          console.log(`game stage? ${gameStage}! wait in line for ${roomCode}, ${data.name}`)
           pendingPlayers[socket.id] = {
             name: data.name
           }
-          socket.emit('game in progress');
+          let playersList = preparePlayerListToSend(roomCode);
+          socket.emit('update players', {players: playersList});
+          socket.emit('game in progress', {
+            roomCode, 
+            cardCzarName: czarOrder[0].name
+          });
+
         }
 
-        console.log(`${data.name} has joined game ${roomCode}`);
       } else {
         console.log('Fuck off, we\'re full!');
         socket.emit('room full');
