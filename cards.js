@@ -461,7 +461,7 @@ module.exports = {
   "pick": 1
   },
   {
-  "text": "This is your captain speaking. Fasten your seatbelts and prepare for _.",
+  "text": "This is your captain speaking. Fasten your seat belts and prepare for _.",
   "pick": 1
   },
   {
@@ -657,7 +657,7 @@ module.exports = {
   "pick": 1
   },
   {
-  "text": "Alright, bros. Our frat house is condemned, and all the hot slampieces are over at Gamma Phi. The time has come to commence Operation _.",
+  "text": "Alright, bros. Our frat house is condemned, and all the hot slam pieces are over at Gamma Phi. The time has come to commence Operation _.",
   "pick": 1
   },
   {
@@ -950,7 +950,7 @@ module.exports = {
   },
   {
   "pick": 1,
-  "text": "To become a true Yanomamo warrior, you must prove that you can withstand _ without crying out."
+  "text": "To become a true Yanomama warrior, you must prove that you can withstand _ without crying out."
   },
   {
   "pick": 1,
@@ -1114,7 +1114,7 @@ module.exports = {
   },
   {
   "pick": 1,
-  "text": "This Friday at the Liquid Lunge, it's _ Night! Ladies drink free."
+  "text": "This Friday at the Liquid Lounge, it's _ Night! Ladies drink free."
   },
   {
   "pick": 1,
@@ -1440,7 +1440,7 @@ module.exports = {
   "Overcompensation.",
   "Riding off into the sunset.",
   "Being on fire.",
-  "Tangled Slinkys.",
+  "Tangled Slinkies.",
   "Civilian casualties.",
   "Auschwitz.",
   "My genitals.",
