@@ -168,6 +168,10 @@ header {
   margin-bottom: -50%;
 }
 
+.player .white-card:hover button {
+  display: block;
+}
+
 .player .selection {
   margin: 10px;
   box-sizing: border-box;
@@ -181,6 +185,7 @@ header {
 }
 
 .white-card button {
+  display: none;
   position: relative;
   width: 100px;
   height: 35px;
