@@ -11,11 +11,11 @@ class Card extends Component {
   }
 
   render() {
-    const { color, heldBy, gameStarted, index, text } = this.props;
+    const { color, showPick, gameStarted, index, text } = this.props;
     return (
       <div className={`${color}-card`} style={{zIndex: index, transform:`translateZ(${index}px)`}}>
         {this.renderCard()}
-        {gameStarted && <button onClick={() => this.props.handleCardSelection(text)}>PICK</button>}
+        {gameStarted && showPick && <button onClick={() => this.props.handleCardSelection(text)}>PICK</button>}
       </div>
     )
   }
