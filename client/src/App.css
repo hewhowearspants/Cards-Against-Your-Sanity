@@ -282,6 +282,17 @@ header {
   background-color: lightgray;
 }
 
+.remove-selected-card {
+  color: red;
+  float: right;
+}
+
+.selected-card p {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 @keyframes expand {
   0% { 
     height: 1px;
