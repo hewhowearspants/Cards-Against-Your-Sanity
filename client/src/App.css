@@ -5,6 +5,7 @@
   overflow-x: hidden;
   margin-top: 42px;
   padding-bottom: 50px;
+  background-color: #EEEEEE
 }
 
 button {
@@ -285,6 +286,7 @@ header {
 .remove-selected-card {
   color: red;
   float: right;
+  cursor: pointer;
 }
 
 .selected-card p {
