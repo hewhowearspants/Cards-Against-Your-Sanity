@@ -2251,7 +2251,7 @@ module.exports = {
   "One of them big-city Jew lawyers.",
   "One of those \"blow jobs\" I've been hearing so much about.",
   "Onions.",
-  "Opening your mouth to talk and a big penis fops out.",
+  "Opening your mouth to talk and a big penis flops out.",
   "Our baby.",
   "Out-of-control teenage blowjob parties.",
   "Overthrowing the democratically-elected government of Chile.",
