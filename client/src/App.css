@@ -9,10 +9,11 @@
 }
 
 button {
-  position: absolute;
+  position: fixed;
   font-size: 20px;
   bottom: 0;
   left: 0;
+  right: 0;
   width: 100%;
   height: 50px;
   color: white;
@@ -271,6 +272,10 @@ header {
   margin: 0 auto;
   padding: 30px;
   z-index: 101;
+}
+
+.modal-window button {
+  position: absolute;
 }
 
 .ready,
