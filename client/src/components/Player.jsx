@@ -5,6 +5,11 @@ import Card from './Card';
 class Player extends Component {
   
   renderWhiteCards() {
+    console.log(this.props.cardSelection);
+    let showPick = false;
+    if (Object.keys(this.props.cardSelection) && this.props.blackCard) {
+      showPick = Object.keys(this.props.cardSelection).length !== this.props.blackCard.pick;
+    }
     return this.props.cards.map((text, index) => {
       return (
         <Card 
@@ -14,6 +19,7 @@ class Player extends Component {
           color='white'
           handleCardSelection={this.props.handleCardSelection}
           text={text}
+          showPick={showPick}
           gameStarted={this.props.gameStarted}
           />
       )
