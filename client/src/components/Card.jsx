@@ -1,21 +1,6 @@
 import React, { Component } from 'react';
  
 class Card extends Component {
-  constructor() {
-    super()
-
-    this.state = ({
-      hovered: false
-    })
-
-    this.handleHover = this.handleHover.bind(this);
-  }
-
-  handleHover(bool) {
-    this.setState({
-      hovered: bool,
-    })
-  }
 
   renderHTML() {
     return {__html: this.props.text}
@@ -26,17 +11,11 @@ class Card extends Component {
   }
 
   render() {
-    const { hovered } = this.state;
-    const { color, heldBy, gameStarted } = this.props;
+    const { color, heldBy, gameStarted, index, text } = this.props;
     return (
-      <div 
-        className={`${this.props.color}-card`} 
-        style={{zIndex: this.props.index, transform:`translateZ(${this.props.index}px)`}}
-        onMouseEnter={() => this.handleHover(true)}
-        onMouseLeave={() => this.handleHover(false)}
-        >
+      <div className={`${color}-card`} style={{zIndex: index, transform:`translateZ(${index}px)`}}>
         {this.renderCard()}
-        {hovered && color === 'white' && heldBy === 'player' && gameStarted && <button onClick={() => this.props.handleCardSelection(this.props.text)}>PICK</button>}
+        {gameStarted && <button onClick={() => this.props.handleCardSelection(text)}>PICK</button>}
       </div>
     )
   }
