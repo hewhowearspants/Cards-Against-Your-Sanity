@@ -37,8 +37,9 @@ class Player extends Component {
       return (
         <div key={card[1]} className={`selected-card ${!this.props.gameStarted ? 'pending' : ''}`}>
           <p>
-            <span>{card[1]} </span><span dangerouslySetInnerHTML={{__html: card[0]}}></span>
-            {card[0] && <span className='remove-selected-card' onClick={() => this.props.handleCardSelection(card[0])}><i className="fas fa-times-circle"></i></span>}
+            <span className='selected-card-number'>{card[1]} </span>
+            <span className='selected-card-text' dangerouslySetInnerHTML={{__html: card[0]}}></span>
+            {card[0] && this.props.gameStarted && <span className='remove-selected-card' onClick={() => this.props.handleCardSelection(card[0])}><i className="fas fa-times-circle"></i></span>}
           </p>
         </div>
       )
