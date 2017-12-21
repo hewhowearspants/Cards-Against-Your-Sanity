@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Scores from './Scores';
 import Winners from './Winners';
+import About from './About';
 
 class Menu extends Component {
   constructor() {
