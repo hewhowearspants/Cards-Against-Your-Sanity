@@ -35,6 +35,7 @@ class Menu extends Component {
         }
         { menuScreen === 'scores' && <Scores setMenuScreen={this.setMenuScreen} players={players} /> }
         { menuScreen === 'winners' && <Winners setMenuScreen={this.setMenuScreen} winningCards={winningCards}/> }
+        { menuScreen === 'about' && <About setMenuScreen={this.setMenuScreen} />}
       </div>
     )
   }
