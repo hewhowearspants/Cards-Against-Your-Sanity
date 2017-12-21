@@ -1,3 +1,7 @@
+body {
+  font-family: 'Helvetica', sans-serif;
+}
+
 .App {
   text-align: center;
   height: calc(100vh - 92px);
@@ -74,15 +78,138 @@ header {
 .menu {
   position: absolute;
   background: grey;
-  top: 42px;
+  top: 41px;
   right: 0px;
   width: 100vw;
   height: 50vh;
-  z-index: 10;
+  z-index: 12;
   padding: 10px;
   box-sizing: border-box;
   animation: fadein .25s;
   animation: expand .25s;
+  transition: .25s all;
+}
+
+.expanded {
+  height: 75vh;
+}
+
+.menu-list {
+  list-style: none;
+  padding: 0;
+  animation: fadein .25s;
+}
+
+.menu-list li {
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid black;
+  font-weight: bold;
+}
+
+.exit-screen {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  font-size: 32px;
+  color: darkorange;
+}
+
+.scores {
+  flex-direction: column;
+  margin-top: 50px;
+  align-items: flex-end;
+}
+
+.scores .player {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 5px;
+  padding-right: 12px;
+  background: lightgrey;
+  border-radius: 20px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.scores .player .name {
+  padding: 5px 10px;
+  margin: 0px 5px 0px 0px;
+  background: black;
+  color: white;
+  border-radius: 20px;
+  text-align: left;
+  font-weight: normal;
+}
+
+.winners {
+  height: 100%;
+  width: 100%;
+}
+
+.winner-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  overflow: hidden;
+  padding-top: 20px;
+  box-sizing: border-box;
+}
+
+.winner {
+  display:flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.winner .white-card,
+.winner .black-card {
+  height: 200px;
+  width: 150px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.winner .white-card {
+  transform: rotate(15deg) !important;
+  align-self: flex-end;
+  animation: none;
+  margin-bottom: -100px;
+}
+
+.winner .black-card {
+  transform: rotate(-20deg) !important;
+  align-self: flex-start;
+  margin-bottom: -75px;
+}
+
+.winner-name {
+  z-index: 13;
+  align-self: flex-start;
+  background: black;
+  color: white;
+  padding: 5px;
+  text-align: left;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
+
+.prev-winner,
+.next-winner {
+  width: 50px;
+  font-size: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -20px;
+}
+
+.prev-winner:active,
+.next-winner:active {
+  background: black;
+  color: white;
 }
 
 .App-title {
