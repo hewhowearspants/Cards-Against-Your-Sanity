@@ -391,6 +391,7 @@ class App extends Component {
       modalCallback,
       showMenu,
       showModal,
+      winningCards,
     } = this.state;
     
     return (
@@ -405,6 +406,9 @@ class App extends Component {
           <Menu 
             leaveGame={this.leaveGame}
             roomCode={roomCode}
+            currentScreen={currentScreen}
+            winningCards={winningCards}
+            players={players}
           />}
         {currentScreen === 'home' && 
           <Home 
