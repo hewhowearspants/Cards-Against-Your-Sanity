@@ -30,6 +30,7 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 50px;
 }
 
 .home button {
@@ -51,7 +52,6 @@ p, h3 {
 
 header {
   background-color: #222;
-  padding: 10px;
   color: white;
   display: flex;
   justify-content: space-between;
@@ -61,12 +61,18 @@ header {
   left: 0;
   right: 0;
   z-index: 10;
+  cursor: default;
+}
+
+header h3 {
+  padding: 10px;
 }
 
 .menu-button {
-  padding: 0px 3px;
+  padding: 10px;
   font-size: 18px;
   cursor: pointer;
+  user-select: none;
   transition: .25s all;
 }
 
@@ -97,7 +103,17 @@ header {
 .menu-list {
   list-style: none;
   padding: 0;
-  animation: fadein .25s;
+  animation: fadein 1s;
+}
+
+.menu-list .room-code-menu,
+.menu-list .room-code-menu:hover,
+.menu-list .room-code-menu:active {
+  background-color: lightgrey;
+  color: #555;
+  cursor: default;
+  border: 1px solid grey;
+  border-radius: 5px;
 }
 
 .menu-list li {
@@ -107,12 +123,28 @@ header {
   font-weight: bold;
 }
 
+.menu-list li:hover,
+.menu-list li:active {
+  background-color: yellow;
+  cursor: pointer;
+}
+
 .exit-screen {
   position: absolute;
   right: 15px;
   top: 15px;
   font-size: 32px;
   color: darkorange;
+  z-index: 15;
+  cursor: pointer;
+}
+
+.exit-screen:hover {
+  color: gold;
+}
+
+.exit-screen:active {
+  color: orangered;
 }
 
 .scores {
@@ -212,6 +244,17 @@ header {
   color: white;
 }
 
+.about {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  text-align: justify;
+}
+
+.about h1 {
+  margin-top: 5px;
+}
+
 .App-title {
   font-size: 1.5em;
 }
@@ -273,6 +316,7 @@ header {
 .black-card {
   cursor: default;
   user-select: none;
+  font-weight: bold;
 }
 
 .white-card {
@@ -416,6 +460,10 @@ header {
   background-color: lightgray;
 }
 
+.invisible {
+  opacity: 0;
+}
+
 .remove-selected-card {
   color: red;
   float: right;
@@ -426,6 +474,13 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+footer {
+  position: absolute;
+  width: calc(100% - 20px);
+  text-align: center;
+  bottom: 10px;
 }
 
 @keyframes expand {
