@@ -5,7 +5,6 @@ import Card from './Card';
 class Player extends Component {
   
   renderWhiteCards() {
-    console.log(this.props.cardSelection);
     let showPick = false;
     if (Object.keys(this.props.cardSelection) && this.props.blackCard) {
       showPick = Object.keys(this.props.cardSelection).length !== this.props.blackCard.pick;
