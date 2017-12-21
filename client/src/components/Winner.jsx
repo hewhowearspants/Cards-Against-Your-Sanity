@@ -13,7 +13,10 @@ const Winner = ({ winner }) => {
     <div className='winner'>
       <Card color='black' text={winner.black.text} />
       {renderWhiteCards()}
-      <p className='winner-name'>by:<br/>{winner.name}</p> 
+      <div className='winner-name'>
+        <p>by:</p>
+        <p>{winner.name}</p>
+      </div>
     </div>
   )
 }
