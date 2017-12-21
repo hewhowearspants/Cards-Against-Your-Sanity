@@ -37,17 +37,19 @@ class Winners extends Component {
   }
 
   render() {
+    const { winningCards } = this.props;
+
     return (
       <div className='winners'>
         <span className='exit-screen' onClick={() => this.props.setMenuScreen('')}>
           <i className="far fa-times-circle"></i>
         </span>
         <div className='winner-container'>
-          <div className='prev-winner' onClick={() => this.iterateWinner(-1)}>
+          <div className={`prev-winner ${winningCards.length < 2 ? 'invisible' : ''}`} onClick={() => this.iterateWinner(-1)}>
             <i className="fas fa-chevron-left"></i>
           </div>
           <Winner winner={this.state.currentWinner}/>
-          <div className='next-winner' onClick={() => this.iterateWinner(1)}>
+          <div className={`next-winner ${winningCards.length < 2 ? 'invisible' : ''}`} onClick={() => this.iterateWinner(1)}>
             <i className="fas fa-chevron-right"></i>
           </div>
         </div>
