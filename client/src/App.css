@@ -41,7 +41,7 @@ button:hover {
 
 .logo {
   filter: blur(1px); 
-  animation: in-and-out 10s linear infinite; 
+  animation: in-and-out 20s linear infinite; 
 }
 
 @keyframes in-and-out {
@@ -94,7 +94,7 @@ header {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 10;
+  z-index: 13;
   cursor: default;
 }
 
@@ -128,6 +128,8 @@ header h3 {
   animation: fadein .25s;
   animation: expand .25s;
   transition: .25s all;
+  border-bottom: 1px solid black;
+  box-shadow: 0px 5px 20px #333; 
 }
 
 .expanded {
@@ -495,8 +497,6 @@ header h3 {
   cursor: pointer;
 }
 
-.modal-buttons
-
 .ready,
 .selected {
   background-color: black;
@@ -506,6 +506,11 @@ header h3 {
 .selection .pending {
   color: grey;
   background-color: lightgray;
+
+}
+
+.selection .pending .selected-card-number {
+  border: 1px solid grey;
 }
 
 .invisible {
