@@ -429,7 +429,7 @@ class App extends Component {
       playerSelections,
       message,
       modalMessage,
-      modalCallback,
+      modalButtons,
       showMenu,
       showModal,
       winningCards,
@@ -441,7 +441,7 @@ class App extends Component {
         {showModal &&
           <Modal
             message={modalMessage}
-            callback={modalCallback}
+            buttons={modalButtons}
           />}
         {showMenu && 
           <Menu 
