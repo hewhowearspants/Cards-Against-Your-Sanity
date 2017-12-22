@@ -176,7 +176,10 @@ class App extends Component {
       this.setState({
         winningCards: data.winningCards,
         showModal: true,
-        modalCallback: this.readyForReset,
+        modalButtons: [{
+          text: 'OK',
+          callback: this.readyForReset
+        }],
         gameStarted: false,
         cardSelection: {},
       })
