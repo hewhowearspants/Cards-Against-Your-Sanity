@@ -503,7 +503,7 @@ header h3 {
   color: white;
 }
 
-.pending {
+.selection .pending {
   color: grey;
   background-color: lightgray;
 }
@@ -513,15 +513,30 @@ header h3 {
 }
 
 .remove-selected-card {
+  width: 20px;
+  margin-left: 10px;
   color: red;
   float: right;
   cursor: pointer;
+  font-size: 20px;
 }
 
 .selected-card p {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.selected-card-text {
+  flex: 1;
+}
+
+.selected-card-number {
+  margin-right: 10px;
+  font-weight: bold;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 0 5px
 }
 
 footer {

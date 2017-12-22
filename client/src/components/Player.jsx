@@ -44,7 +44,7 @@ class Player extends Component {
           <p>
             <span className='selected-card-number'>{card[1]} </span>
             <span className='selected-card-text' dangerouslySetInnerHTML={{__html: card[0]}}></span>
-            {card[0] && this.props.gameStarted && <span className='remove-selected-card' onClick={() => this.props.handleCardSelection(card[0])}><i className="fas fa-times-circle"></i></span>}
+            <div className='remove-selected-card'>{card[0] && this.props.gameStarted ? <span onClick={() => this.props.handleCardSelection(card[0])}><i className="fas fa-times-circle"></i></span> : ''}</div>
           </p>
         </div>
       )
