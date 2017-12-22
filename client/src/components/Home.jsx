@@ -6,15 +6,15 @@ const Home = (props) => {
   return (
     <div className='home'>
       <InputField
-        value={!this.props.joiningGame ? this.props.name : this.props.roomCode}
-        max={!this.props.joiningGame ? 20 : 5}
-        fieldName={!this.props.joiningGame ? "name" : "roomCode"}
-        placeholder={!this.props.joiningGame ? "Who are you?" : "code"}
-        handleInputChange={this.props.handleInputChange} />
-      {!this.props.joiningGame ? <button onClick={this.props.createGame}>Create</button> : <button onClick={this.props.toggleJoiningGame}>Back</button>}
-      <button onClick={this.props.joiningGame ? this.props.joinGame : () => this.props.toggleJoiningGame()}>Join</button>
+        value={!props.joiningGame ? props.name : props.roomCode}
+        max={!props.joiningGame ? 20 : 5}
+        fieldName={!props.joiningGame ? "name" : "roomCode"}
+        placeholder={!props.joiningGame ? "Who are you?" : "code"}
+        handleInputChange={props.handleInputChange} />
+      {!props.joiningGame ? <button onClick={props.createGame}>Create</button> : <button onClick={props.toggleJoiningGame}>Back</button>}
+      <button onClick={props.joiningGame ? props.joinGame : () => props.toggleJoiningGame()}>Join</button>
       <div className='message'>
-        {this.props.message}
+        {props.message}
       </div>
       <img className='logo' src='../favicon.png' alt='shitty logo' />
     </div>
