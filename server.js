@@ -275,6 +275,7 @@ io.on('connection', (socket) => {
         console.log(`${players[id].name} left room ${roomCode}`);
 
         delete players[id];
+        console.log(players)
         let playersList = preparePlayerListToSend(roomCode);
         io.sockets.in(roomCode).emit('update players', { players: playersList });
 
@@ -296,6 +297,10 @@ io.on('connection', (socket) => {
 
       } else {
         socket.emit('not enough players');
+        delete players[id];
+        console.log(players)
+        let playersList = preparePlayerListToSend(roomCode);
+        io.sockets.in(roomCode).emit('update players', { players: playersList });
       }
     }
   }
