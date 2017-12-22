@@ -40,6 +40,7 @@ class Home extends Component {
         <div className='message'>
           {this.props.message}
         </div>
+        <img className='logo' src='../favicon.png' alt='shitty logo' />
       </div>
     )
   }
