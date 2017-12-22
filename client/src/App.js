@@ -232,12 +232,51 @@ class App extends Component {
     });
   }
 
-  leaveGame() {
+  confirmLeaveGame() {
     socket.emit('leave game', {roomCode: this.state.roomCode});
     this.setState({
+      roomCode: '',
+      cards: [],
+      blackCard: null,
       currentScreen: 'home',
-      showMenu: false,
+      players: [],
+      cardCzar: false,
+      cardCzarName: '',
+      gameStarted: false,
+      playedCount: 0,
+      cardSelection: {},
+      playerSelections: null,
+      winningCards: [],
       message: '',
+      modalMessage: '',
+      modalCallback: null,
+      showMenu: false,
+      showModal: false,
+    })
+  }
+
+  leaveGame() {
+    this.setState({
+      showModal: true,
+      showMenu: false,
+      modalMessage: 'Too real for you, huh?',
+      modalButtons: [{
+        text: 'Yes.',
+        callback: this.confirmLeaveGame
+      },
+      {
+        text: 'No.',
+        callback: this.closeModal
+      }
+      ]
+    })
+  }
+
+  closeModal() {
+    this.setState({
+      showModal: false,
+      modalMessage: '',
+      modalButtons: null
     })
   }
 
