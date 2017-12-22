@@ -9,7 +9,7 @@ body {
   overflow-x: hidden;
   margin-top: 42px;
   padding-bottom: 50px;
-  background-color: #EEEEEE
+  background-color: #BBB;
 }
 
 button {
@@ -24,6 +24,12 @@ button {
   background-color: black;
   border: 0;
   z-index: 11;
+  cursor: pointer;
+}
+
+button:hover {
+  color: gold;
+  background-color: #222;
 }
 
 .home {
@@ -31,6 +37,34 @@ button {
   flex-direction: column;
   align-items: center;
   margin-top: 50px;
+}
+
+.logo {
+  filter: blur(1px); 
+  animation: in-and-out 10s linear infinite; 
+}
+
+@keyframes in-and-out {
+  0% { 
+    filter: blur(0px);
+    transform: perspective(200px) translateZ(0px); 
+  }
+  25% { 
+    filter: blur(3px);
+    transform: perspective(200px) translateZ(-25px); 
+  }
+  50% {
+    filter: blur(0px);
+    transform: perspective(200px) translateZ(0px);
+  }
+  75% {
+    filter: blur(2px);
+    transform: perspective(200px) translateZ(25px);
+  }
+  100% {
+    filter: blur(0px);
+    transform: perspective(200px) translateZ(0px);
+  }
 }
 
 .home button {
@@ -121,11 +155,14 @@ header h3 {
   margin: 10px 0;
   border: 1px solid black;
   font-weight: bold;
+  background-color: black;
+  color: white;
 }
 
 .menu-list li:hover,
 .menu-list li:active {
-  background-color: yellow;
+  background-color: #222;
+  color: gold;
   cursor: pointer;
 }
 
@@ -425,7 +462,7 @@ header h3 {
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(0,0,0,0.25);
+  background-color: rgba(0,0,0,0.45);
   padding: 100px 50px;
   z-index: 100;
 }
@@ -445,9 +482,20 @@ header h3 {
   z-index: 101;
 }
 
-.modal-window button {
+.modal-buttons {
   position: absolute;
+  bottom: 0;
+  display: flex;
+  width: 100%;
 }
+
+.modal-buttons button {
+  position: relative;
+  flex: 1;
+  cursor: pointer;
+}
+
+.modal-buttons
 
 .ready,
 .selected {

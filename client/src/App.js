@@ -31,7 +31,7 @@ class App extends Component {
       winningCards: [],
       message: '',
       modalMessage: '',
-      modalCallback: null,
+      modalButtons: null,
       showMenu: false,
       showModal: false,
       joiningGame: false,
@@ -44,8 +44,10 @@ class App extends Component {
     this.joinGame = this.joinGame.bind(this);
     this.startGame = this.startGame.bind(this);
     this.leaveGame = this.leaveGame.bind(this);
+    this.confirmLeaveGame = this.confirmLeaveGame.bind(this);
     this.readyUp = this.readyUp.bind(this);
     this.toggleMenu = this.toggleMenu.bind(this);
+    this.closeModal = this.closeModal.bind(this);
     this.submitCzarSelection = this.submitCzarSelection.bind(this);
     this.readyForReset = this.readyForReset.bind(this);
     this.flashMessage = this.flashMessage.bind(this);
@@ -184,7 +186,10 @@ class App extends Component {
       this.setState({
         winningCards: data.winningCards,
         showModal: true,
-        modalCallback: this.readyForReset,
+        modalButtons: [{
+          text: 'OK',
+          callback: this.readyForReset
+        }],
         gameStarted: false,
         cardSelection: {},
       })
@@ -249,12 +254,51 @@ class App extends Component {
     });
   }
 
-  leaveGame() {
+  confirmLeaveGame() {
     socket.emit('leave game', {roomCode: this.state.roomCode});
     this.setState({
+      roomCode: '',
+      cards: [],
+      blackCard: null,
       currentScreen: 'home',
-      showMenu: false,
+      players: [],
+      cardCzar: false,
+      cardCzarName: '',
+      gameStarted: false,
+      playedCount: 0,
+      cardSelection: {},
+      playerSelections: null,
+      winningCards: [],
       message: '',
+      modalMessage: '',
+      modalCallback: null,
+      showMenu: false,
+      showModal: false,
+    })
+  }
+
+  leaveGame() {
+    this.setState({
+      showModal: true,
+      showMenu: false,
+      modalMessage: 'Too real for you, huh?',
+      modalButtons: [{
+        text: 'Yes.',
+        callback: this.confirmLeaveGame
+      },
+      {
+        text: 'No.',
+        callback: this.closeModal
+      }
+      ]
+    })
+  }
+
+  closeModal() {
+    this.setState({
+      showModal: false,
+      modalMessage: '',
+      modalButtons: null
     })
   }
 
@@ -353,15 +397,12 @@ class App extends Component {
         return card[0]
       });
 
-    //console.log(sortedSelection);
-
     socket.emit('card submit', {
       roomCode: this.state.roomCode,
       cardSelection: sortedSelection,
     })
 
     this.setState({
-      // cardSelection: {},
       gameStarted: false,
       message: 'waiting for other players'
     })
@@ -410,7 +451,7 @@ class App extends Component {
       playerSelections,
       message,
       modalMessage,
-      modalCallback,
+      modalButtons,
       showMenu,
       showModal,
       winningCards,
@@ -423,7 +464,7 @@ class App extends Component {
         {showModal &&
           <Modal
             message={modalMessage}
-            callback={modalCallback}
+            buttons={modalButtons}
           />}
         {showMenu && 
           <Menu 
