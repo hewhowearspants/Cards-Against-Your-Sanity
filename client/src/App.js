@@ -375,15 +375,12 @@ class App extends Component {
         return card[0]
       });
 
-    //console.log(sortedSelection);
-
     socket.emit('card submit', {
       roomCode: this.state.roomCode,
       cardSelection: sortedSelection,
     })
 
     this.setState({
-      // cardSelection: {},
       gameStarted: false,
       message: 'waiting for other players'
     })
