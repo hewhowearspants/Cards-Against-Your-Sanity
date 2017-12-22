@@ -61,27 +61,36 @@ io.on('connection', (socket) => {
       const { players, pendingPlayers, gameStage, czarOrder } = gameRooms[roomCode];
 
       if (Object.keys(players).length < 10) {
-
-        socket.join(roomCode);
-        if (gameStage === 'waiting for ready') {
-          console.log(`game stage? ${gameStage}! welcome aboard ${roomCode}, ${data.name}!`)
-          joinPlayerToRoom(socket.id, data.name, roomCode);
-          socket.emit('joined', {
-            cards: [...players[socket.id].cards],
-            roomCode,
-          });
-        } else {
-          console.log(`game stage? ${gameStage}! wait in line for ${roomCode}, ${data.name}`)
-          pendingPlayers[socket.id] = {
-            name: data.name
+        let nameExists = false;
+        for(let id in players){
+          if(players[id].name.toUpperCase() === data.name.toUpperCase()){
+            nameExists = true
           }
-          let playersList = preparePlayerListToSend(roomCode);
-          socket.emit('update players', {players: playersList});
-          socket.emit('game in progress', {
-            roomCode, 
-            cardCzarName: czarOrder[0].name
-          });
-
+        }
+        if(!nameExists){
+          socket.join(roomCode);
+          if (gameStage === 'waiting for ready') {
+            console.log(`game stage? ${gameStage}! welcome aboard ${roomCode}, ${data.name}!`)
+            joinPlayerToRoom(socket.id, data.name, roomCode);
+            socket.emit('joined', {
+              cards: [...players[socket.id].cards],
+              roomCode,
+            });
+          } else {
+            console.log(`game stage? ${gameStage}! wait in line for ${roomCode}, ${data.name}`)
+            pendingPlayers[socket.id] = {
+              name: data.name
+            }
+            let playersList = preparePlayerListToSend(roomCode);
+            socket.emit('update players', {players: playersList});
+            socket.emit('game in progress', {
+              roomCode,
+              cardCzarName: czarOrder[0].name
+            });
+          }
+        } else {
+          console.log(`${data.name} tried to join, name already exists`)
+          socket.emit('name taken')
         }
 
       } else {
@@ -266,6 +275,7 @@ io.on('connection', (socket) => {
         console.log(`${players[id].name} left room ${roomCode}`);
 
         delete players[id];
+        console.log(players)
         let playersList = preparePlayerListToSend(roomCode);
         io.sockets.in(roomCode).emit('update players', { players: playersList });
 
@@ -287,6 +297,10 @@ io.on('connection', (socket) => {
 
       } else {
         socket.emit('not enough players');
+        delete players[id];
+        console.log(players)
+        let playersList = preparePlayerListToSend(roomCode);
+        io.sockets.in(roomCode).emit('update players', { players: playersList });
       }
     }
   }

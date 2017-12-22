@@ -34,6 +34,7 @@ class App extends Component {
       modalCallback: null,
       showMenu: false,
       showModal: false,
+      joiningGame: false,
     }
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -49,6 +50,7 @@ class App extends Component {
     this.readyForReset = this.readyForReset.bind(this);
     this.flashMessage = this.flashMessage.bind(this);
     this.setMessage = this.setMessage.bind(this);
+    this.toggleJoiningGame = this.toggleJoiningGame.bind(this);
   }
 
   componentDidMount() {
@@ -72,6 +74,14 @@ class App extends Component {
           currentScreen: newCurrentScreen || 'lobby',
           joiningGame: false,
         }
+      })
+    })
+
+    socket.on('name taken', () => {
+      console.log('name taken')
+      this.flashMessage('your name is not as clever as you think. enter different name.', 2000)
+      this.setState({
+        joiningGame: false
       })
     })
 
@@ -215,6 +225,18 @@ class App extends Component {
       socket.emit('join', {name: this.state.name, roomCode: this.state.roomCode});
     } else {
       this.flashMessage('room codes are five digits long. can you count to five?');
+    }
+  }
+
+  toggleJoiningGame() {
+    if (this.state.name.length > 0){
+      this.setState((prevState) => {
+        return {
+          joiningGame: !prevState.joiningGame
+        }
+      })
+    } else {
+      this.flashMessage('you forgot to enter a name, genius')
     }
   }
 
@@ -392,6 +414,7 @@ class App extends Component {
       showMenu,
       showModal,
       winningCards,
+      joiningGame
     } = this.state;
     
     return (
@@ -419,6 +442,8 @@ class App extends Component {
             joinGame={this.joinGame}
             message={message}
             flashMessage={this.flashMessage}
+            joiningGame={joiningGame}
+            toggleJoiningGame={this.toggleJoiningGame}
           />}
         {currentScreen === 'lobby' && 
           <Lobby 
