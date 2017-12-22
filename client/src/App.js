@@ -43,8 +43,10 @@ class App extends Component {
     this.joinGame = this.joinGame.bind(this);
     this.startGame = this.startGame.bind(this);
     this.leaveGame = this.leaveGame.bind(this);
+    this.confirmLeaveGame = this.confirmLeaveGame.bind(this);
     this.readyUp = this.readyUp.bind(this);
     this.toggleMenu = this.toggleMenu.bind(this);
+    this.closeModal = this.closeModal.bind(this);
     this.submitCzarSelection = this.submitCzarSelection.bind(this);
     this.readyForReset = this.readyForReset.bind(this);
     this.flashMessage = this.flashMessage.bind(this);
