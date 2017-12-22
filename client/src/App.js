@@ -75,6 +75,14 @@ class App extends Component {
       })
     })
 
+    socket.on('name taken', () => {
+      console.log('name taken')
+      this.flashMessage('your name is not as clever as you think. enter different name.', 2000)
+      this.setState({
+        joiningGame: false
+      })
+    })
+
     socket.on('bad roomcode', () => {
       console.log('bad roomcode');
       this.flashMessage('bad roomcode, asshole!', 2000);
