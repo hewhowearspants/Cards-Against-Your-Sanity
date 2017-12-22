@@ -31,7 +31,7 @@ class App extends Component {
       winningCards: [],
       message: '',
       modalMessage: '',
-      modalCallback: null,
+      modalButtons: null,
       showMenu: false,
       showModal: false,
     }
