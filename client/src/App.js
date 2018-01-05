@@ -8,6 +8,7 @@ import Home from './components/Home';
 import Lobby from './components/Lobby';
 import Game from './components/Game';
 import Modal from './components/Modal';
+import Popup from './components/Popup';
 
 const socket = io();
 
@@ -31,9 +32,11 @@ class App extends Component {
       winningCards: [],
       message: '',
       modalMessage: '',
+      popupMessage: '',
       modalButtons: null,
       showMenu: false,
       showModal: false,
+      showPopup: false,
       joiningGame: false,
     }
 
@@ -50,7 +53,6 @@ class App extends Component {
     this.closeModal = this.closeModal.bind(this);
     this.submitCzarSelection = this.submitCzarSelection.bind(this);
     this.readyForReset = this.readyForReset.bind(this);
-    this.flashMessage = this.flashMessage.bind(this);
     this.setMessage = this.setMessage.bind(this);
     this.toggleJoiningGame = this.toggleJoiningGame.bind(this);
   }
@@ -81,7 +83,7 @@ class App extends Component {
 
     socket.on('name taken', () => {
       console.log('name taken')
-      this.flashMessage('your name is not as clever as you think. enter different name.', 2000)
+      this.setMessage('your name is not as clever as you think. enter different name.', 'popup', 2000)
       this.setState({
         joiningGame: false
       })
@@ -89,12 +91,12 @@ class App extends Component {
 
     socket.on('bad roomcode', () => {
       console.log('bad roomcode');
-      this.flashMessage('bad roomcode, asshole!', 2000);
+      this.setMessage('bad roomcode, asshole!', 'popup', 2000);
     });
 
     socket.on('room full', () => {
       console.log('fuck off, room full');
-      this.flashMessage('this room is full! go play with yourself', 2000);
+      this.setMessage('this room is full! go play with yourself', 'popup', 2000);
     });
 
     socket.on('game in progress', (data) => {
@@ -110,7 +112,32 @@ class App extends Component {
     })
 
     socket.on('need more players', () => {
-      this.flashMessage('waiting for more players');
+      if (this.state.currentScreen === 'lobby') {
+        this.setMessage('waiting for more players', 'popup', 2000);
+      } else if (this.state.currentScreen === 'game') {
+        let cardSelection = Object.assign({}, this.state.cardSelection);
+        let cards = Object.assign([], this.state.cards);
+        if (Object.keys(cardSelection).length > 0) {
+          for (let text in cardSelection) {
+            cards.push(text);
+          }
+        }
+        this.setState({
+          currentScreen: 'lobby',
+          showModal: true,
+          modalMessage: 'Not enough players',
+          modalButtons: [{
+            text: 'OK',
+            callback: this.closeModal
+          }],
+          blackCard: null,
+          cardCzar: false,
+          cardCzarName: null,
+          cardSelection: {},
+          cards,
+        })
+      }
+      
     })
 
     socket.on('update players', (data) => {
@@ -220,7 +247,7 @@ class App extends Component {
       console.log(`${this.state.name} creating game`);
       socket.emit('create', {name: this.state.name});
     } else {
-      this.flashMessage('you forgot to enter a name, genius')
+      this.setMessage('you forgot to enter a name, genius', 'popup')
     }
   }
 
@@ -229,7 +256,7 @@ class App extends Component {
       console.log(`${this.state.name} joining game ${this.state.roomCode}`);
       socket.emit('join', {name: this.state.name, roomCode: this.state.roomCode});
     } else {
-      this.flashMessage('room codes are five digits long. can you count to five?');
+      this.setMessage('room codes are five digits long. can you count to five?', 'popup');
     }
   }
 
@@ -241,7 +268,7 @@ class App extends Component {
         }
       })
     } else {
-      this.flashMessage('you forgot to enter a name, genius')
+      this.setMessage('you forgot to enter a name, genius', 'popup', 2000)
     }
   }
 
@@ -317,26 +344,30 @@ class App extends Component {
     })
   }
 
-  setMessage(message, type = null) {
+  setMessage(message, type = null, timeout = 2000) {
     switch(type) {
       case 'modal':
         this.setState({
           modalMessage: message
         });
         break;
+      case 'popup':
+        this.setState({
+          popupMessage: message,
+          showPopup: true,
+        });
+        setTimeout(() => {
+          this.setState({
+            popupMessage: '',
+            showPopup: false,
+          })
+        }, timeout)
+        break;
       default:
         this.setState({
           message
         });
     }
-  }
-
-  flashMessage(message, timeout = 2000) {
-    this.setMessage(message);
-
-    setTimeout(() => {
-      this.setMessage('')
-    }, timeout)
   }
 
   toggleMenu() {
@@ -451,9 +482,11 @@ class App extends Component {
       playerSelections,
       message,
       modalMessage,
+      popupMessage,
       modalButtons,
       showMenu,
       showModal,
+      showPopup,
       winningCards,
       joiningGame
     } = this.state;
@@ -474,6 +507,9 @@ class App extends Component {
             winningCards={winningCards}
             players={players}
           />}
+        {showPopup &&
+          <Popup popupMessage={popupMessage} />
+        }
         {currentScreen === 'home' && 
           <Home 
             name={name}
@@ -482,7 +518,6 @@ class App extends Component {
             createGame={this.createGame}
             joinGame={this.joinGame}
             message={message}
-            flashMessage={this.flashMessage}
             joiningGame={joiningGame}
             toggleJoiningGame={this.toggleJoiningGame}
           />}
