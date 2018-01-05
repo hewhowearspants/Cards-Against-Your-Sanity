@@ -458,6 +458,32 @@ header h3 {
   margin-right: -15%;
 }
 
+.popup {
+  position: fixed;
+  top: 41px;
+  left: 0px;
+  width: 100%;
+  padding: 5px;
+  animation: slide-in-fade-out 2s linear;
+  background: gold;
+  font-size: 1em;
+}
+
+@keyframes slide-in-fade-out {
+  0% {
+    transform: translateY(-100px)
+  }
+  10% {
+    transform: translateY(0px)
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
