@@ -320,12 +320,24 @@ class App extends Component {
     })
   }
 
-  setMessage(message, type = null) {
+  setMessage(message, type = null, timeout = 2000) {
     switch(type) {
       case 'modal':
         this.setState({
           modalMessage: message
         });
+        break;
+      case 'popup':
+        this.setState({
+          popupMessage: message,
+          showPopup: true,
+        });
+        setTimeout(() => {
+          this.setState({
+            popupMessage: '',
+            showPopup: false,
+          })
+        }, timeout)
         break;
       default:
         this.setState({
