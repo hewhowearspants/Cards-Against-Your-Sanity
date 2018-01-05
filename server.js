@@ -268,39 +268,45 @@ io.on('connection', (socket) => {
   }
 
   function removePlayerFromRoom(roomCode, id) {
-    const { players, playedCards, czarOrder, gameStage } = gameRooms[roomCode];
+    const { players, playedCards, pendingPlayers, czarOrder, gameStage } = gameRooms[roomCode];
 
     if (players[id]) {
-      if (Object.keys(players).length - 1 >= 3) {
-        console.log(`${players[id].name} left room ${roomCode}`);
+      console.log(`${players[id].name} left room ${roomCode}`);
 
-        delete players[id];
-        console.log(players)
-        let playersList = preparePlayerListToSend(roomCode);
-        io.sockets.in(roomCode).emit('update players', { players: playersList });
+      delete players[id];
+      console.log(players)
+      let playersList = preparePlayerListToSend(roomCode);
+      io.sockets.in(roomCode).emit('update players', { players: playersList });
 
-        if (czarOrder[0].id === id) {
-          resetGame();
+      if (czarOrder[0].id === id) {
+        resetGame();
+      }
+      czarOrder.splice(findById(czarOrder, id), 1);
+
+      if (gameStage === 'waiting for player submit') {
+        if (playedCards[id]) {
+          console.log(`deleting ${id}'s played cards`);
+          delete playedCards[id];
         }
-        czarOrder.splice(findById(czarOrder, id), 1);
-
-        if (gameStage === 'waiting for player submit') {
-          if (playedCards[id]) {
-            console.log(`deleting ${id}'s played cards`);
-            delete playedCards[id];
-          }
-          let allPlayersSubmitted = (Object.keys(playedCards).length === Object.keys(players).length - 1);
-          if (allPlayersSubmitted) {
-            sendWhiteCardsToCardCzar(roomCode);
-          }
+        let allPlayersSubmitted = (Object.keys(playedCards).length === Object.keys(players).length - 1);
+        if (allPlayersSubmitted) {
+          sendWhiteCardsToCardCzar(roomCode);
         }
+      }
 
-      } else {
+      if (Object.keys(players).length - 1 < 3) { 
         socket.emit('not enough players');
-        delete players[id];
-        console.log(players)
-        let playersList = preparePlayerListToSend(roomCode);
-        io.sockets.in(roomCode).emit('update players', { players: playersList });
+        gamerooms[roomCode].gameStage = 'waiting for ready';
+        for (let id in pendingPlayers) {
+          joinPlayerToRoom(id, pendingPlayers[id].name, roomCode);
+          players[id].ready = true;
+          let playerSocket = io.sockets.connected[id];
+          playerSocket.emit('joined', {
+            cards: [...players[id].cards],
+            roomCode,
+          });
+          delete pendingPlayers[id];
+        }
       }
     }
   }
