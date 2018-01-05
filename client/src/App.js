@@ -482,9 +482,11 @@ class App extends Component {
       playerSelections,
       message,
       modalMessage,
+      popupMessage,
       modalButtons,
       showMenu,
       showModal,
+      showPopup,
       winningCards,
       joiningGame
     } = this.state;
@@ -505,6 +507,9 @@ class App extends Component {
             winningCards={winningCards}
             players={players}
           />}
+        {showPopup &&
+          <Popup popupMessage={popupMessage} />
+        }
         {currentScreen === 'home' && 
           <Home 
             name={name}
@@ -513,7 +518,6 @@ class App extends Component {
             createGame={this.createGame}
             joinGame={this.joinGame}
             message={message}
-            flashMessage={this.flashMessage}
             joiningGame={joiningGame}
             toggleJoiningGame={this.toggleJoiningGame}
           />}
