@@ -8,6 +8,7 @@ import Home from './components/Home';
 import Lobby from './components/Lobby';
 import Game from './components/Game';
 import Modal from './components/Modal';
+import Popup from './components/Popup';
 
 const socket = io();
 
@@ -31,9 +32,11 @@ class App extends Component {
       winningCards: [],
       message: '',
       modalMessage: '',
+      popupMessage: '',
       modalButtons: null,
       showMenu: false,
       showModal: false,
+      showPopup: false,
       joiningGame: false,
     }
 
