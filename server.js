@@ -253,8 +253,7 @@ io.on('connection', (socket) => {
     return roomCode.toUpperCase();
   }
 
-  // when a player joins, puts together a player object for them and adds them
-  // to a room
+  // when a player joins, puts together a player object for them and adds them to a room
   function joinPlayerToRoom(id, name, roomCode) {
     const { players, czarOrder } = gameRooms[roomCode];
 
