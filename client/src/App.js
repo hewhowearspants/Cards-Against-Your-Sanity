@@ -308,6 +308,7 @@ class App extends Component {
       message: '',
       modalMessage: '',
       modalCallback: null,
+      modalButtons: null,
       showMenu: false,
       showModal: false,
     })
