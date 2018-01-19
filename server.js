@@ -220,13 +220,19 @@ io.on('connection', (socket) => {
   socket.on('leave game', (data) => {
     const { players } = gameRooms[data.roomCode];
     console.log(`${players[socket.id].name} left the game`);
-    removePlayerFromRoom(data.roomCode, socket.id);
+    if (players[socket.id]) {
+      socket.leave(data.roomCode);
+      removePlayerFromRoom(data.roomCode, socket.id);
+    }
   })
 
   socket.on('disconnect', () => {
     console.log(socket.id + ' disconnected')
     for (let roomCode in gameRooms) {
-      removePlayerFromRoom(roomCode, socket.id);
+      if (gameRooms[roomCode].players[socket.id]) {
+        socket.leave(roomCode);
+        removePlayerFromRoom(roomCode, socket.id);
+      }
     }
   })
 
