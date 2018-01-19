@@ -279,13 +279,15 @@ io.on('connection', (socket) => {
 
     // delete player from players object and update players' lists
     delete players[id];
-    console.log(players);
     let playersList = preparePlayerListToSend(roomCode);
     io.sockets.in(roomCode).emit('update players', { players: playersList });
 
     if (Object.keys(players).length < 3) { 
       // IF THE LOSS OF A PLAYER BRINGS THE PLAYER COUNT BELOW 3
       console.log('PLAYER COUNT DROPPED BELOW 3...')
+      for(let card in playedCards) {
+        delete playedCards[card];
+      }
 
       // if there are pending players waiting to join the game...
       console.log('CHECKING FOR PENDING PLAYERS')
