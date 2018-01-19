@@ -424,7 +424,7 @@ class App extends Component {
 
   handleCardSelectionSubmit() {
     let sortableSelection = [];
-    let cardSelection = Object.assign({}, this.state.cardSelection);
+    let cardSelection = {...this.state.cardSelection};
 
     for (let text in cardSelection) {
       sortableSelection.push([text, cardSelection[text]]);
