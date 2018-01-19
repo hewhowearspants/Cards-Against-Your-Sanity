@@ -220,13 +220,19 @@ io.on('connection', (socket) => {
   socket.on('leave game', (data) => {
     const { players } = gameRooms[data.roomCode];
     console.log(`${players[socket.id].name} left the game`);
-    removePlayerFromRoom(data.roomCode, socket.id);
+    if (players[socket.id]) {
+      socket.leave(data.roomCode);
+      removePlayerFromRoom(data.roomCode, socket.id);
+    }
   })
 
   socket.on('disconnect', () => {
     console.log(socket.id + ' disconnected')
     for (let roomCode in gameRooms) {
-      removePlayerFromRoom(roomCode, socket.id);
+      if (gameRooms[roomCode].players[socket.id]) {
+        socket.leave(roomCode);
+        removePlayerFromRoom(roomCode, socket.id);
+      }
     }
   })
 
@@ -247,8 +253,7 @@ io.on('connection', (socket) => {
     return roomCode.toUpperCase();
   }
 
-  // when a player joins, puts together a player object for them and adds them
-  // to a room
+  // when a player joins, puts together a player object for them and adds them to a room
   function joinPlayerToRoom(id, name, roomCode) {
     const { players, czarOrder } = gameRooms[roomCode];
 
@@ -270,45 +275,86 @@ io.on('connection', (socket) => {
   function removePlayerFromRoom(roomCode, id) {
     const { players, playedCards, pendingPlayers, czarOrder, gameStage } = gameRooms[roomCode];
 
-    if (players[id]) {
-      console.log(`${players[id].name} left room ${roomCode}`);
+    console.log(`${players[id].name} left room ${roomCode}`);
 
-      delete players[id];
-      console.log(players)
-      let playersList = preparePlayerListToSend(roomCode);
-      io.sockets.in(roomCode).emit('update players', { players: playersList });
+    // delete player from players object and update players' lists
+    delete players[id];
+    console.log(players);
+    let playersList = preparePlayerListToSend(roomCode);
+    io.sockets.in(roomCode).emit('update players', { players: playersList });
 
-      if (czarOrder[0].id === id) {
-        resetGame();
-      }
-      czarOrder.splice(findById(czarOrder, id), 1);
+    if (Object.keys(players).length < 3) { 
+      // IF THE LOSS OF A PLAYER BRINGS THE PLAYER COUNT BELOW 3
+      console.log('PLAYER COUNT DROPPED BELOW 3...')
 
-      if (gameStage === 'waiting for player submit') {
-        if (playedCards[id]) {
-          console.log(`deleting ${id}'s played cards`);
-          delete playedCards[id];
-        }
-        let allPlayersSubmitted = (Object.keys(playedCards).length === Object.keys(players).length - 1);
-        if (allPlayersSubmitted) {
-          sendWhiteCardsToCardCzar(roomCode);
-        }
-      }
-
-      if (Object.keys(players).length - 1 < 3) { 
-        socket.emit('not enough players');
-        gamerooms[roomCode].gameStage = 'waiting for ready';
+      // if there are pending players waiting to join the game...
+      console.log('CHECKING FOR PENDING PLAYERS')
+      if (Object.keys(pendingPlayers).length > 0) {
+        // ...shove in all the pending players
         for (let id in pendingPlayers) {
+          console.log(`adding ${pendingPlayers[id].name} to players`)
+
           joinPlayerToRoom(id, pendingPlayers[id].name, roomCode);
+          
           players[id].ready = true;
+          
           let playerSocket = io.sockets.connected[id];
           playerSocket.emit('joined', {
             cards: [...players[id].cards],
             roomCode,
           });
+
           delete pendingPlayers[id];
         }
+        // send updated player list to players
+        let playersList = preparePlayerListToSend(roomCode);
+        io.sockets.in(roomCode).emit('update players', { players: playersList });
       }
+      
+      // if there still aren't enough players...
+      if (Object.keys(players).length < 3) {
+        console.log('STILL LESS THAN THREE PLAYERS')
+        io.sockets.in(roomCode).emit('need more players');
+        gameRooms[roomCode].gameStage = 'waiting for ready';
+        for (let id in players) {
+          players[id].ready = true;
+        }
+      } else {
+        // ...else, even if there are enough players, still need to reset the game
+
+        // if the next person in the czar order is the departing player, go ahead and remove them now
+        // (because resetGame() cycles to the next card czar)
+        if (czarOrder[1].id === id) {
+          czarOrder.splice(findById(czarOrder, id), 1);
+        } 
+        
+        resetGame(roomCode);
+      }
+
+    } else {
+      // ...ELSE IF THERE ARE STILL 3 OR MORE PLAYERS IN THE GAME...
+      // ...if the departing player was the card czar...
+      if (czarOrder[0].id === id) {
+        // reset the game (cycles to next czar)
+        resetGame(roomCode);
+      } else {
+        // ...else, if the game is waiting for players to submit their white cards
+        if (gameStage === 'waiting for player submit') {
+          // ...remove the departing players' played cards...
+          if (playedCards[id]) {
+            console.log(`deleting ${id}'s played cards`);
+            delete playedCards[id];
+          }
+          // ...and send the played cards to the czar if the departing player was the last one
+          let allPlayersSubmitted = (Object.keys(playedCards).length === Object.keys(players).length - 1);
+          if (allPlayersSubmitted) {
+            sendWhiteCardsToCardCzar(roomCode);
+          }
+        }
+      } 
     }
+    // okay, after all that, finally remove the departing player from the czar order array
+    czarOrder.splice(findById(czarOrder, id), 1);
   }
 
   function preparePlayerListToSend(roomCode) {

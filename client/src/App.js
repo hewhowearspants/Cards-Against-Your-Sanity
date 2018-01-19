@@ -112,29 +112,38 @@ class App extends Component {
     })
 
     socket.on('need more players', () => {
+      console.log('needs more players!')
       if (this.state.currentScreen === 'lobby') {
         this.setMessage('waiting for more players', 'popup', 2000);
       } else if (this.state.currentScreen === 'game') {
-        let cardSelection = Object.assign({}, this.state.cardSelection);
-        let cards = Object.assign([], this.state.cards);
-        if (Object.keys(cardSelection).length > 0) {
-          for (let text in cardSelection) {
-            cards.push(text);
+        let playersLeftToPlay = (this.state.players.length - 1) - this.state.playedCount;
+        let cardSelection = {...this.state.cardSelection};
+        let cards = [...this.state.cards];
+
+        if (!playersLeftToPlay) {
+          if (Object.keys(cardSelection).length > 0) {
+            for (let text in cardSelection) {
+              cards.push(text);
+            }
           }
         }
+
         this.setState({
+          cards,
+          blackCard: null,
           currentScreen: 'lobby',
-          showModal: true,
+          cardCzar: false,
+          cardCzarName: '',
+          gameStarted: false,
+          message: '',
           modalMessage: 'Not enough players',
           modalButtons: [{
             text: 'OK',
             callback: this.closeModal
           }],
-          blackCard: null,
-          cardCzar: false,
-          cardCzarName: null,
           cardSelection: {},
-          cards,
+          playerSelections: null,
+          showModal: true,
         })
       }
       
@@ -299,6 +308,7 @@ class App extends Component {
       message: '',
       modalMessage: '',
       modalCallback: null,
+      modalButtons: null,
       showMenu: false,
       showModal: false,
     })
@@ -414,7 +424,7 @@ class App extends Component {
 
   handleCardSelectionSubmit() {
     let sortableSelection = [];
-    let cardSelection = Object.assign({}, this.state.cardSelection);
+    let cardSelection = {...this.state.cardSelection};
 
     for (let text in cardSelection) {
       sortableSelection.push([text, cardSelection[text]]);
