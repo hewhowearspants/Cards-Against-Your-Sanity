@@ -393,8 +393,8 @@ class App extends Component {
   }
 
   handleCardSelection(text) {
-    let cardSelection = Object.assign({}, this.state.cardSelection);
-    let cards = Object.assign([], this.state.cards);
+    let cardSelection = {...this.state.cardSelection};
+    let cards = [...this.state.cards];
 
     if (!cardSelection[text]) {
       if (Object.keys(cardSelection).length < this.state.blackCard.pick) {
