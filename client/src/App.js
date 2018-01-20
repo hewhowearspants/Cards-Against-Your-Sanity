@@ -154,6 +154,17 @@ class App extends Component {
       this.setState({
         players: data.players
       })
+      
+      if (data.joiningPlayer || data.departingPlayer) {
+        let message = ' the game.';
+        if (data.joiningPlayer) {
+          message = `${data.joiningPlayer} joined` + message;
+        } else if (data.departingPlayer) {
+          message = `${data.departingPlayer} left` + message;
+        }
+
+        this.setMessage(message, 'popup');
+      }
     });
 
     socket.on('start game', (data) => {
