@@ -271,7 +271,7 @@ io.on('connection', (socket) => {
     czarOrder.push({id: id, name: player.name});
 
     let playersList = preparePlayerListToSend(roomCode);
-    io.sockets.in(roomCode).emit('update players', { players: playersList });
+    io.sockets.in(roomCode).emit('update players', { players: playersList, joiningPlayer: player.name });
 
   }
 
@@ -281,9 +281,10 @@ io.on('connection', (socket) => {
     console.log(`${players[id].name} left room ${roomCode}`);
 
     // delete player from players object and update players' lists
+    let departingPlayer = players[id].name;
     delete players[id];
     let playersList = preparePlayerListToSend(roomCode);
-    io.sockets.in(roomCode).emit('update players', { players: playersList });
+    io.sockets.in(roomCode).emit('update players', { players: playersList, departingPlayer });
 
     if (Object.keys(players).length < 3) { 
       // IF THE LOSS OF A PLAYER BRINGS THE PLAYER COUNT BELOW 3
