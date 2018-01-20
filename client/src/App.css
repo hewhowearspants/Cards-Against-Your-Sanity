@@ -467,6 +467,7 @@ header h3 {
   animation: slide-in-fade-out 2s linear;
   background: gold;
   font-size: 1em;
+  z-index: 12;
 }
 
 @keyframes slide-in-fade-out {
