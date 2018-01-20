@@ -62,11 +62,13 @@ io.on('connection', (socket) => {
 
       if (Object.keys(players).length < 10) {
         let nameExists = false;
+
         for(let id in players){
           if(players[id].name.toUpperCase() === data.name.toUpperCase()){
             nameExists = true
           }
         }
+
         if(!nameExists){
           socket.join(roomCode);
           if (gameStage === 'waiting for ready') {
@@ -82,7 +84,7 @@ io.on('connection', (socket) => {
               name: data.name
             }
             let playersList = preparePlayerListToSend(roomCode);
-            socket.emit('update players', {players: playersList});
+            socket.emit('update players', { players: playersList });
             socket.emit('game in progress', {
               roomCode,
               cardCzarName: czarOrder[0].name
@@ -97,6 +99,7 @@ io.on('connection', (socket) => {
         console.log('Fuck off, we\'re full!');
         socket.emit('room full');
       }
+
     } else {
       socket.emit('bad roomcode');
     }
@@ -268,7 +271,7 @@ io.on('connection', (socket) => {
     czarOrder.push({id: id, name: player.name});
 
     let playersList = preparePlayerListToSend(roomCode);
-    io.sockets.in(roomCode).emit('update players', { players: playersList });
+    io.sockets.in(roomCode).emit('update players', { players: playersList, joiningPlayer: player.name });
 
   }
 
@@ -278,9 +281,10 @@ io.on('connection', (socket) => {
     console.log(`${players[id].name} left room ${roomCode}`);
 
     // delete player from players object and update players' lists
+    let departingPlayer = players[id].name;
     delete players[id];
     let playersList = preparePlayerListToSend(roomCode);
-    io.sockets.in(roomCode).emit('update players', { players: playersList });
+    io.sockets.in(roomCode).emit('update players', { players: playersList, departingPlayer });
 
     if (Object.keys(players).length < 3) { 
       // IF THE LOSS OF A PLAYER BRINGS THE PLAYER COUNT BELOW 3
