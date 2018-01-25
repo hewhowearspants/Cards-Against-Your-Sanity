@@ -141,7 +141,10 @@ io.on('connection', (socket) => {
       cards.splice(cards.indexOf(card), 1);
     })
 
-    playedCards[socket.id] = data.cardSelection;
+    playedCards[socket.id] = {
+      name: players[socket.id].name,
+      selection: data.cardSelection,
+    }
 
     io.sockets.in(roomCode).emit('player submitted', {playedCount: Object.keys(playedCards).length});
 
@@ -150,7 +153,7 @@ io.on('connection', (socket) => {
       let playerSelections = [];
 
       for (let id in playedCards) {
-        playerSelections.push(playedCards[id]);
+        playerSelections.push(playedCards[id].selection);
       }
 
       gameRooms[roomCode].gameStage = 'waiting for czar choice';
@@ -170,10 +173,12 @@ io.on('connection', (socket) => {
     console.log(`card czar chose ${data.czarChoice}`);
 
     for (let id in playedCards) {
-      if (playedCards[id][0] === data.czarChoice[0]) {
+      if (playedCards[id].selection[0] === data.czarChoice[0]) {
         winner.id = id;
-        winner.name = players[id].name;
-        players[id].winningCards.push({black: data.blackCard, white: data.czarChoice})
+        winner.name = playedCards[id].name;
+        if(players[id]) {
+          players[id].winningCards.push({black: data.blackCard, white: data.czarChoice})
+        }
       }
     }
 
