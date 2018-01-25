@@ -141,7 +141,10 @@ io.on('connection', (socket) => {
       cards.splice(cards.indexOf(card), 1);
     })
 
-    playedCards[socket.id] = data.cardSelection;
+    playedCards[socket.id] = {
+      name: players[socket.id].name,
+      selection: data.cardSelection,
+    }
 
     io.sockets.in(roomCode).emit('player submitted', {playedCount: Object.keys(playedCards).length});
 
@@ -150,7 +153,7 @@ io.on('connection', (socket) => {
       let playerSelections = [];
 
       for (let id in playedCards) {
-        playerSelections.push(playedCards[id]);
+        playerSelections.push(playedCards[id].selection);
       }
 
       gameRooms[roomCode].gameStage = 'waiting for czar choice';
@@ -170,10 +173,12 @@ io.on('connection', (socket) => {
     console.log(`card czar chose ${data.czarChoice}`);
 
     for (let id in playedCards) {
-      if (playedCards[id][0] === data.czarChoice[0]) {
+      if (playedCards[id].selection[0] === data.czarChoice[0]) {
         winner.id = id;
-        winner.name = players[id].name;
-        players[id].winningCards.push({black: data.blackCard, white: data.czarChoice})
+        winner.name = playedCards[id].name;
+        if(players[id]) {
+          players[id].winningCards.push({black: data.blackCard, white: data.czarChoice})
+        }
       }
     }
 
@@ -289,8 +294,8 @@ io.on('connection', (socket) => {
     if (Object.keys(players).length < 3) { 
       // IF THE LOSS OF A PLAYER BRINGS THE PLAYER COUNT BELOW 3
       console.log('PLAYER COUNT DROPPED BELOW 3...')
-      for(let card in playedCards) {
-        delete playedCards[card];
+      for(let id in playedCards) {
+        delete playedCards[id];
       }
 
       // if there are pending players waiting to join the game...
@@ -440,11 +445,7 @@ io.on('connection', (socket) => {
     let cardCzar = czarOrder[0];
     let cardCzarSocket = io.sockets.connected[cardCzar.id];
 
-    io.sockets.in(roomCode).emit('start game', {cardCzarName: cardCzar.name});
-
-    if (cardCzarSocket) {
-      cardCzarSocket.emit('card czar', {blackCard: blackCard});
-    }
+    io.sockets.in(roomCode).emit('start game', {cardCzarName: cardCzar.name, blackCard});
 
     for (let id in players) {
       players[id].ready = false;
@@ -470,7 +471,7 @@ io.on('connection', (socket) => {
 
     console.log('dumping played cards into discard');
     for (let id in playedCards) {
-      playedCards[id].forEach((card) => {
+      playedCards[id].selection.forEach((card) => {
         whiteCardDiscard.push(card);
       });
       delete playedCards[id];

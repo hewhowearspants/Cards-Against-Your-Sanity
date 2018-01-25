@@ -150,11 +150,11 @@ class App extends Component {
     })
 
     socket.on('update players', (data) => {
-      console.log('receiving players');
+      console.log('updating player list');
       this.setState({
         players: data.players
       })
-      
+
       if (data.joiningPlayer || data.departingPlayer) {
         let message = ' the game.';
         if (data.joiningPlayer) {
@@ -162,27 +162,33 @@ class App extends Component {
         } else if (data.departingPlayer) {
           message = `${data.departingPlayer} left` + message;
         }
-
-        this.setMessage(message, 'popup');
+        if (data.joiningPlayer !== this.state.name && data.departingPlayer !== this.state.name) {
+          this.setMessage(message, 'popup');
+        }
       }
     });
 
     socket.on('start game', (data) => {
+      let youAreTheCardCzar = data.cardCzarName === this.state.name;
+      let message;
+
+      if (youAreTheCardCzar) {
+        console.log('you are the card czar!')
+        message = 'Read the card aloud and then press START';
+      } else {
+        console.log('waiting on the card czar!')
+        message = `waiting on ${data.cardCzarName} to read their card`
+      }
+
       this.setState({
         currentScreen: 'game',
+        gameStarted: false,
+        cardCzar: youAreTheCardCzar,
         cardCzarName: data.cardCzarName,
-        message: `waiting on ${data.cardCzarName} to read their card`,
+        blackCard: youAreTheCardCzar ? data.blackCard : null,
+        message
       });
     })
-
-    socket.on('card czar', (data) => {
-      console.log('you are the card czar!');
-      this.setState({
-        cardCzar: true,
-        blackCard: data.blackCard,
-        message: 'Read the card aloud and then press START',
-      })
-    });
 
     socket.on('pick your cards', (data) => {
       if (this.state.currentScreen === 'game') {
