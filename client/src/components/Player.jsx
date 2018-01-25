@@ -44,7 +44,7 @@ class Player extends Component {
         <div key={card[1]} className={`selected-card ${!this.props.gameStarted ? 'pending' : ''}`}>
           <p>
             <span className='selected-card-number'>{card[1]} </span>
-            <span className='selected-card-text' dangerouslySetInnerHTML={{__html: card[0]}}></span>
+      <span className='selected-card-text' dangerouslySetInnerHTML={{__html: card[0] || `<span class='message'>${this.props.message}</span>`}}></span>
             <span className='remove-selected-card'>{card[0] && this.props.gameStarted ? <span onClick={() => this.props.handleCardSelection(card[0])}><i className="fas fa-times-circle"></i></span> : ''}</span>
           </p>
         </div>
@@ -55,13 +55,8 @@ class Player extends Component {
   render() {
     return (
       <div className='player'>
-        {this.props.blackCard && 
-          <Card color='black' text={this.props.blackCard.text} /> 
-        }
-        <div className='message'>
-          <p>{this.props.message}</p>
-        </div>
         <div className='selection'>
+          {this.props.blackCard && <Card color='black' text={this.props.blackCard.text} />}
           {this.props.blackCard && this.renderSelection()}
         </div>
         <div className='white-cards'>
