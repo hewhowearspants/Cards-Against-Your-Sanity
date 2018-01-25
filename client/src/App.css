@@ -15,6 +15,7 @@ body {
 button {
   position: fixed;
   font-size: 20px;
+  font-weight: bold;
   bottom: 0;
   left: 0;
   right: 0;
@@ -246,7 +247,7 @@ header h3 {
   transform: rotate(15deg) !important;
   align-self: flex-end;
   animation: none;
-  margin-bottom: -100px;
+  margin-bottom: -155px;
 }
 
 .winner .black-card {
@@ -327,7 +328,8 @@ header h3 {
 }
 
 .player .message {
-  margin-top: 15px;
+  padding: 0px;
+  height: inherit;
 }
 
 .game {
@@ -365,7 +367,6 @@ header h3 {
   padding: 10px;
   border-radius: 15px;
   border: 1px solid black;
-  margin-bottom: -90%;
   text-align: center;
   box-sizing: border-box;
   transition: .25s all;
@@ -374,10 +375,6 @@ header h3 {
 
 .white-card p {
   text-align: left;
-}
-
-.player .white-card:hover {
-  margin-bottom: -50%;
 }
 
 .player .white-card:hover button {
