@@ -2,8 +2,8 @@ import React from 'react';
 
 const Modal = (props) => {
   function renderButtons() {
-    return props.buttons.map((button) => {
-      return <button onClick={button.callback}>{button.text}</button>
+    return props.buttons.map((button, index) => {
+      return <button key={index} onClick={button.callback}>{button.text}</button>
     })
   }
 
