@@ -9,7 +9,7 @@ class Player extends Component {
     if (Object.keys(this.props.cardSelection) && this.props.blackCard) {
       showPick = Object.keys(this.props.cardSelection).length !== this.props.blackCard.pick;
     }
-    return this.props.cards.map((text, index) => {
+    return this.props.cards.map((text, index, array) => {
       return (
         <Card 
           key={index}
@@ -20,6 +20,7 @@ class Player extends Component {
           text={text}
           showPick={showPick}
           gameStarted={this.props.gameStarted}
+          hoverable={index < array.length - 1 ? true : false}
           />
       )
     });
