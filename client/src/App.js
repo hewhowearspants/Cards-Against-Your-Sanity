@@ -169,21 +169,26 @@ class App extends Component {
     });
 
     socket.on('start game', (data) => {
+      let youAreTheCardCzar = data.cardCzarName === this.state.name;
+      let message;
+
+      if (youAreTheCardCzar) {
+        console.log('you are the card czar!')
+        message = 'Read the card aloud and then press START';
+      } else {
+        console.log('waiting on the card czar!')
+        message = `waiting on ${data.cardCzarName} to read their card`
+      }
+
       this.setState({
         currentScreen: 'game',
+        gameStarted: false,
+        cardCzar: youAreTheCardCzar,
         cardCzarName: data.cardCzarName,
-        message: `waiting on ${data.cardCzarName} to read their card`,
+        blackCard: youAreTheCardCzar ? data.blackCard : null,
+        message
       });
     })
-
-    socket.on('card czar', (data) => {
-      console.log('you are the card czar!');
-      this.setState({
-        cardCzar: true,
-        blackCard: data.blackCard,
-        message: 'Read the card aloud and then press START',
-      })
-    });
 
     socket.on('pick your cards', (data) => {
       if (this.state.currentScreen === 'game') {
