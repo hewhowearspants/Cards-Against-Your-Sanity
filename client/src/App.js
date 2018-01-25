@@ -162,8 +162,9 @@ class App extends Component {
         } else if (data.departingPlayer) {
           message = `${data.departingPlayer} left` + message;
         }
-
-        this.setMessage(message, 'popup');
+        if (data.joiningPlayer !== this.state.name && data.departingPlayer !== this.state.name) {
+          this.setMessage(message, 'popup');
+        }
       }
     });
 
