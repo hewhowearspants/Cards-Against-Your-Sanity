@@ -471,7 +471,7 @@ io.on('connection', (socket) => {
 
     console.log('dumping played cards into discard');
     for (let id in playedCards) {
-      playedCards[id].forEach((card) => {
+      playedCards[id].selection.forEach((card) => {
         whiteCardDiscard.push(card);
       });
       delete playedCards[id];
