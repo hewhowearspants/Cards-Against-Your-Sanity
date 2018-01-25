@@ -294,8 +294,8 @@ io.on('connection', (socket) => {
     if (Object.keys(players).length < 3) { 
       // IF THE LOSS OF A PLAYER BRINGS THE PLAYER COUNT BELOW 3
       console.log('PLAYER COUNT DROPPED BELOW 3...')
-      for(let card in playedCards) {
-        delete playedCards[card];
+      for(let id in playedCards) {
+        delete playedCards[id];
       }
 
       // if there are pending players waiting to join the game...
