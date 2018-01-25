@@ -445,11 +445,7 @@ io.on('connection', (socket) => {
     let cardCzar = czarOrder[0];
     let cardCzarSocket = io.sockets.connected[cardCzar.id];
 
-    io.sockets.in(roomCode).emit('start game', {cardCzarName: cardCzar.name});
-
-    if (cardCzarSocket) {
-      cardCzarSocket.emit('card czar', {blackCard: blackCard});
-    }
+    io.sockets.in(roomCode).emit('start game', {cardCzarName: cardCzar.name, blackCard});
 
     for (let id in players) {
       players[id].ready = false;
