@@ -150,11 +150,11 @@ class App extends Component {
     })
 
     socket.on('update players', (data) => {
-      console.log('receiving players');
+      console.log('updating player list');
       this.setState({
         players: data.players
       })
-      
+
       if (data.joiningPlayer || data.departingPlayer) {
         let message = ' the game.';
         if (data.joiningPlayer) {
