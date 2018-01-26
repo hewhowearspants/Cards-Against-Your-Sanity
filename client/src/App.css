@@ -315,20 +315,45 @@ header h3 {
   font-size: large;
 }
 
-.lobby .player-list {
+.lobby {
   display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  text-align: center;
-  padding: 20px;
+  flex-direction: column;
+  align-items: center;
+  height: calc(100% - 50px);
+}
+
+.lobby h1 {
+  margin-top: 0;
+}
+
+.lobby .player-list-container {
+  background-color: #333;
+  width: 90vw;
+  /* height: 55vh; */
+  color: white;
+  padding: 10px 0;
+  border-radius: 10px;
   overflow: auto;
 }
 
+.lobby .player-list {
+  display: flex;
+  flex: 1;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  text-align: center;
+  padding: 10px;
+  overflow: auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .lobby .player-list p {
-  margin: 15px;
+  margin: 10px;
   font-size: 20px;
   padding: 5px 10px;
   border-radius: 25px;
+  color: white;
 }
 
 .message {
@@ -573,7 +598,11 @@ header h3 {
   cursor: pointer;
 }
 
-.ready,
+.ready {
+  background-color: gold;
+  color: black !important;
+}
+
 .selected {
   background-color: black;
   color: white;
