@@ -37,32 +37,36 @@ button:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 50px;
+  justify-content: space-around;
+  height: 100%;
+}
+
+.home .top,
+.home .bottom {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .logo {
-  filter: blur(1px); 
-  animation: in-and-out 20s linear infinite; 
+  filter: blur(0px); 
+  transform: perspective(200px) translateZ(0px);
+  animation: in-and-out 1s ease-in-out infinite; 
 }
 
 @keyframes in-and-out {
-  0% { 
+  20% { 
     filter: blur(0px);
     transform: perspective(200px) translateZ(0px); 
   }
-  25% { 
+  50% { 
     filter: blur(3px);
-    transform: perspective(200px) translateZ(-25px); 
+    transform: perspective(200px) translateZ(50px); 
   }
-  50% {
-    filter: blur(0px);
-    transform: perspective(200px) translateZ(0px);
-  }
-  75% {
-    filter: blur(2px);
-    transform: perspective(200px) translateZ(25px);
-  }
-  100% {
+  80% {
     filter: blur(0px);
     transform: perspective(200px) translateZ(0px);
   }
@@ -77,7 +81,11 @@ button:hover {
 .home input {
   font-size: 20px;
   margin: 15px;
+  padding: 10px;
   text-align: center;
+  width: 75vw;
+  box-sizing: border-box;
+  border: none;
 }
 
 p, h3 {
@@ -313,6 +321,7 @@ header h3 {
   flex-wrap: wrap;
   text-align: center;
   padding: 20px;
+  overflow: auto;
 }
 
 .lobby .player-list p {
@@ -364,8 +373,15 @@ header h3 {
 }
 
 .card-czar {
-  justify-content: flex-start;
+  justify-content: space-around;
   overflow: hidden;
+}
+
+.card-czar-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .white-card,
@@ -457,7 +473,8 @@ header h3 {
 .player-selections {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  flex: 1;
   width: 100vw;
   margin-top: 20px;
 }
@@ -515,6 +532,9 @@ header h3 {
 
 .modal-overlay {
   position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   top: 0;
   bottom: 0;
   left: 0;
@@ -530,13 +550,14 @@ header h3 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #ccc;
+  background-color: #bbb;
   border-radius: 5px;
   max-width: 300px;
   min-height: 200px;
-  margin: 0 auto;
+  /* margin: 0 auto; */
   padding: 30px;
   z-index: 101;
+  font-weight: bold;
 }
 
 .modal-buttons {
