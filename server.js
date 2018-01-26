@@ -345,7 +345,7 @@ io.on('connection', (socket) => {
     } else {
       // ...ELSE IF THERE ARE STILL 3 OR MORE PLAYERS IN THE GAME...
       // ...if the departing player was the card czar...
-      if (czarOrder[0].id === id) {
+      if (czarOrder[0].id === id && gameStage !== 'waiting for ready') {
         // reset the game (cycles to next czar)
         resetGame(roomCode);
       } else {
