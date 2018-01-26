@@ -54,11 +54,13 @@ class CardCzar extends Component {
 
     return (
       <div className='card-czar'>
-        {this.props.blackCard && <Card color='black' text={this.props.blackCard.text} />}
-        {!this.props.playerSelections && 
-          <div className='message'>
-            <p>{this.props.message}</p>
-          </div>}
+        <div className='card-czar-container'>
+          {this.props.blackCard && <Card color='black' text={this.props.blackCard.text} />}
+          {!this.props.playerSelections && 
+            <div className='message'>
+              <p>{this.props.message}</p>
+            </div>}
+        </div>
         {this.props.playerSelections &&
           <div className='player-selections'>
             <div className='prev-selection' onClick={() => this.changeSelection(-1)}>
