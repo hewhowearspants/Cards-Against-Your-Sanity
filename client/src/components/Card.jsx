@@ -5,7 +5,7 @@ class Card extends Component {
     super();
 
     this.state = {
-      marginBottomOffset: 0
+      offset: 0
     }
 
     this.handleHover = this.handleHover.bind(this);
@@ -24,12 +24,16 @@ class Card extends Component {
 
     if (eventName === 'onMouseEnter') {
       let text = document.querySelector(`#white-card-${this.props.index} p`);
+      let offset = text.offsetHeight;
+      if (this.props.showPick) {
+        offset += 10;
+      }
       this.setState({
-        marginBottomOffset: text.offsetHeight + 10,
+        offset,
       })
     } else if (eventName === 'onMouseLeave') {
       this.setState({
-        marginBottomOffset: 0
+        offset: 0
       })
     } 
   }
@@ -39,8 +43,8 @@ class Card extends Component {
 
     return (
       <div className={`${color}-card`} 
-           id={`${color}-card-${index}`} 
-           style={{zIndex: index, transform:`translateZ(${index}px)`, marginBottom: hoverable ? this.state.marginBottomOffset ? `-${155 - this.state.marginBottomOffset}px` : `-155px` : null}}
+           id={hoverable ? `${color}-card-${index}` : ''} 
+           style={{zIndex: index, transform:`translateZ(${index}px)`, marginBottom: hoverable ? this.state.offset ? `-${155 - this.state.offset}px` : `-155px` : null}}
            onMouseEnter={hoverable ? this.handleHover : null} 
            onMouseLeave={hoverable ? this.handleHover : null}>
         {this.renderCard()}
