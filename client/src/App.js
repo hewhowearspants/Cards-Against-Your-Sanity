@@ -264,6 +264,15 @@ class App extends Component {
 
     socket.on('disconnect', () => {
       socket.connect();
+      this.setState({
+        showModal: true,
+        modalMessage: 'Disconnected from server.',
+        modalButtons: [{
+          text: 'OK',
+          callback: this.closeModal
+        }],
+        currentScreen: 'home',
+      })
     })
 
   }
