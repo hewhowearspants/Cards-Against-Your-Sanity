@@ -4,11 +4,11 @@ body {
 
 .App {
   text-align: center;
-  height: calc(100vh - 92px);
+  height: calc(100vh - 42px);
   width: 100vw;
   overflow-x: hidden;
   margin-top: 42px;
-  padding-bottom: 50px;
+  /* padding-bottom: 50px; */
   background-color: #BBB;
 }
 
@@ -295,6 +295,10 @@ header h3 {
   margin-top: 5px;
 }
 
+.about p {
+  font-weight: bold;
+}
+
 .App-title {
   font-size: 1.5em;
 }
@@ -348,6 +352,17 @@ header h3 {
   justify-content: flex-start;
 }
 
+.player .white-cards {
+  width: 100%;
+  overflow-y: auto;
+  flex: 1;
+  padding: 10px 0;
+}
+
+.player .white-cards .white-card {
+  margin: 0 auto;
+}
+
 .card-czar {
   justify-content: flex-start;
   overflow: hidden;
@@ -382,10 +397,26 @@ header h3 {
 }
 
 .player .selection {
-  margin: 10px;
+  padding: 10px;
+  background-color: #222;
   box-sizing: border-box;
   text-align: left;
-  width: 90vw;
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  border-bottom: 2px solid black;
+  box-shadow: 0px 5px 20px #333;
+  transform-origin: top;
+  animation: expand-max .35s;
+  transition: .25s all;
+  z-index: 11;
+}
+
+@keyframes expand-max {
+  0% {
+    max-height: 1px;
+    transform: scaleY(0);
+  }
 }
 
 .selection .selected-card {
