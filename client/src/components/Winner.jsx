@@ -4,8 +4,8 @@ import Card from './Card';
 
 const Winner = ({ winner }) => {
   function renderWhiteCards() {
-    return winner.white.map((text, index) => {
-      return <Card key={index} index={index} color='white' text={text} />
+    return winner.white.map((text, index, array) => {
+      return <Card key={index} index={index} color='white' text={text} hoverable={index < array.length - 1 ? true : false} />
     })
   }
 

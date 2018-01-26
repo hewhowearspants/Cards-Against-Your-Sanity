@@ -69,9 +69,9 @@ class CardCzar extends Component {
               })}
             </div>
             <div className='current-selection'>
-              {this.props.playerSelections[currentSelection].map((text, index) => {
+              {this.props.playerSelections[currentSelection].map((text, index, array) => {
                 return (
-                  <Card color='white' key={index} index={index} heldBy='czar' text={text} />
+                  <Card color='white' key={index} index={index} heldBy='czar' text={text} hoverable={index < array.length - 1 ? true : false} />
                 )
               })}
             </div>

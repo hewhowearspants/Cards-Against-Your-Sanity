@@ -9,7 +9,7 @@ class Player extends Component {
     if (Object.keys(this.props.cardSelection) && this.props.blackCard) {
       showPick = Object.keys(this.props.cardSelection).length !== this.props.blackCard.pick;
     }
-    return this.props.cards.map((text, index) => {
+    return this.props.cards.map((text, index, array) => {
       return (
         <Card 
           key={index}
@@ -20,6 +20,7 @@ class Player extends Component {
           text={text}
           showPick={showPick}
           gameStarted={this.props.gameStarted}
+          hoverable={index < array.length - 1 ? true : false}
           />
       )
     });
@@ -43,7 +44,7 @@ class Player extends Component {
         <div key={card[1]} className={`selected-card ${!this.props.gameStarted ? 'pending' : ''}`}>
           <p>
             <span className='selected-card-number'>{card[1]} </span>
-            <span className='selected-card-text' dangerouslySetInnerHTML={{__html: card[0]}}></span>
+      <span className='selected-card-text' dangerouslySetInnerHTML={{__html: card[0] || `<span class='message'>${this.props.message}</span>`}}></span>
             <span className='remove-selected-card'>{card[0] && this.props.gameStarted ? <span onClick={() => this.props.handleCardSelection(card[0])}><i className="fas fa-times-circle"></i></span> : ''}</span>
           </p>
         </div>
@@ -54,15 +55,12 @@ class Player extends Component {
   render() {
     return (
       <div className='player'>
-        {this.props.blackCard && 
-          <Card color='black' text={this.props.blackCard.text} /> 
+        {this.props.blackCard &&
+          <div className='selection'>
+            {this.props.blackCard && <Card color='black' text={this.props.blackCard.text} />}
+            {this.props.blackCard && this.renderSelection()}
+          </div>
         }
-        <div className='message'>
-          <p>{this.props.message}</p>
-        </div>
-        <div className='selection'>
-          {this.props.blackCard && this.renderSelection()}
-        </div>
         <div className='white-cards'>
           {this.renderWhiteCards()}
         </div>
