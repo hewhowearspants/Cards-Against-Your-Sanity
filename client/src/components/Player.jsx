@@ -55,10 +55,12 @@ class Player extends Component {
   render() {
     return (
       <div className='player'>
-        <div className='selection'>
-          {this.props.blackCard && <Card color='black' text={this.props.blackCard.text} />}
-          {this.props.blackCard && this.renderSelection()}
-        </div>
+        {this.props.blackCard &&
+          <div className='selection'>
+            {this.props.blackCard && <Card color='black' text={this.props.blackCard.text} />}
+            {this.props.blackCard && this.renderSelection()}
+          </div>
+        }
         <div className='white-cards'>
           {this.renderWhiteCards()}
         </div>
