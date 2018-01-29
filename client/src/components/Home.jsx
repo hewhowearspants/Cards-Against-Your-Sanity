@@ -16,7 +16,9 @@ const Home = (props) => {
         <button onClick={props.joiningGame ? props.joinGame : () => props.toggleJoiningGame()}>Join</button>
       </div>
       <div className='bottom'>
-        <img className='logo' src='../favicon.png' alt='shitty logo' />
+        <div className='black-card-logo'></div>
+        <div className='white-card-logo'></div>
+        {/* <img className='logo' src='../favicon.png' alt='shitty logo' /> */}
       </div>
     </div>
   )
