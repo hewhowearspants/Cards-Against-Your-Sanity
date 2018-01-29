@@ -20,6 +20,129 @@ const cards = require('./cards.js');
 
 const gameRooms = {};
 
+class GameRoom {
+  constructor(roomCode) {
+    this.roomCode = roomCode;
+    this.whiteDeck = new CardDeck([...cards.whiteCards]);
+    this.blackDeck = new CardDeck([...cards.blackCards]);
+    this.playerList = new PlayerList(roomCode);
+    this.playerSelections = [];
+    this.winningCards = [];
+    this.stage = 'waiting for ready';
+  }
+  
+  addToRoom(name, id) {
+    this.playerList.players[id] = new Player(name, id, this.roomCode);
+  }
+
+  reset() {
+    this.playerSelections.forEach((selection) => {
+      selection.forEach((card) => {
+        this.whiteDeck.discard.push(card);
+      })
+    })
+    this.playerSelections = [];
+  }
+}
+
+class CardDeck {
+  constructor(cards) {
+    this.cards = cards;
+    this.discard = [];
+  }
+
+  shuffle() {
+    let shuffledCards = [];
+
+    for(let i = 0; i < this.cards.length; i++) {
+      randIndex = Math.floor(Math.random() * cards.length);
+      shuffledCards.push(cards.splice(randIndex, 1)[0]);
+    };
+
+    this.cards = shuffledCards;
+  }
+
+  reshuffle() {
+    this.cards.concat(this.discard);
+    this.shuffle();
+  }
+
+  get count() {
+    return this.cards.length;
+  }
+}
+
+class Player {
+  constructor(name, id, roomCode) {
+    this.name = name;
+    this.id = id;
+    this.roomCode = roomCode;
+    this.cards = [];
+    this.ready = false;
+    this.winningCards = [];
+    this.score = this.getScore();
+  }
+
+  refillWhiteCards(whiteDeck) {
+    console.log(`refilling ${this.name}'s white cards`);
+    if (this.cards.length < 10) {
+      for (let i = this.cards.length; i < 10; i++) {
+        this.cards.push(whiteDeck.pop());
+      }
+    }
+  }
+
+  getScore() {
+    return this.winningCards.length;
+  }
+}
+
+class PlayerList {
+  constructor(roomCode) {
+    this.players = {};
+    this.pending = {};
+    this.roomCode = roomCode;
+    this.cardCzar = 0;
+  }
+
+  get length() {
+    return Object.keys(this.players).length;
+  }
+
+  allReady() {
+    for(let id in this.players) {
+      if (!players[id].ready) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  prepareToSend() {
+    let playersPackaged = [];
+
+    for (let id in this.players) {
+      playersPackaged.push({
+        name: this.players[id].name,
+        id: id,
+        ready: this.players[id].ready,
+        winningCards: this.players[id].winningCards,
+      });
+    }
+
+    return playersPackaged;
+  }
+
+  nextCardCzar() {
+    let czarOrder = Object.keys(this.players);
+    if (this.cardCzar + 1 === czarOrder.length) {
+      this.cardCzar = 0;
+    } else {
+      this.cardCzar += 1;
+    }
+  }
+}
+
 io.on('connection', (socket) => {
   console.log(`${socket.id} connected`);
 
