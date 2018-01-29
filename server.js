@@ -1,7 +1,6 @@
 const express = require('express');
 const logger = require('morgan');
 const path = require('path');
-const cards = require('./cards.js');
 
 const app = express();
 
@@ -17,6 +16,7 @@ server.listen(port, function() {
 });
 
 const io = require('socket.io')(server);
+const cards = require('./cards.js');
 
 const gameRooms = {};
 
