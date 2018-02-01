@@ -51,34 +51,35 @@ class CardCzar extends Component {
 
   render(){
     const { prevSelection, currentSelection, nextSelection } = this.state;
+    const { playerSelections, blackCard, message } = this.props;
 
     return (
       <div className='card-czar'>
         <div className='card-czar-container'>
-          {this.props.blackCard && <Card color='black' text={this.props.blackCard.text} />}
-          {!this.props.playerSelections && 
+          {blackCard && <Card color='black' text={blackCard.text} />}
+          {!playerSelections && 
             <div className='message'>
-              <p>{this.props.message}</p>
+              <p>{message}</p>
             </div>}
         </div>
-        {this.props.playerSelections &&
+        {playerSelections &&
           <div className='player-selections'>
             <div className='prev-selection' onClick={() => this.changeSelection(-1)}>
-              {this.props.playerSelections[prevSelection].map((text, index) => {
+              {playerSelections[prevSelection].map((text, index) => {
                 return (
                   <Card color='white' key={index} index={index} heldBy='czar' text={text} />
                 )
               })}
             </div>
             <div className='current-selection'>
-              {this.props.playerSelections[currentSelection].map((text, index, array) => {
+              {playerSelections[currentSelection].map((text, index, array) => {
                 return (
                   <Card color='white' key={index} index={index} heldBy='czar' text={text} hoverable={index < array.length - 1 ? true : false} />
                 )
               })}
             </div>
             <div className='next-selection' onClick={() => this.changeSelection(1)}>
-              {this.props.playerSelections[nextSelection].map((text, index) => {
+              {playerSelections[nextSelection].map((text, index) => {
                 return (
                   <Card color='white' key={index} index={index} heldBy='czar' text={text} />
                 )
@@ -89,7 +90,7 @@ class CardCzar extends Component {
         {!this.props.gameStarted &&
           <button onClick={this.props.startGame}>START</button>
         }
-        {this.props.playerSelections &&
+        {playerSelections &&
           <button onClick={() => this.props.submitCzarSelection(currentSelection)}>OMG THIS ONE</button>
         }
       </div>
