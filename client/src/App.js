@@ -73,7 +73,7 @@ class App extends Component {
         }
         return {
           cards: data.cards,
-          roomCode: data.roomCode,
+          roomCode: data.roomCode ? data.roomCode : prevState.roomCode,
           showModal: false,
           currentScreen: newCurrentScreen || 'lobby',
           joiningGame: false,
@@ -246,6 +246,8 @@ class App extends Component {
         gameStarted: false,
         cardSelection: {},
       })
+
+      this.setMessage('waiting for you to click OK, champ')
   
       if (data.winner.id === socket.id) {
         this.setMessage(`You are ${this.state.cardCzarName}'s favorite.`, 'modal')
@@ -265,13 +267,25 @@ class App extends Component {
     socket.on('disconnect', () => {
       socket.connect();
       this.setState({
-        showModal: true,
+        cards: [],
+        blackCard: null,
+        currentScreen: 'home',
+        players: [],
+        cardCzar: false,
+        cardCzarName: '',
+        gameStarted: false,
+        playedCount: 0,
+        cardSelection: {},
+        playerSelections: null,
+        winningCards: [],
+        message: '',
         modalMessage: 'Disconnected from server.',
         modalButtons: [{
           text: 'OK',
           callback: this.closeModal
         }],
-        currentScreen: 'home',
+        showMenu: false,
+        showModal: true,
       })
     })
 
@@ -287,7 +301,7 @@ class App extends Component {
   }
 
   joinGame() {
-    if (this.state.roomCode.length > 0) {
+    if (this.state.roomCode.length > 0 && this.state.roomCode.length === 5) {
       console.log(`${this.state.name} joining game ${this.state.roomCode}`);
       socket.emit('join', {name: this.state.name, roomCode: this.state.roomCode});
     } else {
@@ -319,7 +333,6 @@ class App extends Component {
   confirmLeaveGame() {
     socket.emit('leave game', {roomCode: this.state.roomCode});
     this.setState({
-      roomCode: '',
       cards: [],
       blackCard: null,
       currentScreen: 'home',
