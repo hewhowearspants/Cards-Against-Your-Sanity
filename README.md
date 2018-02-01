@@ -27,9 +27,9 @@ Now you don't have to. https://cardsagainstyoursanity.herokuapp.com/
 <img src='./assets/Screenshot_01.png' width=250 >
 <img src='./assets/Screenshot_02.png' width=250 >
 <img src='./assets/Screenshot_03.png' width=250 >
-<img src='./assets/Screenshot_06.png' width=250 >
-<img src='./assets/Screenshot_05.png' width=250 >
 <img src='./assets/Screenshot_04.png' width=250 >
+<img src='./assets/Screenshot_05.png' width=250 >
+<img src='./assets/Screenshot_06.png' width=250 >
 
 ## Technology
 
