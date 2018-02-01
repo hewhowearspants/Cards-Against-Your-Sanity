@@ -5,12 +5,12 @@ const Scores = (props) => {
     let sortedPlayers = props.players;
 
     sortedPlayers.sort((a, b) => {
-      return b.winningCards.length - a.winningCards.length
+      return b.score - a.score
     })
 
     return sortedPlayers.map((player, index) => {
       return (
-        <p key={index} className='player'><span className='name'>{player.name}</span> {player.winningCards.length}</p>
+        <p key={index} className='player'><span className='name'>{player.name}</span> {player.score}</p>
       )
     })
   }
