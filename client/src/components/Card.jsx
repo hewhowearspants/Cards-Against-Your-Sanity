@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import logo from '../images/favicon.png';
  
 class Card extends Component {
   constructor() {
@@ -49,6 +50,7 @@ class Card extends Component {
            onMouseLeave={hoverable ? this.handleHover : null}>
         {this.renderCard()}
         {gameStarted && showPick && <button onClick={() => this.props.handleCardSelection(text)}>pick</button>}
+        <div className='card-logo'><img src={logo} alt='card logo' /><span style={{color: color === 'black' ? 'white' : 'black'}}>Cards Against Your Sanity</span></div>
       </div>
     )
   }
