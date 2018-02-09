@@ -7,7 +7,7 @@ const app = express();
 const server = require('http').createServer(app);
 // keep the heroku app awake!!
 setInterval(function() {
-  console.log('THE LIGHTS TURN ON...');
+  console.log('THE LIGHTS COME ON...');
   console.log('THE LIGHTS GO OFF...');
   console.log('LIFE IS SHORT...');
   console.log('WAKE UP!!');
