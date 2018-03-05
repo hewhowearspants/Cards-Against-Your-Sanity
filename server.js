@@ -5,14 +5,11 @@ const path = require('path');
 const app = express();
 
 const server = require('http').createServer(app);
+
 // keep the heroku app awake!!
-setInterval(function() {
-  console.log('THE LIGHTS COME ON...');
-  console.log('THE LIGHTS GO OFF...');
-  console.log('LIFE IS SHORT...');
-  console.log('WAKE UP!!');
-  require('http').get('http://cardsagainstyoursanity.herokuapp.com');
-}, 300000);
+// setInterval(function() {
+//   require('http').get('http://cardsagainstyoursanity.herokuapp.com');
+// }, 300000);
 
 app.use(logger('dev'));
 app.use(express.static(`${__dirname}/public`));
