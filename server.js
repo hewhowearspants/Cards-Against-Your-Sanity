@@ -63,7 +63,6 @@ class GameRoom {
     console.log(`${departingPlayer} left room ${roomCode}`);
     delete players[id];
     io.sockets.in(roomCode).emit('update players', { players: playerList.prepareToSend(), departingPlayer })
-    io.sockets.in(roomCode).emit('need more players');
 
     if(playerList.length < 3) {
       // IF THE LOSS OF A PLAYER BRINGS THE PLAYER COUNT BELOW 3
