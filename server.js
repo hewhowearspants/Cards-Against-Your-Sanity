@@ -111,7 +111,7 @@ class GameRoom {
         if (this.stage === 'waiting for player submit') {
           console.log(`deleting ${departingPlayer}'s played cards`) // ...remove the departing player's selection(s)...
           let selectionIndex = playerSelections.findIndex((element) => { return element.id === id });
-          playerSelections.splice(selectionIndex, 1)
+          if (selectionIndex >= 0) { playerSelections.splice(selectionIndex, 1) }
         }
         // ...and send the played cards to the czar if the departing player was the last one
         if (playerSelections.length === playerList.length - 1) {
