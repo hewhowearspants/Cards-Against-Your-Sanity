@@ -123,6 +123,7 @@ class GameRoom {
           this.stage = 'waiting for czar choice';
 
           if(cardCzarSocket) {
+            console.log(`sending card czar: ${playerSelectionsScrubbed}`)
             cardCzarSocket.emit('czar chooses', { playerSelections: playerSelectionsScrubbed })
           }
         }
@@ -544,7 +545,6 @@ io.on('connection', (socket) => {
   socket.on('leave game', (data) => {
     let roomCode = data.roomCode;
     let { players } = gameRooms[roomCode].playerList;
-    console.log(`${players[socket.id].name} left room ${roomCode}`);
 
     if (players[socket.id]) {
       socket.leave(roomCode);
